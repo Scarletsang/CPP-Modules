@@ -4,14 +4,13 @@
 
 NAME:=megaphone
 
-CC:=cc
-CFLAGS= -Wall -Wextra -Werror
+CC:=g++
+CFLAGS= -std=c++98 -Wall -Wextra -Werror
+LDFLAGS= -std=c++98
 ifdef FSANITIZE
 	CFLAGS+= -g3 -fsanitize=address
 	LDFLAGS+= -g3 -fsanitize=address
 endif
-INCLUDE_DIR= \
-	include
 
 ###################################
 ######     Source files     #######
@@ -21,7 +20,7 @@ INCLUDE_DIR= \
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
-	main.c
+	megaphone.cpp
 SRC:= $(MAIN_SRC)
 
 ####################################
@@ -45,9 +44,9 @@ SRC:= $(MAIN_SRC)
 
 # This in effect makes all the object files to be compiled in the OBJ_DIR directory
 
-SRC_DIR:=src
+SRC_DIR:=.
 OBJ_DIR:=obj
-OBJ:=$(addprefix $(OBJ_DIR)/,$(subst /,@,$(SRC:.c=.o)))
+OBJ:=$(addprefix $(OBJ_DIR)/,$(subst /,@,$(SRC:.cpp=.o)))
 
 #################################
 ######     Main rules     #######
@@ -56,8 +55,8 @@ OBJ:=$(addprefix $(OBJ_DIR)/,$(subst /,@,$(SRC:.c=.o)))
 all:
 	@$(MAKE) $(NAME) -j
 
-$(NAME): $(OBJS)
-	@$(CC) $(OBJS) -o $(NAME) $(LDFLAGS) && echo "Compilation of $(NAME) successful"
+$(NAME): $(OBJ)
+	@$(CC) $(OBJ) -o $(NAME) $(LDFLAGS) && echo "Compilation of $(NAME) successful"
 
 bonus: re
 
@@ -75,7 +74,7 @@ bonus: re
 #########################################
 
 .SECONDEXPANSION:
-$(OBJ_DIR)/%.o: $(SRC_DIR)/$$(subst @,/,$$*).c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/$$(subst @,/,$$*).cpp
 	@$(CC) $(CFLAGS) $(addprefix -iquote ,$(INCLUDE_DIR)) -c $< -o $@
 
 $(OBJ): $(OBJ_DIR)
@@ -88,7 +87,7 @@ $(OBJ_DIR):
 ###############################
 
 clean: 
-	@rm -f $(OBJS)
+	@rm -f $(OBJ)
 
 fclean: clean
 	@rm -rf $(OBJ_DIR)
