@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 17:41:05 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/17 23:26:09 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/17 23:42:04 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
+
+#include <cstdlib>
 
 #include <iostream>
 #include <iomanip>
@@ -58,7 +60,7 @@ namespace my
     }
     else
       return &contacts_[index];
-    return nullptr;
+    return NULL;
   }
 
   std::ostream&	PhoneBook::print_contacts() const

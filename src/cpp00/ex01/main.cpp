@@ -6,15 +6,18 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 16:45:55 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/17 23:35:56 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/17 23:43:34 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.hpp"
 
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+
 #include <iostream>
 #include <iomanip>
-#include <cctype>
 
 #include "Contact.hpp"
 #include "PhoneBook.hpp"
@@ -129,12 +132,12 @@ namespace my
   static int  SearchContact(const PhoneBook &phone_book)
   {
       my::NumericString index;
-      const my::Contact *contact = nullptr;
+      const my::Contact *contact;
 
       phone_book.print_contacts();
       if (my::GetInput("Enter index: ", index))
         return EXIT_FAILURE;
-      if ((contact = phone_book.search(atoi(index.c_str()))) != nullptr)
+      if ((contact = phone_book.search(atoi(index.c_str()))) != NULL)
         contact->print();
       return EXIT_SUCCESS;
   }
