@@ -6,43 +6,58 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 17:38:08 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/14 21:52:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/17 22:50:27 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONTACT_HPP
 # define CONTACT_HPP
 
-# include <iostream>
-# include <iomanip>
+# include <istream>
+# include <ostream>
 # include <string>
 
-class	Contact
+namespace my
 {
-	public:
-		Contact();
-		~Contact();
-		Contact(const Contact &contact);
-		Contact&	operator=(const Contact &contact);
+  class PhoneNumber : public std::string {
+    public:
+      PhoneNumber& operator=(const char* str)
+      {
+        std::string::operator=(str);
+        return *this;
+      }
+  };
+  
+  class	Contact
+  {
+    public:
+      Contact();
+      ~Contact();
+      Contact(const Contact &contact);
+      Contact&	    operator=(const Contact &contact);
 
-		bool	isComplete();
-		void	printAbbreviated();
-		void	print();
+      bool	        is_complete() const;
 
-		void	setFirstName(std::string firstName);
-		void	setLastName(std::string lastName);
-		void	setNickname(std::string nickname);
-		void	setPhoneNumber(std::string phoneNumber);
-		void	setDarkestSecret(std::string darkestSecret);
+      void	        set_first_name(std::string firstName);
+      void	        set_last_name(std::string lastName);
+      void	        set_nick_name(std::string nickname);
+      void	        set_phone_number(PhoneNumber phoneNumber);
+      void	        set_darkest_secret(std::string darkestSecret);
 
-	private:
-		std::string	firstName;
-		std::string	lastName;
-		std::string	nickname;
-		std::string	phoneNumber;
-		std::string	darkestSecret;
+      std::ostream& print_abbreviated() const;
+      std::ostream& print() const;
 
-		void	printField(std::string field);
-};
+    private:
+      std::string	  first_name_;
+      std::string	  last_name_;
+      std::string	  nick_name_;
+      PhoneNumber	  phone_number_;
+      std::string	  darkest_secret_;
+
+      std::ostream&	print_abbreviated_field(std::string field) const;
+  }; // class Contact
+
+} // namespace my
+
 
 #endif

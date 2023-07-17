@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=megaphone
+NAME:= my_awesome_phonebook
 
 CC:=g++
 CFLAGS= -std=c++98 -Wall -Wextra -Werror
@@ -20,7 +20,9 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
-	megaphone.cpp
+	Contact.cpp \
+	PhoneBook.cpp \
+	main.cpp
 SRC:= $(MAIN_SRC)
 
 ####################################
