@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 16:45:55 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/18 18:28:11 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/18 18:37:02 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,6 @@ namespace my
         return (false);
       }
       i++;
-    }
-    if (digit_count < 7)
-    {
-      std::cerr << "Phone number must have at least 7 digits. ";
-      return (false);
     }
     return (true);
   }
