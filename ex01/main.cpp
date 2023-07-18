@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 16:45:55 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/18 17:58:14 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/18 18:28:11 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,10 +149,10 @@ int main(void)
   my::PhoneBook phone_book;
   std::string   input;
 
+  std::cout << "Avaliable commands: ADD, SEARCH, EXIT" << std::endl;
+  std::getline(std::cin, input);
   while (!std::cin.eof())
   {
-    std::cout << "Avaliable commands: ADD, SEARCH, EXIT" << std::endl;
-    std::getline(std::cin, input);
     if (input.empty())
     {
       std::cerr << "Empty command received" << std::endl;
@@ -173,6 +173,8 @@ int main(void)
     {
       std::cerr << "Invalid command received: '" << input << "'" << std::endl;
     }
+    std::cout << "Avaliable commands: ADD, SEARCH, EXIT" << std::endl;
+    std::getline(std::cin, input);
   }
   return EXIT_FAILURE;
 }
