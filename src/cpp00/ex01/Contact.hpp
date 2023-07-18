@@ -6,10 +6,11 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 17:38:08 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/17 22:50:27 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/18 01:38:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
 #ifndef CONTACT_HPP
 # define CONTACT_HPP
 
