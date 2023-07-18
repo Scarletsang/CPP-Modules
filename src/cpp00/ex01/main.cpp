@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 16:45:55 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/17 23:43:34 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/18 17:58:14 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ namespace my
       {
         std::cerr << "Field cannot be empty. Please input again: ";
       }
-      if (!IsValid(input))
+      else if (!IsValid(input))
       {
         std::cerr << "Please input again: ";
       }
@@ -154,7 +154,9 @@ int main(void)
     std::cout << "Avaliable commands: ADD, SEARCH, EXIT" << std::endl;
     std::getline(std::cin, input);
     if (input.empty())
-      break ;
+    {
+      std::cerr << "Empty command received" << std::endl;
+    }
     else if (strcmp(input.c_str(), "EXIT") == 0)
       return EXIT_SUCCESS;
     else if (strcmp(input.c_str(), "ADD") == 0)
@@ -169,7 +171,7 @@ int main(void)
     }
     else
     {
-      std::cout << "Invalid command received: '" << input << "'" << std::endl;
+      std::cerr << "Invalid command received: '" << input << "'" << std::endl;
     }
   }
   return EXIT_FAILURE;
