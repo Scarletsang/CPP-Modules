@@ -6,10 +6,11 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:17:34 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/18 21:34:26 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/19 03:19:45 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
 #ifndef ZOMBIE_HPP
 # define ZOMBIE_HPP
 
