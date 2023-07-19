@@ -1,41 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Zombie.hpp                                         :+:      :+:    :+:   */
+/*   Weapon.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/18 21:17:34 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/19 03:19:41 by htsang           ###   ########.fr       */
+/*   Created: 2023/07/19 02:54:38 by htsang            #+#    #+#             */
+/*   Updated: 2023/07/19 11:02:39 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#ifndef ZOMBIE_HPP
-# define ZOMBIE_HPP
+#ifndef WEAPON_HPP
+# define WEAPON_HPP
 
 # include <string>
 
-namespace my
+class Weapon
 {
-  class Zombie
-  {
-    public:
-      Zombie();
-      Zombie(std::string name);
-      ~Zombie();
-      Zombie(const Zombie &zombie);
-      Zombie&     operator=(const Zombie &zombie);
+  public:
+    Weapon() : type_("") {};
+    Weapon(std::string type) : type_(type) {};
+    ~Weapon() {};
+    Weapon(const Weapon& weapon);
+    const Weapon& operator=(const Weapon& weapon);
 
-      void        setName(std::string name);
+    const std::string& getType() const;
+    void setType(std::string type);
 
-      void        announce() const;
-
-    private:
-      std::string name_;
-  };
-
-  Zombie* zombieHorde(int n, std::string name);
-} // namespace my
+  private:
+    std::string type_;
+};
 
 #endif
