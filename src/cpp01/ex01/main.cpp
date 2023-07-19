@@ -6,12 +6,15 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:27:44 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/18 23:55:05 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/19 02:28:30 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
 
+#include <cstdlib>
+
+#include <limits>
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -19,6 +22,11 @@
 namespace test
 {
   static const std::ios_base::iostate FailMask = std::ios_base::eofbit | std::ios_base::badbit;
+
+  void  ClearLine(std::istream &input_stream)
+  {
+    input_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  }
 
   std::ios_base::iostate  HandleBadStream(std::istream &input_stream)
   {
@@ -32,7 +40,7 @@ namespace test
     {
       std::cerr << "Invalid input. Please try again: ";
       input_stream.clear();
-      input_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      ClearLine(input_stream);
     }
     else if (input_stream.bad())
     {
@@ -51,6 +59,7 @@ namespace test
       else if ((HandleBadStream(std::cin) & FailMask) > 0)
         return EXIT_FAILURE;
     }
+    ClearLine(std::cin);
     return EXIT_SUCCESS;
   }
 
@@ -97,7 +106,7 @@ namespace my
     if (test::GetInt(n))
       return EXIT_FAILURE;
     std::cout << "Enter the name of the zombies: ";
-    std::cin >> name;
+    std::getline(std::cin, name);
     std::cout << std::endl;
     PTestZombieHorde(n, name);
     return EXIT_SUCCESS;
@@ -116,7 +125,7 @@ namespace my
     if (test::GetInt(to))
       return EXIT_FAILURE;
     std::cout << "Enter the name of the zombies: ";
-    std::cin >> name;
+    std::getline(std::cin, name);
     std::cout << std::endl;
     PTestZombieHordeRange(from, to, name);
     return EXIT_SUCCESS;
