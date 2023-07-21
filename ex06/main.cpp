@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 18:26:43 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/21 20:26:02 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/21 21:14:59 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main(int argc, const char **argv)
 
   if (argc != 2)
   {
-    std::cout << "Usage: ./harl [debug|info|warning|error]" << std::endl;
+    std::cout << "Usage: ./harl [DEBUG|INFO|WARNING|ERROR]" << std::endl;
     return EXIT_FAILURE;
   }
   harl.complain(argv[1]);
