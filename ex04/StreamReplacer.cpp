@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:45:03 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/21 20:49:22 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/21 22:38:03 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ namespace my
 
   void  StreamReplacer::file(const std::string& of, const std::string& to)
   {
+    if (of.empty())
+      return ;
+
     std::string buffer;
     char        read_buffer[kReadSize];
     size_t      buffer_size;
