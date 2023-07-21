@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:45:03 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/21 16:22:21 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/21 20:49:22 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ namespace my
       line.insert(pos, to);
       pos += to.length();
     }
-    output_ << line << std::endl;
+    if (input_.eof())
+      output_ << line;
+    else
+      output_ << line << std::endl;
   }
 
   void  StreamReplacer::file(const std::string& of, const std::string& to)
