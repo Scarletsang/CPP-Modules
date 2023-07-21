@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 16:10:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/19 17:16:57 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/21 16:09:17 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ int main(int argc, const char **argv)
   {
     my::StreamReplacer stream_replacer(in_file, out_file);
 
-    while (!in_file.eof())
-    {
-      stream_replacer.line(argv[2], argv[3]);
-    }
+    stream_replacer.file(argv[2], argv[3]);
   }
   return EXIT_SUCCESS;
 }
