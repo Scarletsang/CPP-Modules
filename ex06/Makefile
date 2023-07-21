@@ -2,10 +2,10 @@
 ######     Variables     #######
 ################################
 
-NAME:=account
+NAME:=harlFilter
 
 CC:=g++
-CFLAGS= -std=c++98 -Wall -Wextra -Werror
+CFLAGS= -std=c++98 -Wall -Wextra -Werror -Wno-implicit-fallthrough
 LDFLAGS= -std=c++98
 ifdef FSANITIZE
 	CFLAGS+= -g3 -fsanitize=address
@@ -20,8 +20,8 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
-	Account.cpp \
-	tests.cpp
+	Harl.cpp \
+	main.cpp
 SRC:= $(MAIN_SRC)
 
 ####################################
