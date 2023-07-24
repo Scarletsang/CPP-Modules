@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:38:07 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/22 21:52:44 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/24 15:18:27 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ class Fixed
     float toFloat() const;
     int   toInt() const;
 
-    std::ostream&  operator<<(std::ostream &out) const;
-  
   private:
     int              value_;
     static const int bits_ = 8;
 };
+
+std::ostream&  operator<<(std::ostream &out, const Fixed& fixed);
 
 #endif
