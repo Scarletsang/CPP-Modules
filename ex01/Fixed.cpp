@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:37:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/24 15:18:04 by htsang           ###   ########.fr       */
+/*   Updated: 2023/08/14 16:28:37 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,18 @@ Fixed::Fixed(): value_(0)
 
 Fixed::Fixed(int const value)
 {
+  std::cout << "Int constructor called" << std::endl;
   assert(value < (std::numeric_limits<int>::max() >> bits_));
   assert(value > (std::numeric_limits<int>::min() >> bits_));
-  std::cout << "Int constructor called" << std::endl;
-  value_ = value << bits_;
+  setRawBits(value << bits_);
 }
 
 Fixed::Fixed(float const value)
 {
   std::cout << "Float constructor called" << std::endl;
-  // get the exponent
+  assert(value <= static_cast<float>(std::numeric_limits<int>::max() >> bits_));
+  assert(value >= static_cast<float>(std::numeric_limits<int>::min() >> bits_));
+  setRawBits(static_cast<int>(round(value * (1 << bits_))));
 }
 
 Fixed::~Fixed()
@@ -48,7 +50,7 @@ Fixed::Fixed(const Fixed& fixed) : value_(fixed.value_)
 const Fixed&  Fixed::operator=(const Fixed& fixed)
 {
   std::cout << "Copy assignation operator called" << std::endl;
-  value_ = fixed.value_;
+  setRawBits(fixed.getRawBits());
   return *this;
 }
 
@@ -66,16 +68,16 @@ void  Fixed::setRawBits(int const raw)
 
 float Fixed::toFloat() const
 {
-
+  return ((float)value_ / (float)(1 << bits_));
 }
 
 int   Fixed::toInt() const
 {
-
+  return (value_ >> bits_);
 }
 
 std::ostream&  operator<<(std::ostream &out, const Fixed& fixed)
 {
-
+  out << fixed.toFloat();
   return out;
 }
