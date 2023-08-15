@@ -6,13 +6,14 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/24 22:23:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/08/15 18:37:22 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
 
 #include <cstdlib>
+#include <cstring>
 
 #include <iostream>
 #include <iomanip>
@@ -20,11 +21,39 @@
 
 namespace test
 {
-  bool  ParseNumber(const std::string input, Fixed &n)
+  bool  ParseNumber(std::string::const_iterator &it, std::string::const_iterator end, Fixed &n)
   {
-    std::string number;
-  
-    // input++;
+    float sign    = 1.0f;
+    float number  = 0.f;
+
+    if (*it == '-')
+    {
+      it++;
+      sign = -1.0f;
+    }
+    if (!std::isdigit(*it))
+      return false;
+    while ((it != end) && std::isdigit(*it))
+    {
+      number = number * 10.f + (*it - '0');
+      it++;
+    }
+    if (*it == '.')
+    {
+      float decimal = 0.f;
+      float power   = 10.0f;
+
+      it++;
+      while ((it != end) && std::isdigit(*it))
+      {
+        decimal += ((*it - '0') / power);
+        power *= 10.0f;
+        it++;
+      }
+      number += decimal;
+    }
+    n = Fixed(number * sign);
+    return true;
   }
 
   template <typename T>
@@ -76,14 +105,14 @@ namespace my
 
   int  InteractiveEvaluate(std::string &input)
   {
-    Fixed n;
+    Fixed                       n;
+    std::string::const_iterator it = input.begin();
 
-    if (!test::ParseNumber(input, n))
+    if (!test::ParseNumber(it, input.end(), n))
       return EXIT_FAILURE;
-    std::cout << "n is " << n << std::endl;
+    std::cout << "n is printed as " << n << std::endl;
     std::cout << "n is " << n.toInt() << " as integer" << std::endl;
     std::cout << "n is " << n.toFloat() << " as float" << std::endl;
-    std::cout << "n is ";
     test::PrintAsBinary(n.getRawBits());
     return EXIT_SUCCESS;
   }
