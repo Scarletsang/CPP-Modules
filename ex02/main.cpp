@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/15 18:37:22 by htsang           ###   ########.fr       */
+/*   Updated: 2023/08/16 19:11:16 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,45 +19,116 @@
 #include <iomanip>
 #include <string>
 
-namespace test
+namespace parser
 {
-  bool  ParseNumber(std::string::const_iterator &it, std::string::const_iterator end, Fixed &n)
+  bool  Match(std::string::const_iterator &it, \
+              std::string::const_iterator end, \
+              const char *match_target)
   {
-    float sign    = 1.0f;
-    float number  = 0.f;
-
-    if (*it == '-')
+    while ((it != end) && *match_target)
     {
+      if (*it != *match_target)
+        return false;
+      match_target++;
       it++;
+    }
+    return true;
+  }
+
+  bool  FixedNumber(std::string::const_iterator &it, \
+                    std::string::const_iterator end, \
+                    Fixed &n)
+  {
+    std::string::const_iterator copy(it);
+    float                       sign   = 1.0f;
+    float                       number = 0.f;
+
+    if (*copy == '-')
+    {
+      copy++;
       sign = -1.0f;
     }
-    if (!std::isdigit(*it))
+    if (!std::isdigit(*copy))
       return false;
-    while ((it != end) && std::isdigit(*it))
+    while ((copy != end) && std::isdigit(*copy))
     {
-      number = number * 10.f + (*it - '0');
-      it++;
+      number = number * 10.f + (*copy - '0');
+      copy++;
     }
-    if (*it == '.')
+    if (*copy == '.')
     {
       float decimal = 0.f;
       float power   = 10.0f;
 
-      it++;
-      while ((it != end) && std::isdigit(*it))
+      copy++;
+      while ((copy != end) && std::isdigit(*copy))
       {
-        decimal += ((*it - '0') / power);
+        decimal += ((*copy - '0') / power);
         power *= 10.0f;
-        it++;
+        copy++;
       }
       number += decimal;
     }
     n = Fixed(number * sign);
+    it = copy;
     return true;
   }
 
+  bool  FixedNumberModified(std::string::const_iterator &it, \
+                            std::string::const_iterator end, \
+                            Fixed &n)
+  {
+    enum Modifier { kIncrement, kDecrement, kNone };
+    std::string::const_iterator copy(it);
+    Modifier                    suffix = kNone;
+    
+    if (Match(copy, end, "++"))
+      suffix = kIncrement;
+    else if (Match(copy, end, "--"))
+      suffix = kDecrement;
+    if (!FixedNumber(copy, end, n))
+      return false;
+    if (suffix == kIncrement)
+      n++;
+    else if (suffix == kDecrement)
+      n--;
+    else
+    {
+      if (Match(copy, end, "++"))
+        n++;
+      else if (Match(copy, end, "--"))
+        n--;
+    }
+    it = copy;
+    return true;
+  }
+
+  bool  Term(std::string::const_iterator &it, \
+             std::string::const_iterator end, \
+             Fixed &n)
+  {
+    std::string::const_iterator copy(it);
+
+    if (!FixedNumber(copy, end, n))
+      return false;
+    while (copy != end)
+    {
+      Fixed n2;
+
+      if (!FixedNumber(copy, end, n2))
+        return true;
+      if (*(copy - 1) == '*')
+        n = n * n2;
+      else
+        n = n / n2;
+    }
+  }
+} // namespace test
+
+namespace printer
+{
   template <typename T>
-  void  PrintAsBinary(T value)
+  void  Bitfield(T value)
   {
     unsigned char* bytes = reinterpret_cast<unsigned char*>(&value);
     for (int i = sizeof(T) - 1; i >= 0; i--)
@@ -69,7 +140,7 @@ namespace test
     }
     std::cout << std::endl;
   }
-} // namespace test
+}
 
 namespace my
 {
@@ -108,12 +179,12 @@ namespace my
     Fixed                       n;
     std::string::const_iterator it = input.begin();
 
-    if (!test::ParseNumber(it, input.end(), n))
+    if (!parser::FixedNumber(it, input.end(), n))
       return EXIT_FAILURE;
     std::cout << "n is printed as " << n << std::endl;
     std::cout << "n is " << n.toInt() << " as integer" << std::endl;
     std::cout << "n is " << n.toFloat() << " as float" << std::endl;
-    test::PrintAsBinary(n.getRawBits());
+    printer::Bitfield(n.getRawBits());
     return EXIT_SUCCESS;
   }
 }

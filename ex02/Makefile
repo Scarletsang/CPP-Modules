@@ -8,7 +8,7 @@ CC:=g++
 CFLAGS= -std=c++98 -Wall -Wextra -Werror
 LDFLAGS= -std=c++98
 ifdef FSANITIZE
-	CFLAGS+= -g3 -fsanitize=address
+	CFLAGS+= -g3 -fsanitize=address -DDEBUG=1
 	LDFLAGS+= -g3 -fsanitize=address
 endif
 

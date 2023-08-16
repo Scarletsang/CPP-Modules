@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:37:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/16 12:02:16 by htsang           ###   ########.fr       */
+/*   Updated: 2023/08/16 14:55:02 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,31 @@
 #include <limits>
 #include <iostream>
 
+//////////////////////////////////////
+////////////   debugger   ////////////
+//////////////////////////////////////
+
+static void  FixedDebugger(const char *message)
+{
+#ifdef DEBUG
+  std::cout << message << std::endl;
+#else
+  (void)message;
+#endif
+}
+
 /////////////////////////////////////////////////////////
 ////////////   constructors and destructor   ////////////
 /////////////////////////////////////////////////////////
 
 Fixed::Fixed(): value_(0)
 {
-  std::cout << "Default constructor called" << std::endl;
+  FixedDebugger("Default constructor called");
 }
 
 Fixed::Fixed(int const value)
 {
-  std::cout << "Int constructor called" << std::endl;
+  FixedDebugger("Int constructor called");
   assert(value < (std::numeric_limits<int>::max() >> bits_));
   assert(value > (std::numeric_limits<int>::min() >> bits_));
   value_ = value << bits_;
@@ -37,7 +50,7 @@ Fixed::Fixed(int const value)
 
 Fixed::Fixed(float const value)
 {
-  std::cout << "Float constructor called" << std::endl;
+  FixedDebugger("Float constructor called");
   assert(value <= static_cast<float>(std::numeric_limits<int>::max() >> bits_));
   assert(value >= static_cast<float>(std::numeric_limits<int>::min() >> bits_));
   value_ = static_cast<int>(roundf(value * (1 << bits_)));
@@ -45,7 +58,7 @@ Fixed::Fixed(float const value)
 
 Fixed::~Fixed()
 {
-  std::cout << "Destructor called" << std::endl;
+  FixedDebugger("Destructor called");
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -54,12 +67,12 @@ Fixed::~Fixed()
 
 Fixed::Fixed(const Fixed& fixed) : value_(fixed.value_)
 {
-  std::cout << "Copy constructor called" << std::endl;
+  FixedDebugger("Copy constructor called");
 }
 
 const Fixed&  Fixed::operator=(const Fixed& fixed)
 {
-  std::cout << "Copy assignation operator called" << std::endl;
+  FixedDebugger("Copy assignation operator called");
   value_ = fixed.value_;
   return *this;
 }
@@ -70,13 +83,11 @@ const Fixed&  Fixed::operator=(const Fixed& fixed)
 
 int Fixed::getRawBits() const
 {
-  std::cout << "getRawBits member function called" << std::endl;
   return value_;
 }
 
 void  Fixed::setRawBits(int const raw)
 {
-  std::cout << "setRawBits member function called" << std::endl;
   value_ = raw;
 }
 
