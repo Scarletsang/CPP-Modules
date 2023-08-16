@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:37:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/15 18:37:31 by htsang           ###   ########.fr       */
+/*   Updated: 2023/08/16 14:40:01 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,11 @@ const Fixed&  Fixed::operator=(const Fixed& fixed)
 
 int Fixed::getRawBits() const
 {
-  std::cout << "getRawBits member function called" << std::endl;
   return value_;
 }
 
 void  Fixed::setRawBits(int const raw)
 {
-  std::cout << "setRawBits member function called" << std::endl;
   value_ = raw;
 }
 
