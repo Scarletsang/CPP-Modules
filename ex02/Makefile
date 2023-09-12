@@ -20,6 +20,8 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
+	parser/ResultInternal.cpp \
+	parser/Parser.cpp \
 	Fixed.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
