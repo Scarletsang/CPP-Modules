@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/16 19:11:16 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/12 19:34:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,112 +18,6 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-
-namespace parser
-{
-  bool  Match(std::string::const_iterator &it, \
-              std::string::const_iterator end, \
-              const char *match_target)
-  {
-    while ((it != end) && *match_target)
-    {
-      if (*it != *match_target)
-        return false;
-      match_target++;
-      it++;
-    }
-    return true;
-  }
-
-  bool  FixedNumber(std::string::const_iterator &it, \
-                    std::string::const_iterator end, \
-                    Fixed &n)
-  {
-    std::string::const_iterator copy(it);
-    float                       sign   = 1.0f;
-    float                       number = 0.f;
-
-    if (*copy == '-')
-    {
-      copy++;
-      sign = -1.0f;
-    }
-    if (!std::isdigit(*copy))
-      return false;
-    while ((copy != end) && std::isdigit(*copy))
-    {
-      number = number * 10.f + (*copy - '0');
-      copy++;
-    }
-    if (*copy == '.')
-    {
-      float decimal = 0.f;
-      float power   = 10.0f;
-
-      copy++;
-      while ((copy != end) && std::isdigit(*copy))
-      {
-        decimal += ((*copy - '0') / power);
-        power *= 10.0f;
-        copy++;
-      }
-      number += decimal;
-    }
-    n = Fixed(number * sign);
-    it = copy;
-    return true;
-  }
-
-  bool  FixedNumberModified(std::string::const_iterator &it, \
-                            std::string::const_iterator end, \
-                            Fixed &n)
-  {
-    enum Modifier { kIncrement, kDecrement, kNone };
-    std::string::const_iterator copy(it);
-    Modifier                    suffix = kNone;
-    
-    if (Match(copy, end, "++"))
-      suffix = kIncrement;
-    else if (Match(copy, end, "--"))
-      suffix = kDecrement;
-    if (!FixedNumber(copy, end, n))
-      return false;
-    if (suffix == kIncrement)
-      n++;
-    else if (suffix == kDecrement)
-      n--;
-    else
-    {
-      if (Match(copy, end, "++"))
-        n++;
-      else if (Match(copy, end, "--"))
-        n--;
-    }
-    it = copy;
-    return true;
-  }
-
-  bool  Term(std::string::const_iterator &it, \
-             std::string::const_iterator end, \
-             Fixed &n)
-  {
-    std::string::const_iterator copy(it);
-
-    if (!FixedNumber(copy, end, n))
-      return false;
-    while (copy != end)
-    {
-      Fixed n2;
-
-      if (!FixedNumber(copy, end, n2))
-        return true;
-      if (*(copy - 1) == '*')
-        n = n * n2;
-      else
-        n = n / n2;
-    }
-  }
-} // namespace test
 
 namespace printer
 {
@@ -146,22 +40,18 @@ namespace my
 {
   void  TestFromSubject()
   {
-    Fixed a;
-    Fixed const b(10);
-    Fixed const c(42.42f);
-    Fixed const d(b);
+    Fixed       a;
+    Fixed const b( Fixed( 5.05f ) * Fixed( 2 ) );
+    Fixed const c( Fixed( 10.05f ) / Fixed( 2 ) );
 
-    a = Fixed(1234.4321f);
-
-    std::cout << "a is " << a << std::endl;
-    std::cout << "b is " << b << std::endl;
-    std::cout << "c is " << c << std::endl;
-    std::cout << "d is " << d << std::endl;
-
-    std::cout << "a is " << a.toInt() << " as integer" << std::endl;
-    std::cout << "b is " << b.toInt() << " as integer" << std::endl;
-    std::cout << "c is " << c.toInt() << " as integer" << std::endl;
-    std::cout << "d is " << d.toInt() << " as integer" << std::endl;
+    std::cout << a << std::endl;
+    std::cout << ++a << std::endl;
+    std::cout << a << std::endl;
+    std::cout << a++ << std::endl;
+    std::cout << a << std::endl;
+    std::cout << b << std::endl;
+    std::cout << Fixed::max( a, b ) << std::endl;
+    std::cout << c << std::endl;
   }
 
   void  InteractivePrompt()
@@ -176,11 +66,9 @@ namespace my
 
   int  InteractiveEvaluate(std::string &input)
   {
-    Fixed                       n;
-    std::string::const_iterator it = input.begin();
+    Fixed                       n(4);
 
-    if (!parser::FixedNumber(it, input.end(), n))
-      return EXIT_FAILURE;
+    (void)input;
     std::cout << "n is printed as " << n << std::endl;
     std::cout << "n is " << n.toInt() << " as integer" << std::endl;
     std::cout << "n is " << n.toFloat() << " as float" << std::endl;

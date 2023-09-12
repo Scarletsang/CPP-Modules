@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:37:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/16 14:55:02 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/12 19:54:26 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,14 @@ Fixed::Fixed(): value_(0)
 Fixed::Fixed(int const value)
 {
   FixedDebugger("Int constructor called");
-  assert(value < (std::numeric_limits<int>::max() >> bits_));
-  assert(value > (std::numeric_limits<int>::min() >> bits_));
+  assert(Fixed::is_convertable(value));
   value_ = value << bits_;
 }
 
 Fixed::Fixed(float const value)
 {
   FixedDebugger("Float constructor called");
-  assert(value <= static_cast<float>(std::numeric_limits<int>::max() >> bits_));
-  assert(value >= static_cast<float>(std::numeric_limits<int>::min() >> bits_));
+  assert(Fixed::is_convertable(value));
   value_ = static_cast<int>(roundf(value * (1 << bits_)));
 }
 
@@ -155,12 +153,18 @@ Fixed Fixed::operator-(const Fixed& fixed) const
 
 Fixed Fixed::operator*(const Fixed& fixed) const
 {
-  return (Fixed(value_ * fixed.value_));
+  Fixed multiplied;
+
+  multiplied.setRawBits(static_cast<float>((static_cast<long>(value_) * static_cast<long>(fixed.value_)) >> bits_));
+  return (multiplied);
 }
 
 Fixed Fixed::operator/(const Fixed& fixed) const
 {
-  return (Fixed(value_ / fixed.value_));
+  Fixed divided;
+
+  divided.setRawBits(static_cast<float>(static_cast<long>(value_ << bits_) / static_cast<long>(fixed.value_)));
+  return (divided);
 }
 
 ///////////////////////////////////////////////////////////////

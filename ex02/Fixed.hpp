@@ -6,13 +6,11 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:38:07 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/16 14:36:21 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/12 20:24:50 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#ifndef FIXED_HPP
-# define FIXED_HPP
 
 #include <iostream>
 #include <ostream>
@@ -66,11 +64,16 @@ class Fixed
     static const Fixed& min(const Fixed& a, const Fixed& b);
     static const Fixed& max(const Fixed& a, const Fixed& b);
 
+    template <typename T>
+    static bool is_convertable(T value)
+    {
+      return (value <= static_cast<T>(std::numeric_limits<int>::max() >> bits_) &&
+              value >= static_cast<T>(std::numeric_limits<int>::min() >> bits_));
+    }
+
   private:
     int              value_;
     static const int bits_ = 8;
 };
 
 std::ostream&  operator<<(std::ostream &out, const Fixed& fixed);
-
-#endif
