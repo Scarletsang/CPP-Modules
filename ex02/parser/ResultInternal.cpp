@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 20:20:02 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/12 22:00:40 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/13 23:01:01 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,26 @@
 
 namespace parser
 {
-  ResultInternal::ResultInternal(std::string &string)
+  ResultInternal::ResultInternal()
+  : string_(std::string()),
+    is_valid_(false) {}
+
+  ResultInternal::ResultInternal(std::string string)
   : string_(string),
-    position_(0),
     is_valid_(false) {}
 
   ResultInternal::~ResultInternal() {}
 
   ResultInternal::ResultInternal(const ResultInternal& value)
     : string_(value.string_),
-      position_(value.position_),
       is_valid_(value.is_valid_) {}
 
-  const ResultInternal&  ResultInternal::operator=(const ResultInternal& parser)
+  const ResultInternal&  ResultInternal::operator=(const ResultInternal& value)
   {
-    if (this == &parser)
+    if (this == &value)
       return *this;
-    string_ = parser.string_;
-    position_ = parser.position_;
-    is_valid_ = parser.is_valid_;
+    string_ = value.string_;
+    is_valid_ = value.is_valid_;
     return *this;
   }
 
@@ -46,14 +47,14 @@ namespace parser
   }
   bool  ResultInternal::is_end() const
   {
-    return position_ >= string_.size();
+    return string_.empty();
   }
 
   /* getters */
 
-  std::string ResultInternal::string() const
+  std::string &ResultInternal::string() const
   {
-    return string_.substr(position_);
+    return const_cast<std::string &>(string_);
   }
 
   /* setters */
@@ -63,9 +64,14 @@ namespace parser
     is_valid_ = is_valid;
   }
 
+  void  ResultInternal::set_string(std::string string)
+  {
+    string_ = string;
+  }
+
   void  ResultInternal::advance(size_t n)
   {
-    position_ += n;
+    string_ = string_.substr(n);
   }
 
 }
