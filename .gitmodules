@@ -1,9 +1,0 @@
-[submodule "src/cpp00"]
-	path = src/cpp00
-	url = https://github.com/Scarletsang/CPP00_to_04.git
-[submodule "src/cpp01"]
-	path = src/cpp01
-	url = https://github.com/Scarletsang/CPP00_to_04.git
-[submodule "src/cpp02"]
-	path = src/cpp02
-	url = https://github.com/Scarletsang/CPP00_to_04.git
