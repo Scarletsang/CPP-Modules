@@ -7,3 +7,9 @@
 [submodule "src/cpp02"]
 	path = src/cpp02
 	url = https://github.com/Scarletsang/CPP00_to_04.git
+[submodule "src/cpp03"]
+	path = src/cpp03
+	url = https://github.com/Scarletsang/CPP00_to_04.git
+[submodule "src/cpp04"]
+	path = src/cpp04
+	url = https://github.com/Scarletsang/CPP00_to_04.git
