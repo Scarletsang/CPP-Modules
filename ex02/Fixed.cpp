@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:37:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/12 19:54:26 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/14 19:30:47 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,12 +143,18 @@ bool  Fixed::operator!=(const Fixed& fixed) const
 
 Fixed Fixed::operator+(const Fixed& fixed) const
 {
-  return (Fixed(value_ + fixed.value_));
+  Fixed added;
+
+  added.setRawBits(value_ + fixed.value_);
+  return (added);
 }
 
 Fixed Fixed::operator-(const Fixed& fixed) const
 {
-  return (Fixed(value_ - fixed.value_));
+  Fixed subtracted;
+
+  subtracted.setRawBits(value_ - fixed.value_);
+  return (subtracted);
 }
 
 Fixed Fixed::operator*(const Fixed& fixed) const

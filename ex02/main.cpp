@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/12 19:34:57 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/14 19:40:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace printer
     }
     std::cout << std::endl;
   }
-}
+} // namespace printer
 
 namespace my
 {
@@ -75,7 +75,7 @@ namespace my
     printer::Bitfield(n.getRawBits());
     return EXIT_SUCCESS;
   }
-}
+} // namespace my
 
 int main(int argc, char const **argv)
 {
