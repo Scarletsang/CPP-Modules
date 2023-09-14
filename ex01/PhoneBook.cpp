@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 17:41:05 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/17 23:42:04 by htsang           ###   ########.fr       */
+/*   Updated: 2023/07/27 15:18:51 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ namespace my
   
   const Contact *PhoneBook::search(int index) const
   {
-    if (index >= kMaxContactCount && index < 0)
+    if ((index >= kMaxContactCount) || (index < 0))
       std::cerr << "Index out of range" << std::endl;
     else if (index >= contact_count_)
     {
