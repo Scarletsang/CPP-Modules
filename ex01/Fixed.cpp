@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:37:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/16 14:40:01 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/12 19:53:07 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,14 @@ Fixed::Fixed(): value_(0)
 Fixed::Fixed(int const value)
 {
   std::cout << "Int constructor called" << std::endl;
-  assert(value < (std::numeric_limits<int>::max() >> bits_));
-  assert(value > (std::numeric_limits<int>::min() >> bits_));
+  assert(Fixed::is_convertable(value));
   value_ = value << bits_;
 }
 
 Fixed::Fixed(float const value)
 {
   std::cout << "Float constructor called" << std::endl;
-  assert(value <= static_cast<float>(std::numeric_limits<int>::max() >> bits_));
-  assert(value >= static_cast<float>(std::numeric_limits<int>::min() >> bits_));
+   assert(Fixed::is_convertable(value));
   value_ = static_cast<int>(roundf(value * (1 << bits_)));
 }
 

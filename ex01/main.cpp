@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/08/15 18:37:22 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/12 20:07:17 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@
 
 namespace test
 {
-  bool  ParseNumber(std::string::const_iterator &it, std::string::const_iterator end, Fixed &n)
+  
+  bool  ParseNumber(std::string &input, Fixed &n)
   {
-    float sign    = 1.0f;
-    float number  = 0.f;
+    std::string::iterator it  = input.begin();
+    float sign                = 1.0f;
+    float number              = 0.f;
 
     if (*it == '-')
     {
@@ -33,7 +35,7 @@ namespace test
     }
     if (!std::isdigit(*it))
       return false;
-    while ((it != end) && std::isdigit(*it))
+    while ((it != input.end()) && std::isdigit(*it))
     {
       number = number * 10.f + (*it - '0');
       it++;
@@ -44,7 +46,7 @@ namespace test
       float power   = 10.0f;
 
       it++;
-      while ((it != end) && std::isdigit(*it))
+      while ((it != input.end()) && std::isdigit(*it))
       {
         decimal += ((*it - '0') / power);
         power *= 10.0f;
@@ -52,6 +54,8 @@ namespace test
       }
       number += decimal;
     }
+    if (Fixed::is_convertable(number * sign) == false)
+      return false;
     n = Fixed(number * sign);
     return true;
   }
@@ -106,9 +110,8 @@ namespace my
   int  InteractiveEvaluate(std::string &input)
   {
     Fixed                       n;
-    std::string::const_iterator it = input.begin();
 
-    if (!test::ParseNumber(it, input.end(), n))
+    if (!test::ParseNumber(input, n))
       return EXIT_FAILURE;
     std::cout << "n is printed as " << n << std::endl;
     std::cout << "n is " << n.toInt() << " as integer" << std::endl;
