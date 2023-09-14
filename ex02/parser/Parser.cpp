@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 21:30:06 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/13 23:12:51 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/14 15:25:35 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,7 @@ namespace parser
     result.is_valid() ? sign = -1 : sign = 1;
     if (!std::isdigit(result.string()[0]))
     {
+      result.set_value(0);
       result.set_valid(false);
       return result;
     }
