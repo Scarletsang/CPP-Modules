@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=fragtrap
+NAME:=diamondtrap
 
 CC:=g++
 CFLAGS= -std=c++98 -Wall -Wextra -Werror -Wno-implicit-fallthrough

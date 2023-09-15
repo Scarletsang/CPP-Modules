@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:49:10 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:07:09 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/15 19:05:10 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,19 @@
 
 #include <iostream>
 
-ScavTrap::ScavTrap() : ClapTrap(100, 50, 20)
+ScavTrap::ScavTrap()
+  :  ClapTrap(ScavTrap::kDefaultHitPoints,
+              ScavTrap::kDefaultEnergyPoints,
+              ScavTrap::kDefaultAttackDamage)
 {
   std::cout << "Scavtrap default constructor called" << std::endl;
 }
 
-ScavTrap::ScavTrap(std::string name) : ClapTrap(name, 100, 50, 20)
+ScavTrap::ScavTrap(std::string name)
+  :  ClapTrap(name,
+              ScavTrap::kDefaultHitPoints,
+              ScavTrap::kDefaultEnergyPoints,
+              ScavTrap::kDefaultAttackDamage)
 {
   std::cout << "Scavtrap constructor called" << std::endl;
 }

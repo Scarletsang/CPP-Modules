@@ -6,29 +6,22 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:20:43 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/15 19:10:10 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "FragTrap.hpp"
+#include "DiamondTrap.hpp"
 
 int main(void)
 {
-  FragTrap fragtrap("hello");
+  DiamondTrap diamondTrap("diamondTrap");
 
-  fragtrap.attack("enemy");
-  fragtrap.takeDamage(5);
-  fragtrap.beRepaired(5);
-  fragtrap.highFivesGuys();
-  fragtrap.takeDamage(10);
-  fragtrap.takeDamage(100);
-  fragtrap.beRepaired(100);
-  fragtrap.attack("enemy");
-  fragtrap.takeDamage(5);
-  fragtrap.beRepaired(5);
-  fragtrap.takeDamage(10);
-  fragtrap.highFivesGuys();
-  fragtrap.takeDamage(100);
-  fragtrap.beRepaired(100);
+  diamondTrap.attack("target");
+  diamondTrap.takeDamage(10);
+  diamondTrap.beRepaired(10);
+  diamondTrap.whoAmI();
+  diamondTrap.guardGate();
+  diamondTrap.highFivesGuys();
+  diamondTrap.whoAmI();
   return 0;
 }

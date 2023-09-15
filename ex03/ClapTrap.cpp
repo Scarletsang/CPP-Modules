@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:11:28 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:05:54 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/15 19:02:48 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@
 
 ClapTrap::ClapTrap()
   : name_("without a name"),
-    hit_points_(10),
-    energy_points_(10),
-    attack_damage_(0)
+    hit_points_(kDefaultHitPoints),
+    energy_points_(kDefaultEnergyPoints),
+    attack_damage_(kDefaultAttackDamage)
 {
   std::cout << "ClapTrap default constructor called" << std::endl;
 }
 
 ClapTrap::ClapTrap(std::string name)
   : name_(name),
-    hit_points_(10),
-    energy_points_(10),
-    attack_damage_(0)
+    hit_points_(kDefaultHitPoints),
+    energy_points_(kDefaultEnergyPoints),
+    attack_damage_(kDefaultAttackDamage)
 {
   std::cout << "ClapTrap constructor called" << std::endl;
 }

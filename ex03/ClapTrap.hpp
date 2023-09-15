@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:06:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:04:14 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/15 18:58:22 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@
 class ClapTrap
 {
   public:
+    static const int kDefaultHitPoints = 10;
+    static const int kDefaultEnergyPoints = 10;
+    static const int kDefaultAttackDamage = 0;
+
     ClapTrap();
     ClapTrap(std::string name);
     ClapTrap(int hit_points, int energy_points, int attack_damage);

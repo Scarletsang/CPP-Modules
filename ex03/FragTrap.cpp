@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 21:18:54 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:19:49 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/15 19:04:15 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,18 @@
 #include <iostream>
 
 FragTrap::FragTrap()
-  : ClapTrap(100, 10, 30)
+  : ClapTrap(FragTrap::kDefaultHitPoints,
+             FragTrap::kDefaultEnergyPoints,
+             FragTrap::kDefaultAttackDamage)
 {
   std::cout << "FragTrap default constructor called" << std::endl;
 }
 
 FragTrap::FragTrap(std::string name)
-  : ClapTrap(name, 100, 10, 30)
+  : ClapTrap(name,
+             FragTrap::kDefaultHitPoints,
+             FragTrap::kDefaultEnergyPoints,
+             FragTrap::kDefaultAttackDamage)
 {
   std::cout << "FragTrap constructor called" << std::endl;
 }

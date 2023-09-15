@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 21:26:21 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:26:47 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/15 19:08:29 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ class DiamondTrap : public ScavTrap, public FragTrap
     DiamondTrap(const DiamondTrap& copy);
     ~DiamondTrap();
     DiamondTrap& operator=(const DiamondTrap& copy);
+
+    void  attack(const std::string& target);
 
     void  whoAmI();
 

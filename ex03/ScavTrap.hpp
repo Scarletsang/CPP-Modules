@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:47:30 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:26:03 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/15 18:59:24 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 class ScavTrap : public virtual ClapTrap
 {
   public:
+    static const int kDefaultHitPoints = 100;
+    static const int kDefaultEnergyPoints = 50;
+    static const int kDefaultAttackDamage = 20;
+
     ScavTrap();
     ScavTrap(std::string name);
     ScavTrap(const ScavTrap& copy);
