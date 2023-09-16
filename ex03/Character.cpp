@@ -6,41 +6,44 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 20:40:40 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 20:44:03 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/16 22:37:29 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Character.hpp"
+#include "Vector.hpp"
+#include "materias/AMateria.hpp"
 
-Character::Character() : name_("no one") {}
+Character::Character()
+  : name_("no one"), ground_(Vector<AMateria *>(4)) {}
 
 Character::Character(std::string name)
-  : name_(name) {}
+  : name_(name), ground_(Vector<AMateria *>(4)) {}
 
 Character::Character(const Character &copy)
 {
-  *this = copy;
+  reset();
+  name_ = copy.name_;
+  for (int i = 0; i < 4; i++)
+  {
+    inventory_[i] = copy.inventory_[i]->clone();
+  }
 }
 
 Character::~Character()
 {
-  for (int i = 0; i < 4; i++)
-  {
-    if (inventory_[i])
-      delete inventory_[i];
-  }
+  reset();
 }
 
-Character &Character::operator=(const Character &op)
+Character &Character::operator=(const Character &character)
 {
-  if (this == &op)
+  if (this == &character)
     return (*this);
-  name_ = op.name_;
+  reset();
+  name_ = character.name_;
   for (int i = 0; i < 4; i++)
   {
-    if (inventory_[i])
-      delete inventory_[i];
-    inventory_[i] = op.inventory_[i]->clone();
+    inventory_[i] = character.inventory_[i]->clone();
   }
   return (*this);
 }
@@ -60,4 +63,42 @@ void Character::equip(AMateria* m)
       return ;
     }
   }
+}
+
+void  Character::unequip(int idx)
+{
+  if (idx < 0 || idx > 3)
+    return ;
+  if (inventory_[idx])
+  {
+    ground_.push_back(inventory_[idx]);
+    inventory_[idx] = NULL;
+  }
+}
+
+void  Character::use(int idx, ICharacter& target)
+{
+  if (idx < 0 || idx > 3)
+    return ;
+  if (inventory_[idx])
+  {
+    inventory_[idx]->use(target);
+    delete inventory_[idx];
+    inventory_[idx] = NULL;
+  }
+}
+
+void  Character::reset()
+{
+  for (int i = 0; i < 4; i++)
+  {
+    if (inventory_[i])
+      delete inventory_[i];
+    inventory_[i] = NULL;
+  }
+  for (size_t i = 0; i < ground_.size(); i++)
+  {
+    delete ground_[i];
+  }
+  ground_.clear();
 }

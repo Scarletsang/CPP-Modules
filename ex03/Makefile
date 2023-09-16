@@ -11,6 +11,7 @@ ifdef FSANITIZE
 	CFLAGS+= -g3 -fsanitize=address
 	LDFLAGS+= -g3 -fsanitize=address
 endif
+INCLUDE_DIR:= $(CURDIR)
 
 ###################################
 ######     Source files     #######
@@ -20,11 +21,11 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
-	AMateria.cpp \
-	Ice.cpp \
-	Cure.cpp \
+	materias/AMateria.cpp \
+	materias/Ice.cpp \
+	materias/Cure.cpp \
 	Character.cpp \
-	MaterialSource.cpp \
+	MateriaSource.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 

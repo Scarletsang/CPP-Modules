@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 20:37:02 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 20:39:33 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/16 22:56:18 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #include <string>
 #include <iostream>
+
+#include "ICharacter.hpp"
 
 AMateria::AMateria() : type_("nothing") {}
 
