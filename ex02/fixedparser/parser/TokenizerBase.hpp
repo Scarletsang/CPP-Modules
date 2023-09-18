@@ -6,13 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 13:23:13 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/18 08:05:05 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 11:38:28 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "../Stack.hpp"
+#include "./Stack.hpp"
 
 #include <string>
 

@@ -6,13 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 23:21:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/17 23:27:05 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 11:38:41 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "TokenizerBase.hpp"
+#include "./TokenizerBase.hpp"
 
 template <typename Token>
 class Tokenizer : public TokenizerBase

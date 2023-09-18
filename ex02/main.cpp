@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 19:40:57 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 11:33:46 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
+#include "fixedparser/FixedTokenizer.hpp"
+#include "fixedparser/FixedParser.hpp"
 
 #include <cstdlib>
 #include <cstring>
@@ -66,9 +68,10 @@ namespace my
 
   int  InteractiveEvaluate(std::string &input)
   {
-    Fixed                       n(4);
-
-    (void)input;
+    FixedTokenizer  tokenizer(input);
+    FixedParser     parser(tokenizer);
+    Fixed           n = parser.parse();
+    
     std::cout << "n is printed as " << n << std::endl;
     std::cout << "n is " << n.toInt() << " as integer" << std::endl;
     std::cout << "n is " << n.toFloat() << " as float" << std::endl;

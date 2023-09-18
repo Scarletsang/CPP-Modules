@@ -6,14 +6,19 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 22:23:50 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/17 23:45:31 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:59:12 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "FixedTokenizer.hpp"
-#include "FixedToken.hpp"
+#include "fixedparser/FixedTokenizer.hpp"
+#include "fixedparser/FixedToken.hpp"
+
+#include <string>
 
 FixedTokenizer::FixedTokenizer() : Tokenizer() {}
+
+FixedTokenizer::FixedTokenizer(std::string &string)
+  : Tokenizer(string) {}
 
 FixedTokenizer::FixedTokenizer(const FixedTokenizer& value)
   : Tokenizer(value) {}
@@ -57,12 +62,12 @@ FixedToken* FixedTokenizer::next()
     return tokens_.pop();
   else if (is_end())
     return NULL;
+  else if (string_[pos_] == '-')
+    return tokenize_one(FixedToken::kMinus);
   else if (std::isdigit(string_[pos_]))
     return tokenize_number();
   else if (string_[pos_] == '+')
     return tokenize_one(FixedToken::kPlus);
-  else if (string_[pos_] == '-')
-    return tokenize_one(FixedToken::kMinus);
   else if (string_[pos_] == '*')
     return tokenize_one(FixedToken::kMultiply);
   else if (string_[pos_] == '/')

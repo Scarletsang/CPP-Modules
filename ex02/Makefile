@@ -11,6 +11,7 @@ ifdef FSANITIZE
 	CFLAGS+= -g3 -fsanitize=address -DDEBUG=1
 	LDFLAGS+= -g3 -fsanitize=address
 endif
+INCLUDE_DIR = .
 
 ###################################
 ######     Source files     #######
@@ -20,8 +21,9 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
-	parser/ResultInternal.cpp \
-	parser/Parser.cpp \
+	fixedparser/parser/TokenizerBase.cpp \
+	fixedparser/FixedParser.cpp \
+	fixedparser/FixedTokenizer.cpp \
 	Fixed.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)

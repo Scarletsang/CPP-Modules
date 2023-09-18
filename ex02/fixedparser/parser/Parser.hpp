@@ -6,13 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 22:41:28 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/18 00:20:24 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:42:52 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "tokenizer/Tokenizer.hpp"
+#include "./Tokenizer.hpp"
 
 template <typename Token, typename Result>
 class Parser
@@ -51,7 +51,7 @@ class Parser
 
     bool  has_tokenizer_error() const
     {
-      return !tokenizer_->is_valid()
+      return !tokenizer_->is_valid();
     }
 
     bool  has_malloc_error() const
@@ -62,6 +62,11 @@ class Parser
     bool  has_syntax_error() const
     {
       return syntax_error_;
+    }
+
+    bool  has_error() const
+    {
+      return has_tokenizer_error() || has_malloc_error() || has_syntax_error();
     }
 
     bool  is_end() const
@@ -88,6 +93,7 @@ class Parser
       else if (!tokenizer_->is_valid())
       {
         syntax_error_ = true;
+        delete token;
         return EXIT_FAILURE;
       }
       else
@@ -105,7 +111,7 @@ class Parser
       return Result();
     }
 
-    Tokenizer<Token>  &tokenizer_;
+    Tokenizer<Token>  *tokenizer_;
     Stack<Token *>    stack_;
     bool              syntax_error_;
     bool              malloc_error_;

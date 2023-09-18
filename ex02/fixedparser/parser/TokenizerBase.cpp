@@ -6,11 +6,11 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 13:37:33 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/17 23:29:47 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:11:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "TokenizerBase.hpp"
+#include "./TokenizerBase.hpp"
 
 #include <string>
 
@@ -22,7 +22,7 @@ TokenizerBase::TokenizerBase()
 TokenizerBase::TokenizerBase(std::string string)
   : string_(string),
     pos_(0),
-    is_valid_(false) {}
+    is_valid_(true) {}
 
 TokenizerBase::TokenizerBase(const TokenizerBase& value)
   : string_(value.string_),
@@ -55,5 +55,5 @@ void  TokenizerBase::set_string(std::string string)
 {
   string_ = string;
   pos_ = 0;
-  is_valid_ = false;
+  is_valid_ = true;
 }

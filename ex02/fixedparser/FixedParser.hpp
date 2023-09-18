@@ -6,20 +6,21 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 22:32:55 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/18 00:17:55 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 11:43:16 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "parser/Parser.hpp"
-#include "FixedToken.hpp"
+#include "fixedparser/parser/Parser.hpp"
+#include "fixedparser/FixedToken.hpp"
 #include "Fixed.hpp"
 
 class FixedParser : public Parser<FixedToken, Fixed>
 {
   public:
     FixedParser(const FixedParser& value);
+    FixedParser(Tokenizer<FixedToken> &tokenizer);
     ~FixedParser();
     const FixedParser& operator=(const FixedParser& value);
 
