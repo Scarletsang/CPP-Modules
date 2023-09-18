@@ -6,13 +6,11 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/18 11:33:46 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 19:07:32 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
-#include "fixedparser/FixedTokenizer.hpp"
-#include "fixedparser/FixedParser.hpp"
 
 #include <cstdlib>
 #include <cstring>
@@ -20,6 +18,76 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+
+namespace test
+{
+  int  ParseNumber(std::string input, Fixed &n)
+  {
+    std::string::iterator it  = input.begin();
+    float sign                = 1.0f;
+    float number              = 0.f;
+
+    if (*it == '-')
+    {
+      it++;
+      sign = -1.0f;
+    }
+    if (!std::isdigit(*it))
+      return 0;
+    while ((it != input.end()) && std::isdigit(*it))
+    {
+      number = number * 10.f + (*it - '0');
+      it++;
+    }
+    if (*it == '.')
+    {
+      float decimal = 0.f;
+      float power   = 10.0f;
+
+      it++;
+      while ((it != input.end()) && std::isdigit(*it))
+      {
+        decimal += ((*it - '0') / power);
+        power *= 10.0f;
+        it++;
+      }
+      number += decimal;
+    }
+    if (Fixed::is_convertable(number * sign) == false)
+      return 0;
+    n = Fixed(number * sign);
+    return it - input.begin();
+  }
+
+  int ParseExpression(std::string input, Fixed &n)
+  {
+    Fixed a;
+    Fixed b;
+    char  op;
+    int   pos = test::ParseNumber(input, a);
+
+    while (input[pos] == ' ')
+      pos++;
+    op = input[pos];
+    if ((op != '+') && (op != '-') && (op != '*') && (op != '/'))
+      return 0;
+    pos++;
+    while (input[pos] == ' ')
+      pos++;
+    int pos2 = test::ParseNumber(input.substr(pos), b);
+    if (pos2 == 0)
+      return 0;
+    if (op == '+')
+      n = a + b;
+    else if (op == '-')
+      n = a - b;
+    else if (op == '*')
+      n = a * b;
+    else if (op == '/')
+      n = a / b;
+    return pos + pos2;
+  }
+} // namespace test
 
 namespace printer
 {
@@ -68,10 +136,10 @@ namespace my
 
   int  InteractiveEvaluate(std::string &input)
   {
-    FixedTokenizer  tokenizer(input);
-    FixedParser     parser(tokenizer);
-    Fixed           n = parser.parse();
-    
+    Fixed n;
+  
+    if (test::ParseExpression(input, n) == 0)
+      return EXIT_FAILURE;
     std::cout << "n is printed as " << n << std::endl;
     std::cout << "n is " << n.toInt() << " as integer" << std::endl;
     std::cout << "n is " << n.toFloat() << " as float" << std::endl;

@@ -21,9 +21,6 @@ INCLUDE_DIR = .
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
-	fixedparser/parser/TokenizerBase.cpp \
-	fixedparser/FixedParser.cpp \
-	fixedparser/FixedTokenizer.cpp \
 	Fixed.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
