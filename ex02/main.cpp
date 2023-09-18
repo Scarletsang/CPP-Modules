@@ -6,17 +6,15 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/18 19:07:32 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 19:15:15 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
 
 #include <cstdlib>
-#include <cstring>
 
 #include <iostream>
-#include <iomanip>
 #include <string>
 
 namespace test
@@ -114,14 +112,18 @@ namespace my
     Fixed const b( Fixed( 5.05f ) * Fixed( 2 ) );
     Fixed const c( Fixed( 10.05f ) / Fixed( 2 ) );
 
-    std::cout << a << std::endl;
-    std::cout << ++a << std::endl;
-    std::cout << a << std::endl;
-    std::cout << a++ << std::endl;
-    std::cout << a << std::endl;
-    std::cout << b << std::endl;
-    std::cout << Fixed::max( a, b ) << std::endl;
-    std::cout << c << std::endl;
+    std::cout << "a   : " << a << std::endl;
+    std::cout << "++a : " << ++a << std::endl;
+    std::cout << "a   : " << a << std::endl;
+    std::cout << "a++ : " << a++ << std::endl;
+    std::cout << "a   : " << a << std::endl;
+    std::cout << "--a : " << --a << std::endl;
+    std::cout << "a   : " << a << std::endl;
+    std::cout << "a-- : " << a-- << std::endl;
+    std::cout << "a   : " << a << std::endl;
+    std::cout << "b   : " << b << std::endl;
+    std::cout << "Fixed::max(a,b): " << Fixed::max( a, b ) << std::endl;
+    std::cout << "c   : " << c << std::endl;
   }
 
   void  InteractivePrompt()
