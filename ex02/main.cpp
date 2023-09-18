@@ -6,13 +6,14 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 21:30:49 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/18 19:15:15 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 19:27:28 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
 
 #include <cstdlib>
+#include <cstring>
 
 #include <iostream>
 #include <string>

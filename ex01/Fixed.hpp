@@ -6,15 +6,17 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:38:07 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 19:43:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/18 19:27:06 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <cmath>
+
 #include <iostream>
 #include <ostream>
-#include <cmath>
+#include <limits>
 
 class Fixed
 {
