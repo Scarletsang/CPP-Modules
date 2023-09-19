@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:42:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 20:02:55 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 22:57:59 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ Cat::Cat() : Animal("Cat")
   std::cout << "Cat default constructor called" << std::endl;
 }
 
-Cat::Cat(const Cat &copy)
+Cat::Cat(const Cat &copy) : Animal(copy)
 {
   std::cout << "Cat copy constructor called" << std::endl;
-  *this = copy;
 }
 
 Cat::~Cat()

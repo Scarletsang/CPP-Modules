@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:44:27 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 19:44:42 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 22:57:14 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ Dog::Dog() : Animal("Dog")
   std::cout << "Dog default constructor called" << std::endl;
 }
 
-Dog::Dog(const Dog &copy)
+Dog::Dog(const Dog &copy) : Animal(copy)
 {
   std::cout << "Dog copy constructor called" << std::endl;
-  *this = copy;
 }
 
 Dog::~Dog()
