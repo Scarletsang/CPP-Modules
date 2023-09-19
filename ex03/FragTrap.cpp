@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 21:18:54 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 19:04:15 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:56:47 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,8 @@ FragTrap& FragTrap::operator=(const FragTrap& copy)
 void  FragTrap::highFivesGuys()
 {
   if (isActive("high fives guys"))
+  {
     std::cout << "Fragtrap " << name_ << " high fives guys" << std::endl;
+    energy_points_--;
+  }
 }
