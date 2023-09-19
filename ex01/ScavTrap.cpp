@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:49:10 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:07:09 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:22:58 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,9 @@ ScavTrap::ScavTrap(std::string name) : ClapTrap(name, 100, 50, 20)
   std::cout << "Scavtrap constructor called" << std::endl;
 }
 
-ScavTrap::ScavTrap(const ScavTrap& copy)
+ScavTrap::ScavTrap(const ScavTrap& copy) : ClapTrap(copy)
 {
   std::cout << "Scavtrap copy constructor called" << std::endl;
-  *this = copy;
 }
 
 ScavTrap::~ScavTrap()
@@ -49,11 +48,17 @@ ScavTrap& ScavTrap::operator=(const ScavTrap& copy)
 void  ScavTrap::attack(const std::string& target)
 {
   if (isActive("attack"))
+  {
     std::cout << "Scavtrap " << name_ << " attack " << target << ", causing " << attack_damage_ << " points of damage!" << std::endl;
+    energy_points_--;
+  }
 }
 
 void  ScavTrap::guardGate()
 {
   if (isActive("guard gate"))
+  {
     std::cout << "Scavtrap " << name_ << " has entered in Gate keeper mode" << std::endl;
+    energy_points_--;
+  }
 }
