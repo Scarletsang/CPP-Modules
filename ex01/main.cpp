@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 13:05:50 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:49:14 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ namespace interactive
         std::cout << "Invalid action, try again: ";
       else
       {
+        battle.printTurn();
         if (action == "A")
           battle.attack();
         else
@@ -67,7 +68,7 @@ namespace interactive
     ScavTrap player1(player_name);
     ScavTrap player2("Scav dude");
 
-    Battle  battle(player1, player2);
+    Battle  battle(player1, player2, 50, 3, 15, 20);
     while (!battle.isEnd() && std::cin.good())
     {
       if (PromptAction(battle))
@@ -75,6 +76,7 @@ namespace interactive
       battle.print();
       std::cout << "Opponent deciding moves..." << std::endl << std::endl;
       sleep(1);
+      battle.printTurn();
       battle.randomAction();
       battle.print();
     }
