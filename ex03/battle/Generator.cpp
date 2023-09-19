@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ScavAvatorPrinter.hpp                              :+:      :+:    :+:   */
+/*   Generator.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 12:01:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 14:54:26 by htsang           ###   ########.fr       */
+/*   Created: 2023/09/19 12:04:53 by htsang            #+#    #+#             */
+/*   Updated: 2023/09/19 14:54:22 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
-
-#include "../AvatorPrinter.hpp"
+#include "Generator.hpp"
 
 #include <iostream>
+#include <iomanip>
 
-class ScavAvatorPrinter : public AvatorPrinter
+Generator::Generator() : index_(0) {}
+
+Generator::Generator(const Generator& value) : index_(value.index_) {}
+
+const Generator& Generator::operator=(const Generator& value)
 {
-  public:
-    ScavAvatorPrinter();
-    ScavAvatorPrinter(const ScavAvatorPrinter& value);
-    ~ScavAvatorPrinter();
-    const ScavAvatorPrinter& operator=(const ScavAvatorPrinter& value);
-
-    int   next();
-    bool  isEnd() const;
-};
+  index_ = value.index_;
+  return *this;
+}

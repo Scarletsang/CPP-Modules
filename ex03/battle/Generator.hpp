@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   DiamondAvatorPrinter copy.hpp                         :+:      :+:    :+:   */
+/*   Generator.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 12:01:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 14:03:58 by htsang           ###   ########.fr       */
+/*   Created: 2023/09/19 11:54:18 by htsang            #+#    #+#             */
+/*   Updated: 2023/09/19 19:26:58 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "../AvatorPrinter.hpp"
-
-#include <iostream>
-
-class DiamondAvatorPrinter : public AvatorPrinter
+class Generator
 {
   public:
-    DiamondAvatorPrinter();
-    DiamondAvatorPrinter(const DiamondAvatorPrinter& value);
-    ~DiamondAvatorPrinter();
-    const DiamondAvatorPrinter& operator=(const DiamondAvatorPrinter& value);
+    Generator();
+    Generator(const Generator& value);
+    const Generator& operator=(const Generator& value);
+    virtual ~Generator() {}
 
-    int   next();
-    bool  isEnd() const;
+    virtual int next() = 0;
+    virtual bool isEnd() const = 0;
+  
+  protected:
+    int index_;
 };

@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 21:27:40 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 19:09:04 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 22:23:28 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,12 @@ DiamondTrap::DiamondTrap(std::string name)
 }
 
 DiamondTrap::DiamondTrap(const DiamondTrap& copy)
+  : ClapTrap(copy),
+    ScavTrap(copy),
+    FragTrap(copy),
+    name_(copy.name_)
 {
   std::cout << "DiamondTrap copy constructor called" << std::endl;
-  *this = copy;
 }
 
 DiamondTrap::~DiamondTrap()

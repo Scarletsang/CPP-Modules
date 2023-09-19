@@ -25,9 +25,7 @@ MAIN_SRC:= \
 	FragTrap.cpp \
 	DiamondTrap.cpp \
 	battle/Generator.cpp \
-	battle/avator/ScavAvatorPrinter.cpp \
-	battle/avator/FragAvatorPrinter.cpp \
-	battle/avator/DiamondAvatorPrinter.cpp \
+	battle/AvatorPrinter.cpp \
 	battle/StatusPrinter.cpp \
 	battle/Battle.cpp \
 	main.cpp

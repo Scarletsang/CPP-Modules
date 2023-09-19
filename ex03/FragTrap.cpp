@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 21:18:54 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 13:56:47 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 22:24:19 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,9 @@ FragTrap::FragTrap(std::string name)
   std::cout << "FragTrap constructor called" << std::endl;
 }
 
-FragTrap::FragTrap(const FragTrap& copy)
+FragTrap::FragTrap(const FragTrap& copy) : ClapTrap(copy)
 {
   std::cout << "FragTrap copy constructor called" << std::endl;
-  *this = copy;
 }
 
 FragTrap::~FragTrap()

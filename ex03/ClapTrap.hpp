@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:06:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 13:55:46 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 22:17:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class ClapTrap
     ClapTrap(int hit_points, int energy_points, int attack_damage);
     ClapTrap(std::string name, int hit_points, int energy_points, int attack_damage);
     ClapTrap(const ClapTrap& copy);
-    ~ClapTrap();
+    virtual ~ClapTrap();
     ClapTrap& operator=(const ClapTrap& copy);
 
     void  attack(const std::string& target);

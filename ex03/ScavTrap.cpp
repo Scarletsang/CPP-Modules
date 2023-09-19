@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:49:10 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 13:57:16 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 22:24:28 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,9 @@ ScavTrap::ScavTrap(std::string name)
   std::cout << "Scavtrap constructor called" << std::endl;
 }
 
-ScavTrap::ScavTrap(const ScavTrap& copy)
+ScavTrap::ScavTrap(const ScavTrap& copy) : ClapTrap(copy)
 {
   std::cout << "Scavtrap copy constructor called" << std::endl;
-  *this = copy;
 }
 
 ScavTrap::~ScavTrap()

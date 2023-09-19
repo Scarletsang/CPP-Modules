@@ -6,18 +6,18 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 12:09:05 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 14:54:36 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 20:29:11 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "AvatorPrinter.hpp"
+#include "Generator.hpp"
 #include "../ClapTrap.hpp"
 
 #include <iostream>
 
-class StatusPrinter : public AvatorPrinter
+class StatusPrinter : public Generator
 {
   public:
     StatusPrinter(ClapTrap &claptrap);

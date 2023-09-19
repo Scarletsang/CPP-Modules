@@ -6,9 +6,11 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:47:30 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 18:59:24 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 20:45:15 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#pragma once
 
 #include "ClapTrap.hpp"
 

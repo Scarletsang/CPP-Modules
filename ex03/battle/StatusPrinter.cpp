@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 12:08:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 14:53:53 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 20:29:06 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 #include <iomanip>
 
 StatusPrinter::StatusPrinter(ClapTrap &claptrap)
-  : AvatorPrinter(), claptrap_(claptrap) {}
+  : Generator(), claptrap_(claptrap) {}
 
 StatusPrinter::StatusPrinter(const StatusPrinter& value)
-  : AvatorPrinter(), claptrap_(value.claptrap_) {}
+  : Generator(), claptrap_(value.claptrap_) {}
 
 StatusPrinter::~StatusPrinter() {}
 
