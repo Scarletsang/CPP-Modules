@@ -21,6 +21,10 @@ endif
 
 MAIN_SRC:= \
 	ClapTrap.cpp \
+	battle/Generator.cpp \
+	battle/AvatorPrinter.cpp \
+	battle/StatusPrinter.cpp \
+	battle/Battle.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 
