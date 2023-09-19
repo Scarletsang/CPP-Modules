@@ -6,13 +6,16 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 20:40:40 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/16 22:37:29 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 00:16:16 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Character.hpp"
 #include "Vector.hpp"
 #include "materias/AMateria.hpp"
+
+#include <string>
+#include <iostream>
 
 Character::Character()
   : name_("no one"), ground_(Vector<AMateria *>(4)) {}
@@ -86,6 +89,40 @@ void  Character::use(int idx, ICharacter& target)
     delete inventory_[idx];
     inventory_[idx] = NULL;
   }
+}
+
+void  Character::printInventory() const
+{
+  std::cout << "Inventory: ";
+  for (int i = 0; i < 4; i++)
+  {
+    if (inventory_[i])
+      std::cout << inventory_[i];
+    else
+      std::cout << "empty";
+    if (i < 3)
+      std::cout << ", ";
+  }
+  std::cout << std::endl;
+}
+
+void  Character::printGround() const
+{
+  std::cout << "Ground: ";
+  for (size_t i = 0; i < ground_.size(); i++)
+  {
+    std::cout << ground_[i];
+    if (i < (ground_.size() - 1))
+      std::cout << ", ";
+  }
+  std::cout << std::endl;
+}
+
+void  Character::print() const
+{
+  std::cout << "Character: " << name_ << std::endl;
+  printInventory();
+  printGround();
 }
 
 void  Character::reset()

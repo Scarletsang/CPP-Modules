@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 21:07:23 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/16 21:46:15 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 23:47:52 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class Vector
       delete[] array_;
     }
 
-    Vector &operator=(const Vector &vector)
+    Vector& operator=(const Vector &vector)
     {
       if (this != &vector)
       {
@@ -46,7 +46,14 @@ class Vector
       return (*this);
     }
 
-    T &operator[](size_t index)
+    T&  operator[](size_t index)
+    {
+      if (index >= size_)
+        throw std::out_of_range("Index out of range");
+      return array_[index];
+    }
+
+    T&  operator[](size_t index) const
     {
       if (index >= size_)
         throw std::out_of_range("Index out of range");

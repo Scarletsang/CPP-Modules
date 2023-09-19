@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 20:31:09 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/16 22:56:24 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 23:30:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "ICharacter.hpp"
 
 #include <string>
+#include <iostream>
 
 class AMateria
 {
@@ -33,3 +34,5 @@ class AMateria
   protected:
     std::string type_;
 };
+
+std::ostream& operator<<(std::ostream& out, const AMateria &amateria);

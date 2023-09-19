@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:44:13 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/16 22:48:44 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 23:27:48 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MateriaSource.hpp"
+
+#include <iostream>
 
 MateriaSource::MateriaSource()
 {
@@ -70,4 +72,19 @@ AMateria* MateriaSource::createMateria(std::string const & type)
       return (materias_[i]->clone());
   }
   return (NULL);
+}
+
+void  MateriaSource::print() const
+{
+  std::cout << "MateriaSource: ";
+  for (int i = 0; i < 4; i++)
+  {
+    if (materias_[i])
+      std::cout << *materias_[i];
+    else
+      std::cout << "empty";
+    if (i < 3)
+      std::cout << ", ";
+  }
+  std::cout << std::endl;
 }
