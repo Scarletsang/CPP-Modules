@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:06:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/14 21:04:14 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:28:20 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,17 @@ class ClapTrap
     void  beRepaired(unsigned int amount);
     void  takeDamage(unsigned int amount);
 
+    std::string getName() const;
+    int         getHitPoints() const;
+    int         getEnergyPoints() const;
+    int         getAttackDamage() const;
+
   protected:
+    bool  isActive(const char *action) const;
+
     std::string name_;
     int hit_points_;
     int energy_points_;
     int attack_damage_;
 
-    bool  isActive(const char *action) const;
 };
