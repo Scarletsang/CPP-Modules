@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 12:05:38 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 13:33:19 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/19 14:03:31 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ int   AvatorPrinter::next()
   if (index_ == 0)
     std::cout << std::setw(3) << " " << ".-----.  " << std::setw(4) << " ";
   else if (index_ == 1)
-    std::cout << std::setw(3) << " " << " / - x \\ " << std::setw(4) << " ";
+    std::cout << std::setw(3) << " " << " / $ $ \\ " << std::setw(4) << " ";
   else if (index_ == 2)
-    std::cout << std::setw(3) << " " << "|  (^)  |" << std::setw(4) << " ";
+    std::cout << std::setw(3) << " " << "|   ∆   |" << std::setw(4) << " ";
   else if (index_ == 3)
-    std::cout << std::setw(3) << " " << "|   U   |" << std::setw(4) << " ";
+    std::cout << std::setw(3) << " " << "|  /w\\  |" << std::setw(4) << " ";
   else if (index_ == 4)
     std::cout << std::setw(3) << " " << " \\_____/ " << std::setw(4) << " ";
   else if (index_ == 5)
