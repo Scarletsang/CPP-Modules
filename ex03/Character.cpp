@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 20:40:40 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/20 14:37:12 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 17:48:38 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,23 @@
 #include <iostream>
 
 Character::Character()
-  : name_("no one"), ground_(Vector<AMateria *>(4)) {}
+  : name_("no one"),
+    ground_(Vector<AMateria *>(4))
+{
+  for (int i = 0; i < 4; i++)
+  {
+    inventory_[i] = NULL;
+  }
+}
 
 Character::Character(std::string name)
-  : name_(name), ground_(Vector<AMateria *>(4)) {}
+  : name_(name), ground_(Vector<AMateria *>(4))
+{
+  for (size_t i = 0; i < 4; i++)
+  {
+    inventory_[i] = NULL;
+  }
+}
 
 Character::Character(const Character &copy)
 {
