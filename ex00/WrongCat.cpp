@@ -29,15 +29,15 @@ WrongCat::~WrongCat()
   std::cout << "WrongCat destructor called" << std::endl;
 }
 
-WrongCat &WrongCat::operator=(const WrongCat &op)
+WrongCat &WrongCat::operator=(const WrongCat &wrong_cat)
 {
-  std::cout << "WrongCat assignation operator called" << std::endl;
-  if (this != &op)
-    this->type = op.type;
+  std::cout << "WrongCat assignment operator called" << std::endl;
+  if (this != &wrong_cat)
+    this->type = wrong_cat.type;
   return (*this);
 }
 
 void WrongCat::makeSound() const
 {
-  std::cout << "WrongCat make sound" << std::endl;
+  std::cout << "WrongCat meow" << std::endl;
 }

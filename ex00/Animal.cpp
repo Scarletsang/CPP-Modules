@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:41:28 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 19:42:18 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 19:32:12 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,9 @@ Animal::Animal(std::string type) : type(type)
   std::cout << "Animal constructor called" << std::endl;
 }
 
-Animal::Animal(const Animal &copy)
+Animal::Animal(const Animal &copy) : type(copy.type)
 {
   std::cout << "Animal copy constructor called" << std::endl;
-  *this = copy;
 }
 
 Animal::~Animal()

@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:44:27 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 20:09:03 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 21:36:47 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Dog::Dog() : Animal("Dog"), brain_(new Brain())
   std::cout << "Dog default constructor called" << std::endl;
 }
 
-Dog::Dog(const Dog &copy) : Animal(copy), brain_(copy.brain_)
+Dog::Dog(const Dog &copy) : Animal(copy), brain_(new Brain(*copy.brain_))
 {
   std::cout << "Dog copy constructor called" << std::endl;
 }
@@ -43,5 +43,5 @@ Dog &Dog::operator=(const Dog &dog)
 
 void Dog::makeSound() const
 {
-  std::cout << "Dog make sound" << std::endl;
+  std::cout << "Bark" << std::endl;
 }

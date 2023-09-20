@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:42:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 22:57:59 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 18:38:53 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ Cat &Cat::operator=(const Cat &copy)
 
 void Cat::makeSound() const
 {
-  std::cout << "Cat make sound" << std::endl;
+  std::cout << "meow" << std::endl;
 }

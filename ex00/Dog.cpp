@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:44:27 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 22:57:14 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 18:39:00 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ Dog &Dog::operator=(const Dog &op)
 
 void Dog::makeSound() const
 {
-  std::cout << "Dog make sound" << std::endl;
+  std::cout << "bark" << std::endl;
 }

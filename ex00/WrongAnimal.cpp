@@ -24,10 +24,9 @@ WrongAnimal::WrongAnimal(std::string type) : type(type)
   std::cout << "WrongAnimal constructor called" << std::endl;
 }
 
-WrongAnimal::WrongAnimal(const WrongAnimal &copy)
+WrongAnimal::WrongAnimal(const WrongAnimal &copy) : type(copy.type)
 {
   std::cout << "WrongAnimal copy constructor called" << std::endl;
-  *this = copy;
 }
 
 WrongAnimal::~WrongAnimal()
@@ -37,7 +36,7 @@ WrongAnimal::~WrongAnimal()
 
 WrongAnimal &WrongAnimal::operator=(const WrongAnimal &op)
 {
-  std::cout << "WrongAnimal assignation operator called" << std::endl;
+  std::cout << "WrongAnimal assignment operator called" << std::endl;
   if (this != &op)
     this->type = op.type;
   return (*this);

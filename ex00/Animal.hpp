@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:36:45 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 19:59:13 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 18:37:47 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ class Animal
     Animal();
     Animal(std::string type);
     Animal(const Animal &copy);
-    ~Animal();
+    virtual ~Animal();
     Animal &operator=(const Animal &op);
 
     std::string getType() const;
-    void makeSound() const;
+    virtual void makeSound() const;
   
   protected:
     std::string type;
