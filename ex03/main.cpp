@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:34:03 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/20 00:13:59 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 14:40:07 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace interactive
     std::string type;
 
     src->print();
-    std::cout << "Enter materia type to learn (ice/cure) Type exit to enter the next session: ";
+    std::cout << "Enter materia type to learn (ice/cure/exit): ";
     std::getline(std::cin, type);
     while (std::cin.good())
     {
@@ -36,11 +36,18 @@ namespace interactive
       else if (type == "cure")
         src->learnMateria(new Cure());
       else if (type == "exit")
+      {
+        std::cout << std::endl;
         return EXIT_SUCCESS;
+      }
       else
+      {
         std::cout << "Invalid materia type. Try again: ";
+        std::getline(std::cin, type);
+        continue;
+      }
       src->print();
-      std::cout << "Enter materia type to learn (ice/cure) Type exit to enter the next session: ";
+      std::cout << "Enter materia type to learn (ice/cure/exit): ";
       std::getline(std::cin, type);
     }
     return EXIT_FAILURE;
@@ -90,7 +97,7 @@ namespace interactive
     while (std::cin.good())
     {
       idx = std::atoi(type.c_str());
-      if (idx >= 0 || idx <= 3)
+      if (idx >= 0 && idx <= 3)
       {
         me->use(idx, *bob);
         return EXIT_SUCCESS;
@@ -112,7 +119,7 @@ namespace interactive
     while (std::cin.good())
     {
       idx = std::atoi(type.c_str());
-      if (idx >= 0 || idx <= 3)
+      if (idx >= 0 && idx <= 3)
       {
         me->unequip(idx);
         return EXIT_SUCCESS;
@@ -130,7 +137,7 @@ namespace interactive
     std::string type;
 
     me->print();
-    std::cout << "Enter your action (equip/use/unequip): ";
+    std::cout << "Enter your action (equip/use/unequip/exit): ";
     std::getline(std::cin, action);
     while (std::cin.good())
     {
@@ -149,6 +156,11 @@ namespace interactive
         if (PromptCharacterUnequip(me))
           return EXIT_FAILURE;
       }
+      else if (action == "exit")
+      {
+        std::cout << std::endl;
+        return EXIT_SUCCESS;
+      }
       else
       {
         std::cout << "Invalid action. Try again: ";
@@ -156,7 +168,7 @@ namespace interactive
         continue;
       }
       me->print();
-      std::cout << "Enter your action (equip/use/unequip): ";
+      std::cout << "Enter your action (equip/use/unequip/exit): ";
       std::getline(std::cin, action);
     }
     return EXIT_SUCCESS;

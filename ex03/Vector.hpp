@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 21:07:23 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 23:47:52 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 14:28:38 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Vector
   public:
     Vector() : array_(new T[8]), size_(0), capacity_(0) {}
 
-    Vector(size_t size) : array_(new T[size]), size_(size), capacity_(size) {}
+    Vector(size_t size) : array_(new T[size]), size_(0), capacity_(size) {}
 
     Vector(const Vector &copy)
     {

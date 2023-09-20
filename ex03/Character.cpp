@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 20:40:40 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/20 00:16:16 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/20 14:37:12 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void  Character::printInventory() const
   for (int i = 0; i < 4; i++)
   {
     if (inventory_[i])
-      std::cout << inventory_[i];
+      std::cout << *inventory_[i];
     else
       std::cout << "empty";
     if (i < 3)
@@ -111,7 +111,10 @@ void  Character::printGround() const
   std::cout << "Ground: ";
   for (size_t i = 0; i < ground_.size(); i++)
   {
-    std::cout << ground_[i];
+    if (ground_[i])
+      std::cout << *ground_[i];
+    else
+      std::cout << "empty";
     if (i < (ground_.size() - 1))
       std::cout << ", ";
   }
@@ -120,9 +123,10 @@ void  Character::printGround() const
 
 void  Character::print() const
 {
-  std::cout << "Character: " << name_ << std::endl;
+  std::cout << std::endl << "Character: " << name_ << std::endl;
   printInventory();
   printGround();
+  std::cout << std::endl;
 }
 
 void  Character::reset()
