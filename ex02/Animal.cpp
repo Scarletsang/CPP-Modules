@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:41:28 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/20 21:38:36 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/21 11:16:09 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ Animal::~Animal()
 
 Animal &Animal::operator=(const Animal &op)
 {
-  std::cout << "Animal assignation operator called" << std::endl;
+  std::cout << "Animal assignment operator called" << std::endl;
   if (this != &op)
     this->type = op.type;
   return (*this);
