@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:44:27 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/20 18:39:00 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/21 10:42:21 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Dog::~Dog()
 
 Dog &Dog::operator=(const Dog &op)
 {
-  std::cout << "Dog assignation operator called" << std::endl;
+  std::cout << "Dog assignment operator called" << std::endl;
   if (this != &op)
     this->type = op.type;
   return (*this);

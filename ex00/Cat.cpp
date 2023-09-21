@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:42:57 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/20 18:38:53 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/21 10:42:25 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Cat::~Cat()
 
 Cat &Cat::operator=(const Cat &copy)
 {
-  std::cout << "Cat assignation operator called" << std::endl;
+  std::cout << "Cat assignment operator called" << std::endl;
   if (this != &copy)
     this->type = copy.type;
   return (*this);
