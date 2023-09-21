@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:56:37 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/15 20:02:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/21 10:41:49 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Brain::~Brain()
 
 Brain &Brain::operator=(const Brain &copy)
 {
-  std::cout << "Brain assignation operator called" << std::endl;
+  std::cout << "Brain assignment operator called" << std::endl;
   if (this != &copy)
   {
     for (int i = 0; i < 100; i++)

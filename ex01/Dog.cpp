@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:44:27 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/20 21:36:47 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/21 10:41:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ Dog::~Dog()
 
 Dog &Dog::operator=(const Dog &dog)
 {
-  std::cout << "Dog assignation operator called" << std::endl;
+  std::cout << "Dog assignment operator called" << std::endl;
   if (this != &dog)
   {
     Animal::operator=(dog);
