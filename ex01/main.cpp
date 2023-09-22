@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:47:15 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/21 11:13:18 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/22 19:42:38 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace printer
 
   void  InteractivePrompt()
   {
-    std::cout << "Enter a command (cat/dog/exit): ";
+    std::cout << "Enter a command (animal/cat/dog/exit): ";
   }
 
   void  InteractivePromptRetry()
@@ -97,6 +97,19 @@ namespace interactive
     return EXIT_SUCCESS;
   }
 
+  int RunAnimal()
+  {
+    printer::Banner("Animal constructor");
+    Animal animal;
+    {
+      printer::Banner("Animal2 constructor");
+      Animal animal2 = animal;
+    }
+    printer::Banner("Animal make sound");
+    animal.makeSound();
+    return EXIT_SUCCESS;
+  }
+
   int Run()
   {
     std::string command;
@@ -105,7 +118,9 @@ namespace interactive
     std::getline(std::cin, command);
     while (std::cin.good())
     {
-      if (command == "cat")
+      if (command == "animal")
+        RunAnimal();
+      else if (command == "cat")
         RunCat();
       else if (command == "dog")
         RunDog();
