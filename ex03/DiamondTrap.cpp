@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 21:27:40 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/19 22:23:28 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/22 21:57:10 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ DiamondTrap::DiamondTrap(std::string name)
   : ClapTrap(name + "_clap_name"),
     ScavTrap(name),
     FragTrap(name),
-    name_(ClapTrap::name_)
+    name_(name)
 {
   std::cout << "DiamondTrap constructor called" << std::endl;
   hit_points_ = FragTrap::kDefaultHitPoints;
