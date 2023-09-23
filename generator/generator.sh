@@ -10,11 +10,12 @@ if [ -z "$2" ]; then
     exit 1
 fi
 
-BASH_SCRIPT_LOCATION="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SRC_LOCATION=$BASH_SCRIPT_LOCATION/../src
+BASH_SCRIPT_LOCATION=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-git submodule add https://github.com/Scarletsang/CPP00_to_04.git $SRC_LOCATION/$1
-cd $SRC_LOCATION/$1
+cd $BASH_SCRIPT_LOCATION/..
+
+git submodule add https://github.com/Scarletsang/CPP-Modules.git src/$1
+cd src/$1
 git checkout -b $1
 rm -r .vscode/ src/ docs/ generator/ .gitmodules README.md
 for ((i = 0; i <= $2; i++)); do
