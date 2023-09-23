@@ -6,34 +6,76 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/23 14:33:54 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/23 23:37:14 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "Bureaucrat.hpp"
+#include "interactive.hpp"
 
 #include <cstdlib>
 
 #include <iostream>
 #include <string>
 
-namespace printer
-{
-  void  InteractivePrompt()
-  {}
-} // namespace printer
-
 namespace interactive
 {
+  int RunIncrement(Bureaucrat* bureaucrat)
+  {
+    try
+    {
+      bureaucrat->incrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    return EXIT_SUCCESS;
+  }
+
+  int RunDecrement(Bureaucrat* bureaucrat)
+  {
+    try
+    {
+      bureaucrat->decrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    return EXIT_SUCCESS;
+  }
+
   int Run()
   {
     std::string input;
+    Bureaucrat* bureaucrat;
 
+    if (parser::ParseUntilCorrect(input, bureaucrat))
+      return EXIT_FAILURE;
     printer::InteractivePrompt();
     std::getline(std::cin, input);
     while (std::cin.good())
     {
+      if (input == "+")
+        RunIncrement(bureaucrat);
+      else if (input == "-")
+        RunDecrement(bureaucrat);
+      else if (input == "exit")
+      {
+        delete bureaucrat;
+        return EXIT_SUCCESS;
+      }
+      else
+      {
+        printer::InteractiveInvalidPrompt();
+        std::getline(std::cin, input);
+      }
+      std::cout << *bureaucrat << std::endl;
       printer::InteractivePrompt();
       std::getline(std::cin, input);
     }
+    delete bureaucrat;
     return EXIT_SUCCESS;
   }
 } // namespace battle
@@ -42,6 +84,27 @@ namespace noninteractive
 {
   int Run()
   {
+    Bureaucrat bureaucrat;
+
+    std::cout << bureaucrat << std::endl;
+    try
+    {
+      bureaucrat.decrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    std::cout << bureaucrat << std::endl;
+    try
+    {
+      bureaucrat.incrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    std::cout << bureaucrat << std::endl;
     return EXIT_SUCCESS;
   }
 } // namespace noninteractive
