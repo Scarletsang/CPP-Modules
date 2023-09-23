@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/23 23:37:14 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/24 00:57:05 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ namespace interactive
       {
         printer::InteractiveInvalidPrompt();
         std::getline(std::cin, input);
+        continue ;
       }
       std::cout << *bureaucrat << std::endl;
       printer::InteractivePrompt();

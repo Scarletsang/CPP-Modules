@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 15:18:22 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/23 23:28:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/09/24 00:42:03 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,19 @@
 
 Bureaucrat::Bureaucrat(): name_("default"), grade_(150) {};
 
-Bureaucrat::Bureaucrat(std::string name, int grade)
-  : name_(name), grade_(grade)
+Bureaucrat::Bureaucrat(std::string name, int grade) : name_(name)
 {
-  if (grade_ < 1)
+  if (grade < 1)
+  {
+    grade_ = 1;
     throw Bureaucrat::GradeTooHighException();
-  else if (grade_ > 150)
+  }
+  else if (grade > 150)
+  {
+    grade_ = 150;
     throw Bureaucrat::GradeTooLowException();
+  }
+  grade_ = grade;
 }
 
 Bureaucrat::Bureaucrat(Bureaucrat const &obj)
