@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=
+NAME:=intern
 
 CC:=g++
 CFLAGS= -std=c++98 -Wall -Wextra -Werror
@@ -20,6 +20,13 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
+	Bureaucrat.cpp \
+	AForm.cpp \
+	forms/ShrubberyCreationForm.cpp \
+	forms/RobotomyRequestForm.cpp \
+	forms/PresidentialPardonForm.cpp \
+	Intern.cpp \
+	interactive.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 
