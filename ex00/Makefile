@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=
+NAME:=static_cast
 
 CC:=g++
 CFLAGS= -std=c++98 -Wall -Wextra -Werror
@@ -20,6 +20,8 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
+	ScalarType.cpp \
+	ScalarConverter.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 
