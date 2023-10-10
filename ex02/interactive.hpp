@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 22:39:24 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/24 01:24:44 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/10 16:36:21 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ namespace interactive
 
     void  CharacterGradePrompt();
 
-    void  FormNamePrompt();
+    void  FormTargetPrompt();
 
-    void  FormGradeSignPrompt();
-
-    void  FormGradeExecutePrompt();
+    void  FormTypePrompt();
 
     void  ChooseFormPrompt();
 
@@ -56,15 +54,35 @@ namespace interactive
 
   namespace parser
   {
+    int Parse(std::string& input, std::string& string);
+
     int Parse(std::string& input, int& number);
 
     int Parse(std::string& input, struct s_index& index);
-
-    int Parse(std::string& input, std::string& string);
     
     int Parse(std::string& input, Bureaucrat*& bureaucrat);
 
-    int Parse(std::string& input, AForm*& form);
+    template <typename T>
+    int ParseWithPrompt(std::string& input, T& target, printer::Printer prompt);
+
+    template <typename T>
+    int Parse(std::string& input, AForm*& form)
+    {
+      std::string target;
+
+      try
+      {
+        if (ParseWithPrompt(input, target, printer::FormTargetPrompt))
+          return EXIT_FAILURE;
+        form = new T(target);
+        return EXIT_SUCCESS;
+      }
+      catch (std::exception& e)
+      {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+      }
+    }
 
     template <typename T>
     int ParseWithPrompt(std::string& input, T& target, printer::Printer prompt)

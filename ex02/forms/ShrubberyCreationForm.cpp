@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 01:32:30 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/24 01:51:56 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/10 16:40:47 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationF
 void  ShrubberyCreationForm::execute(Bureaucrat const & executor) const
 {
   checkExecutable(executor);
-  std::fstream file(getTarget() + "_shrubbery");
+  std::string file_name = getTarget() + "_shrubbery";
+  std::fstream file(file_name.c_str(), std::fstream::out | std::fstream::trunc);
 
   if (!file.is_open())
     std::cerr << "Error: " << getTarget() << "_shrubbery" << " could not be opened nor created." << std::endl;

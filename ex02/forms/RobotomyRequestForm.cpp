@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 01:52:42 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/24 01:56:30 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/10 16:20:30 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RobotomyRequestForm.hpp"
+
+#include <cstdlib>
 
 #include <iostream>
 

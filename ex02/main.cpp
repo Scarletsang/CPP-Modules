@@ -6,12 +6,15 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/24 01:24:44 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/10 16:37:14 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
 #include "AForm.hpp"
+#include "forms/PresidentialPardonForm.hpp"
+#include "forms/RobotomyRequestForm.hpp"
+#include "forms/ShrubberyCreationForm.hpp"
 #include "interactive.hpp"
 #include "Vector.hpp"
 
@@ -52,11 +55,36 @@ namespace interactive
 
   int RunForm(std::string& input, Vector<AForm*>& forms)
   {
-    AForm  *form;
+    AForm*  form = NULL;
 
-    printer::ShowForms(forms);
-    if (parser::ParseUntilCorrect(input, form))
-      return EXIT_FAILURE;
+    printer::FormTypePrompt();
+    std::getline(std::cin, input);
+    while (std::cin.good())
+    {
+      if (input == "presidential")
+      {
+        if (parser::Parse<PresidentialPardonForm>(input, form))
+          return EXIT_FAILURE;
+        break ;
+      }
+      else if (input == "robotomy")
+      {
+        if (parser::Parse<RobotomyRequestForm>(input, form))
+          return EXIT_FAILURE;
+        break ;
+      }
+      else if (input == "shrubbery")
+      {
+        if (parser::Parse<ShrubberyCreationForm>(input, form))
+          return EXIT_FAILURE;
+        break ;
+      }
+      else
+      {
+        printer::InteractiveInvalidPrompt();
+        std::getline(std::cin, input);
+      }
+    }
     forms.push_back(form);
     return EXIT_SUCCESS;
   }
@@ -75,6 +103,23 @@ namespace interactive
     if (parser::ParseWithPrompt(input, index, printer::ChooseFormPrompt))
       return EXIT_FAILURE;
     bureaucrat->signForm(*forms[index.number]);
+    return EXIT_SUCCESS;
+  }
+
+  int RunExecute(std::string& input, Vector<AForm*>& forms, Bureaucrat* bureaucrat)
+  {
+    s_index     index;
+
+    if (forms.size() == 0)
+    {
+      printer::NoFormError();
+      return EXIT_SUCCESS;
+    }
+    printer::ShowForms(forms);
+    index.upper_bound = forms.size();
+    if (parser::ParseWithPrompt(input, index, printer::ChooseFormPrompt))
+      return EXIT_FAILURE;
+    bureaucrat->executeForm(*forms[index.number]);
     return EXIT_SUCCESS;
   }
 
@@ -110,6 +155,8 @@ namespace interactive
         exit_code = RunForm(input, forms);
       else if (input == "sign")
         exit_code = RunSign(input, forms, bureaucrat);
+      else if (input == "execute")
+        exit_code = RunExecute(input, forms, bureaucrat);
       else if (input == "print")
       {
         std::cout << *bureaucrat << std::endl;
@@ -161,10 +208,15 @@ namespace noninteractive
       std::cerr << e.what() << '\n';
     }
     std::cout << bureaucrat << std::endl;
-    AForm  form("missile launching agreement", 1, 1);
-    AForm  form2("car crash report", 150, 150);
+    PresidentialPardonForm  form("president");
+    RobotomyRequestForm     form2("A highly dangerous bomb");
+    ShrubberyCreationForm   form3("healthy tree");
     bureaucrat.signForm(form);
     bureaucrat.signForm(form2);
+    bureaucrat.signForm(form3);
+    bureaucrat.executeForm(form);
+    bureaucrat.executeForm(form2);
+    bureaucrat.executeForm(form3);
     return EXIT_SUCCESS;
   }
 } // namespace noninteractive

@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 22:37:48 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/24 01:24:44 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/10 16:38:22 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace interactive
   {
     void  InteractivePrompt()
     {
-      std::cout << "Please enter a command (+/-/form/sign/print/exit): ";
+      std::cout << "Please enter a command (+/-/form/sign/execute/print/exit): ";
     }
 
     void  CharacterNamePrompt()
@@ -40,19 +40,14 @@ namespace interactive
       std::cout << "Please enter a grade for your character: ";
     }
 
-    void  FormNamePrompt()
+    void  FormTargetPrompt()
     {
-      std::cout << "Please enter a name for your form: ";
+      std::cout << "Please enter a target for your form: ";
     }
 
-    void  FormGradeSignPrompt()
+    void  FormTypePrompt()
     {
-      std::cout << "Please enter a grade to sign your form: ";
-    }
-
-    void  FormGradeExecutePrompt()
-    {
-      std::cout << "Please enter a grade to execute your form: ";
+      std::cout << "Please enter the kind of form you want to make (presidential/robotomy/shrubbery): ";
     }
 
     void  ChooseFormPrompt()
@@ -116,28 +111,6 @@ namespace interactive
             ParseWithPrompt(input, grade, printer::CharacterGradePrompt))
           return EXIT_FAILURE;
         bureaucrat = new Bureaucrat(name, grade);
-        return EXIT_SUCCESS;
-      }
-      catch (std::exception& e)
-      {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
-      }
-    }
-
-    int Parse(std::string& input, AForm*& form)
-    {
-      std::string name;
-      int         gradeSign;
-      int         gradeExecute;
-
-      try
-      {
-        if (ParseWithPrompt(input, name, printer::FormNamePrompt) ||
-            ParseWithPrompt(input, gradeSign, printer::FormGradeSignPrompt) ||
-            ParseWithPrompt(input, gradeExecute, printer::FormGradeExecutePrompt))
-          return EXIT_FAILURE;
-        form = new AForm(name, gradeSign, gradeExecute);
         return EXIT_SUCCESS;
       }
       catch (std::exception& e)
