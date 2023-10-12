@@ -20,7 +20,6 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
-	ScalarType.cpp \
 	ScalarConverter.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
