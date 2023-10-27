@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 14:35:42 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/20 14:17:02 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 00:02:02 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ template <typename T, typename Err>
 class Result
 {
   public:
+    static  Result Ok(T value);
+    static  Result Error(Err error);
+
     Result(T value);
-    Result(Err error);
+    Result(Err error, int);
     Result(Result const &src);
     ~Result();
 
@@ -31,11 +34,9 @@ class Result
     Err   error() const;
 
   private:
-    union {
-      T   value;
-      Err error;
-    }     data_;
     bool  is_ok_;
+    T     value_;
+    Err   error_;
 };
 
 /////////////////////////////////////////////////////
@@ -43,13 +44,24 @@ class Result
 /////////////////////////////////////////////////////
 
 template <typename T, typename Err>
-Result<T,Err>::Result(T value) : is_ok_(true) { data_.value = value; }
+Result<T,Err> Result<T,Err>::Ok(T value) { return Result<T,Err>(value); }
 
 template <typename T, typename Err>
-Result<T,Err>::Result(Err error) { data_.error = error; }
+Result<T,Err> Result<T,Err>::Error(Err error) { return Result<T,Err>(error, 0); }
 
 template <typename T, typename Err>
-Result<T,Err>::Result(Result const &src) : data_(src.data_), is_ok_(src.is_ok_) {}
+Result<T,Err>::Result(T value) : is_ok_(true), value_(value) {}
+
+template <typename T, typename Err>
+Result<T,Err>::Result(Err error, int) : is_ok_(false), error_(error) {}
+
+template <typename T, typename Err>
+Result<T,Err>::Result(Result const &src) : is_ok_(src.is_ok_) {
+  if (is_ok_)
+    value_ = src.value_;
+  else
+    error_ = src.error_;
+}
 
 template <typename T, typename Err>
 Result<T,Err>::~Result() {}
@@ -59,20 +71,23 @@ Result<T,Err>&  Result<T,Err>::operator=(Result const &src)
 {
   if (this != &src)
   {
-    data_  = src.data_;
+    if (src.is_ok_)
+      value_ = src.value_;
+    else
+      error_ = src.error_;
     is_ok_ = src.is_ok_;
   }
-  return (*this);
+  return *this;
 }
 
 template <typename T, typename Err>
-bool  Result<T,Err>::is_ok() const { return (is_ok_); }
+bool  Result<T,Err>::is_ok() const { return is_ok_; }
 
 template <typename T, typename Err>
-T Result<T,Err>::value() const { return (data_.value); }
+T Result<T,Err>::value() const { return value_; }
 
 template <typename T, typename Err>
-Err Result<T,Err>::error() const { return (data_.error); }
+Err Result<T,Err>::error() const { return error_; }
 
 template<typename T, typename Err>
 std::ostream& operator<<(std::ostream& os, Result<T,Err> const& result)
@@ -81,5 +96,5 @@ std::ostream& operator<<(std::ostream& os, Result<T,Err> const& result)
     os << result.value();
   else
     os << result.error();
-  return (os);
+  return os;
 }

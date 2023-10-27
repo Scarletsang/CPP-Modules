@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 22:06:48 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/20 22:20:26 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 00:30:25 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,21 @@ namespace convert
     kNoError
   };
 
-  enum  Type
+  typedef struct Type
   {
-    kNormal,
-    kNan,
-    kPositiveInfinity,
-    kNegativeInfinity
-  };
+    enum Value {
+      kNormal,
+      kNan,
+      kPositiveInfinity,
+      kNegativeInfinity
+    } value;
+
+    static Type Normal();
+    static Type Nan();
+    static Type PositiveInfinity();
+    static Type NegativeInfinity();
+    Type(enum Value value);
+  } Type;
 
   template <typename T>
   class Scalar
@@ -45,7 +53,7 @@ namespace convert
 
       Scalar();
       Scalar(T c);
-      Scalar(enum Type type);
+      Scalar(Type type);
       Scalar(Scalar const& src);
       ~Scalar();
       Scalar&  operator=(Scalar const& src);
@@ -80,13 +88,13 @@ namespace convert
   /////////////////////////////////////////////////////
 
   template <typename T>
-  Scalar<T>::Scalar() : data_(T()), type_(kNormal) {}
+  Scalar<T>::Scalar() : data_(T()), type_(Type::kNormal) {}
 
   template <typename T>
-  Scalar<T>::Scalar(T c) : data_(c), type_(kNormal) {}
+  Scalar<T>::Scalar(T c) : data_(c), type_(Type::kNormal) {}
 
   template <typename T>
-  Scalar<T>::Scalar(enum Type type) : data_(T()), type_(type) {}
+  Scalar<T>::Scalar(Type type) : data_(T()), type_(type) {}
 
   template <typename T>
   Scalar<T>::Scalar(Scalar const& src) : data_(src.data_), type_(src.type_) {}
@@ -116,12 +124,12 @@ namespace convert
   Result<char, Error>  Scalar<T>::to_char() const
   {
     enum  Error error = checkError<char>();
-    if (error == kNoError)
-      return Result<char, Error>(static_cast<char>(data_));
+    if (error != kNoError)
+      return Result<char, Error>::Error(error);
     else if (!isprint(static_cast<int>(data_)))
-      return Result<char, Error>(kNonDisplayableError);
+      return Result<char, Error>::Error(kNonDisplayableError);
     else
-      return Result<char, Error>(static_cast<char>(data_));
+      return Result<char, Error>::Ok(static_cast<char>(data_));
   }
 
   template <typename T>
@@ -129,9 +137,9 @@ namespace convert
   {
     enum  Error error = checkError<int>();
     if (error == kNoError)
-      return Result<int, Error>(static_cast<int>(data_));
+      return Result<int, Error>::Ok(static_cast<int>(data_));
     else
-      return Result<int, Error>(error);
+      return Result<int, Error>::Error(error);
   }
 
   template <typename T>
@@ -139,9 +147,9 @@ namespace convert
   {
     enum  Error error = checkError<float>();
     if (error == kNoError)
-      return Result<float, Error>(static_cast<float>(data_));
+      return Result<float, Error>::Ok(static_cast<float>(data_));
     else
-      return Result<float, Error>(error);
+      return Result<float, Error>::Error(error);
   }
 
   template <typename T>
@@ -149,9 +157,9 @@ namespace convert
   {
     enum  Error error = checkError<double>();
     if (error == kNoError)
-      return Result<double, Error>(static_cast<double>(data_));
+      return Result<double, Error>::Ok(static_cast<double>(data_));
     else
-      return Result<double, Error>(error);
+      return Result<double, Error>::Error(error);
   }
 
   /////////////////////////////////////////////
@@ -162,88 +170,19 @@ namespace convert
   template<typename T2>
   Error  Scalar<T>::checkError() const
   {
-    if (type_ == kNan)
+    switch (type_.value)
+    {
+    case Type::kNan:
       return kNanError;
-    else if (type_ == kPositiveInfinity)
+    case Type::kPositiveInfinity:
       return kPositiveInfinityError;
-    else if (type_ == kNegativeInfinity)
+    case Type::kNegativeInfinity:
       return kNegativeInfinityError;
-    else if (!IsInRange<T, T2>(data_))
-      return kImpossibleError;
-    else
-      return kNoError;
-  }
-
-  ////////////////////////////////////////////////
-  ////////////   Printing functions   ////////////
-  ////////////////////////////////////////////////
-
-  template <typename T>
-  std::ostream& operator<<(std::ostream& os, Error const& error)
-  {
-    switch (error)
-    {
-      case kNonDisplayableError:
-        os << "Non displayable";
-        break;
-      case kImpossibleError:
-        os << "impossible";
-        break;
-      default:
-        break;
+    default:
+      if (!IsInRange<T, T2>(data_))
+        return kImpossibleError;
+      else
+        return kNoError;
     }
-    return (os);
-  }
-
-  template <>
-  std::ostream& operator<<<float>(std::ostream& os, Error const& error)
-  {
-    switch (error)
-    {
-      case kNonDisplayableError:
-        os << "Non displayable";
-        break;
-      case kImpossibleError:
-        os << "impossible";
-        break;
-      case kNanError:
-        os << "nanf";
-        break;
-      case kPositiveInfinityError:
-        os << "+inff";
-        break;
-      case kNegativeInfinityError:
-        os << "-inff";
-        break;
-      default:
-        break;
-    }
-    return (os);
-  }
-
-  template <>
-  std::ostream& operator<<<double>(std::ostream& os, Error const& error)
-  {
-    switch (error)
-    {
-      case kNonDisplayableError:
-        os << "Non displayable";
-        break;
-      case kImpossibleError:
-        os << "impossible";
-        break;
-      case kNanError:
-        os << "nan";
-        break;
-      case kPositiveInfinityError:
-        os << "+inf";
-        break;
-      case kNegativeInfinityError:
-        os << "-inf";
-        break;
-      default:
-        break;
-    }
-    return (os);
   }
 } // namespace scalar

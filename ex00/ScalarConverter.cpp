@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 17:16:33 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/20 23:05:54 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 00:27:57 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,34 @@ namespace parser
     kIncorrectTypeError
   };
 
+  typedef Result<convert::Scalar<char>, parser::Error>   CharResult;
+  typedef Result<convert::Scalar<int>, parser::Error>    IntResult;
+  typedef Result<convert::Scalar<float>, parser::Error>  FloatResult;
+  typedef Result<convert::Scalar<double>, parser::Error> DoubleResult;
+
+  template <typename T>
+  Result<convert::Scalar<T>, parser::Error> ParseResult(T value)
+  {
+    return (Result<convert::Scalar<T>, parser::Error>::Ok(convert::Scalar<T>(value)));
+  }
+
+  template <typename T>
+  Result<convert::Scalar<T>, parser::Error> ParseResultType(convert::Type type)
+  {
+    return (Result<convert::Scalar<T>, parser::Error>::Ok(convert::Scalar<T>(type)));
+  }
+
   static bool  IsEmpty(std::string const& str)
   {
     return (str.length() == 0);
   }
 
-  static Result<char, parser::Error>  Char(std::string const& str)
+  static CharResult  Char(std::string const& str)
   {
     if (str.length() == 1 && std::isprint(str[0]))
-      return (Result<char, parser::Error>(str[0]));
+      return ParseResult<char>(str[0]);
     else
-      return (Result<char, parser::Error>(kTooManyCharactersError));
+      return CharResult::Error(kTooManyCharactersError);
   }
 
   // sign
@@ -51,7 +68,7 @@ namespace parser
   // numbers
   // f => float
 
-  static Result<int, parser::Error> Int(std::string const& str)
+  static IntResult Int(std::string const& str)
   {
     int i = 0;
     int sign = 1;
@@ -69,35 +86,153 @@ namespace parser
     for (; it != str.end(); ++it)
     {
       if (*it < '0' || *it > '9')
-        return (Result<int, parser::Error>(kIncorrectTypeError));
+        return IntResult::Error(kIncorrectTypeError);
       // check overflow and underflow
       if (i > std::numeric_limits<int>::max() / 10)
-        return (Result<int, parser::Error>(kIncorrectTypeError));
+        return IntResult::Error(kIncorrectTypeError);
       else if (i < std::numeric_limits<int>::min() / 10)
-        return (Result<int, parser::Error>(kIncorrectTypeError));
+        return IntResult::Error(kIncorrectTypeError);
       i = i * 10 + (*it - '0');
     }
-    return (Result<int, parser::Error>(i * sign));
+    return ParseResult<int>(i * sign);
   }
 
   // TODO: Incomplete
-  static Result<float, parser::Error> Float(std::string const& str)
+  static FloatResult Float(std::string const& str)
   {
-    double d = std::strtof(str.c_str(), NULL);
+    if (str == "nanf") return (ParseResultType<float>(convert::Type::Nan()));
+    else if (str == "+inff") return (ParseResultType<float>(convert::Type::PositiveInfinity()));
+    else if (str == "-inff") return (ParseResultType<float>(convert::Type::NegativeInfinity()));
+    // double d = std::strtof(str.c_str(), NULL);
 
     // if (d == HUGE_VAL) ;
-    return (Result<float, parser::Error>(d));
+    return (FloatResult::Error(kIncorrectTypeError));
   }
 
   // TODO: Incomplete
-  static Result<double, parser::Error> Double(std::string const& str)
+  static DoubleResult Double(std::string const& str)
   {
+    if (str == "nan") return (ParseResultType<double>(convert::Type::Nan()));
+    else if (str == "+inf") return (ParseResultType<double>(convert::Type::PositiveInfinity()));
+    else if (str == "-inf") return (ParseResultType<double>(convert::Type::NegativeInfinity()));
     double d = std::strtod(str.c_str(), NULL);
 
-    return (Result<double, parser::Error>(d));
+    return (ParseResult<double>(d));
   }
   
 } // namespace parser
+
+template <>
+std::ostream& operator<<(std::ostream& os, Result<char, convert::Error> const& result)
+{
+  if (result.is_ok())
+    os << "'" << result.value() << "'";
+  else
+  {
+    switch (result.error())
+    {
+      case convert::kNonDisplayableError:
+        os << "Non displayable";
+        break;
+      case convert::kNanError:
+      case convert::kPositiveInfinityError:
+      case convert::kNegativeInfinityError:
+      case convert::kImpossibleError:
+        os << "impossible";
+        break;
+      default:
+        break;
+    }
+  }
+  return os;
+}
+
+template <>
+std::ostream& operator<<(std::ostream& os, Result<int, convert::Error> const& result)
+{
+  if (result.is_ok())
+    os << result.value();
+  else
+  {
+    switch (result.error())
+    {
+      case convert::kNonDisplayableError:
+        os << "Non displayable";
+        break;
+      case convert::kNanError:
+      case convert::kPositiveInfinityError:
+      case convert::kNegativeInfinityError:
+      case convert::kImpossibleError:
+        os << "impossible";
+        break;
+      default:
+        break;
+    }
+  }
+  return os;
+}
+
+template <>
+std::ostream& operator<<(std::ostream& os, Result<float, convert::Error> const& result)
+{
+  if (result.is_ok())
+    os << result.value();
+  else
+  {
+    switch (result.error())
+    {
+      case convert::kNonDisplayableError:
+        os << "Non displayable";
+        break;
+      case convert::kImpossibleError:
+        os << "impossible";
+        break;
+      case convert::kNanError:
+        os << "nanf";
+        break;
+      case convert::kPositiveInfinityError:
+        os << "+inff";
+        break;
+      case convert::kNegativeInfinityError:
+        os << "-inff";
+        break;
+      default:
+        break;
+    }
+  }
+  return os;
+}
+
+template <>
+std::ostream& operator<<(std::ostream& os, Result<double, convert::Error> const& result)
+{
+  if (result.is_ok())
+    os << result.value();
+  else
+  {
+    switch (result.error())
+    {
+      case convert::kNonDisplayableError:
+        os << "Non displayable";
+        break;
+      case convert::kImpossibleError:
+        os << "impossible";
+        break;
+      case convert::kNanError:
+        os << "nan";
+        break;
+      case convert::kPositiveInfinityError:
+        os << "+inf";
+        break;
+      case convert::kNegativeInfinityError:
+        os << "-inf";
+        break;
+      default:
+        break;
+    }
+  }
+  return os;
+}
 
 template <typename T>
 static void Print(convert::Scalar<T> scalar)
@@ -115,28 +250,33 @@ void  ScalarConverter::convert(std::string const& str)
     std::cout << "Usage: ./convert [string]" << std::endl;
     return ;
   }
-  Result<float, parser::Error>  float_result = parser::Float(str);
+  parser::FloatResult  float_result = parser::Float(str);
   if (float_result.is_ok())
   {
-    Print(convert::Scalar<float>(float_result.value()));
+    std::cout << "Type Detection: float" << std::endl;
+    Print(float_result.value());
     return ;
   }
-  Result<double, parser::Error> double_result = parser::Double(str);
+  parser::DoubleResult double_result = parser::Double(str);
   if (double_result.is_ok())
   {
-    Print(convert::Scalar<double>(double_result.value()));
+    std::cout << "Type Detection: double" << std::endl;
+    Print(double_result.value());
     return ;
   }
-  Result<int, parser::Error>    int_result = parser::Int(str);
+  parser::IntResult    int_result = parser::Int(str);
   if (int_result.is_ok())
   {
-    Print(convert::Scalar<int>(int_result.value()));
+    std::cout << "Type Detection: int" << std::endl;
+    Print(int_result.value());
     return ;
   }
-  Result<char, parser::Error>   char_result = parser::Char(str);
+  parser::CharResult   char_result = parser::Char(str);
   if (char_result.is_ok())
   {
-    Print(convert::Scalar<char>(char_result.value()));
+    std::cout << "Type Detection: char" << std::endl;
+    Print(char_result.value());
     return ;
   }
+  std::cout << "Type Detection: impossible" << std::endl;
 }
