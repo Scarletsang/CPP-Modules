@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 17:16:33 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/28 00:27:57 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 01:16:33 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,65 @@ namespace parser
     return (Result<convert::Scalar<T>, parser::Error>::Ok(convert::Scalar<T>(type)));
   }
 
+  template <typename T>
+  Result<convert::Scalar<T>, parser::Error> ParseResultError(parser::Error error)
+  {
+    return (Result<convert::Scalar<T>, parser::Error>::Error(error));
+  }
+
   static bool  IsEmpty(std::string const& str)
   {
     return (str.length() == 0);
+  }
+
+  static bool Character(std::string::const_iterator &it, char c)
+  {
+    if (*it == c)
+    {
+      ++it;
+      return (true);
+    }
+    return (false);
+  }
+
+  static bool  Sign(std::string::const_iterator &it, bool &positive)
+  {
+    positive = true;
+    if (Character(it, '+')) return (true);
+    else if (Character(it, '-'))
+    {
+      positive = false;
+      return (true);
+    }
+    return (false);
+  }
+
+  template <typename T>
+  static Result<convert::Scalar<T>, parser::Error> Number(std::string::const_iterator &it, T &i, bool is_positive)
+  {
+    if (is_positive)
+    {
+      for (; it != str.end(); ++it)
+      {
+        if (*it < '0' || *it > '9')
+          return ParseResultError<T>(kIncorrectTypeError);
+        else if (i > (std::numeric_limits<int>::max() / 10) - (*it - '0'))
+          return ParseResultError<T>(kIncorrectTypeError);
+        i = i * 10 + (*it - '0');
+      }
+    }
+    else
+    { 
+      for (; it != str.end(); ++it)
+      {
+        if (*it < '0' || *it > '9')
+          return ParseResultError<T>(kIncorrectTypeError);
+        else if (i < (std::numeric_limits<int>::min() / 10) + (*it - '0'))
+          return ParseResultError<T>(kIncorrectTypeError);
+        i = i * 10 - (*it - '0');
+      }
+    }
+    return ParseResult<T>(i);
   }
 
   static CharResult  Char(std::string const& str)
