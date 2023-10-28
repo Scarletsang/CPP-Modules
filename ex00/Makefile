@@ -5,7 +5,7 @@
 NAME:=static_cast
 
 CC:=g++
-CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror -MMD -MP
+CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror -MMD -MP -O2
 LDFLAGS= -std=c++98 -pedantic
 ifdef FSANITIZE
 	CXXFLAGS+= -g3 -fsanitize=address -DDEBUG=1

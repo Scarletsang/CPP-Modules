@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/28 04:35:32 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 15:09:00 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,13 @@ int main(int argc, const char** argv)
 {
   if (argc == 2)
   {
-    ScalarConverter::convert(argv[1]);
+    std::string str(argv[1]);
+    if (str.empty())
+    {
+      std::cout << "Usage: ./convert [string]" << std::endl;
+      return EXIT_FAILURE;
+    }
+    ScalarConverter::convert(str);
     return EXIT_SUCCESS;
   }
   else

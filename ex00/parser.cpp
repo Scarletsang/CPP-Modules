@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/28 03:22:27 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/28 05:15:30 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 17:12:55 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@
 
 namespace parser
 {
-
-  Parser::Parser(std::string const string) : str(string), it(str.begin()) {}
+  Parser::Parser(std::string const string)
+    : str(string),
+      it(str.begin()),
+      is_positive(true) {}
 
   bool  Parser::is_end() const
   {
@@ -48,13 +50,13 @@ namespace parser
     return false;
   }
 
-  bool  Sign(struct Parser &parser, bool &positive)
+  bool  Sign(struct Parser &parser)
   {
-    positive = true;
+    parser.is_positive = true;
     if (Character(parser, '+')) return true;
     else if (Character(parser, '-'))
     {
-      positive = false;
+      parser.is_positive = false;
       return true;
     }
     return false;
@@ -70,58 +72,52 @@ namespace parser
 
   IntResult Int(std::string const& str)
   {
-    bool          is_positive = true;
     int           i = 0;
     struct Parser parser(str);
 
-    Sign(parser, is_positive);
-    IntResult result = Number<int>(parser, i, is_positive);
+    Sign(parser);
+    IntResult result = Number<int>(parser, i);
     if (!parser.is_end())
       return IntResult::Error(kIncorrectTypeError);
     else
       return result;
   }
 
-  // TODO: Incomplete
   FloatResult Float(std::string const& str)
   {
-    if (str == "nanf") return ParseResultType<float>(convert::Type::Nan());
-    else if (str == "+inff") return ParseResultType<float>(convert::Type::PositiveInfinity());
-    else if (str == "-inff") return ParseResultType<float>(convert::Type::NegativeInfinity());
-    bool          is_positive = true;
+    if (str == "nanf") return ParseResultType<float>(converter::ScalarType::Nan());
+    else if (str == "+inff") return ParseResultType<float>(converter::ScalarType::PositiveInfinity());
+    else if (str == "-inff") return ParseResultType<float>(converter::ScalarType::NegativeInfinity());
     float         i = 0;
     struct Parser parser(str);
 
-    Sign(parser, is_positive);
-    FloatResult result = Number<float>(parser, i, is_positive);
+    Sign(parser);
+    FloatResult result = Number<float>(parser, i);
     if (!result.is_ok() || !Character(parser, '.'))
       return FloatResult::Error(kIncorrectTypeError);
-    result = Decimals<float>(parser, i, is_positive);
+    result = Decimals<float>(parser, i);
     if (!Character(parser, 'f') || !parser.is_end())
       return FloatResult::Error(kIncorrectTypeError);
     else
       return result;
   }
 
-  // TODO: Incomplete
   DoubleResult Double(std::string const& str)
   {
-    if (str == "nan") return ParseResultType<double>(convert::Type::Nan());
-    else if (str == "+inf") return ParseResultType<double>(convert::Type::PositiveInfinity());
-    else if (str == "-inf") return ParseResultType<double>(convert::Type::NegativeInfinity());
-    bool          is_positive = true;
+    if (str == "nan") return ParseResultType<double>(converter::ScalarType::Nan());
+    else if (str == "+inf") return ParseResultType<double>(converter::ScalarType::PositiveInfinity());
+    else if (str == "-inf") return ParseResultType<double>(converter::ScalarType::NegativeInfinity());
     double        i = 0;
     struct Parser parser(str);
 
-    Sign(parser, is_positive);
-    DoubleResult result = Number<double>(parser, i, is_positive);
+    Sign(parser);
+    DoubleResult result = Number<double>(parser, i);
     if (!result.is_ok() || !Character(parser, '.'))
       return DoubleResult::Error(kIncorrectTypeError);
-    result = Decimals<double>(parser, i, is_positive);
+    result = Decimals<double>(parser, i);
     if (!parser.is_end())
       return DoubleResult::Error(kIncorrectTypeError);
     else
       return result;
   }
-  
 } // namespace parser

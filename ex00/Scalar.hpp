@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 22:06:48 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/28 00:30:25 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 17:11:53 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include "Result.hpp"
 
-namespace convert
+namespace converter
 {
   enum  Error
   {
@@ -30,7 +30,7 @@ namespace convert
     kNoError
   };
 
-  typedef struct Type
+  typedef struct ScalarType
   {
     enum Value {
       kNormal,
@@ -39,12 +39,12 @@ namespace convert
       kNegativeInfinity
     } value;
 
-    static Type Normal();
-    static Type Nan();
-    static Type PositiveInfinity();
-    static Type NegativeInfinity();
-    Type(enum Value value);
-  } Type;
+    static ScalarType Normal();
+    static ScalarType Nan();
+    static ScalarType PositiveInfinity();
+    static ScalarType NegativeInfinity();
+    ScalarType(enum Value value);
+  } ScalarType;
 
   template <typename T>
   class Scalar
@@ -53,7 +53,7 @@ namespace convert
 
       Scalar();
       Scalar(T c);
-      Scalar(Type type);
+      Scalar(ScalarType type);
       Scalar(Scalar const& src);
       ~Scalar();
       Scalar&  operator=(Scalar const& src);
@@ -70,31 +70,34 @@ namespace convert
 
     private:
       T    data_;
-      Type type_;
+      ScalarType type_;
 
       template <typename T2>
       Error  checkError() const;
   };
 
-  template<typename T, typename Range>
-  bool  IsInRange(T value)
-  {
-    return (value >= std::numeric_limits<Range>::min() &&
-            value <= std::numeric_limits<Range>::max());
-  }
-
   /////////////////////////////////////////////////////
   ////////////   template implementation   ////////////
   /////////////////////////////////////////////////////
 
-  template <typename T>
-  Scalar<T>::Scalar() : data_(T()), type_(Type::kNormal) {}
+  template<typename T>
+  T MinimumValue()
+  {
+    T min = std::numeric_limits<T>::min();
+    if (min > 0)
+      return -std::numeric_limits<T>::max();
+    else
+      return min;
+  }
 
   template <typename T>
-  Scalar<T>::Scalar(T c) : data_(c), type_(Type::kNormal) {}
+  Scalar<T>::Scalar() : data_(T()), type_(ScalarType::kNormal) {}
 
   template <typename T>
-  Scalar<T>::Scalar(Type type) : data_(T()), type_(type) {}
+  Scalar<T>::Scalar(T c) : data_(c), type_(ScalarType::kNormal) {}
+
+  template <typename T>
+  Scalar<T>::Scalar(ScalarType type) : data_(T()), type_(type) {}
 
   template <typename T>
   Scalar<T>::Scalar(Scalar const& src) : data_(src.data_), type_(src.type_) {}
@@ -166,17 +169,24 @@ namespace convert
   ////////////   private methods   ////////////
   /////////////////////////////////////////////
 
+  template<typename T, typename Range>
+  static bool  IsInRange(T value)
+  {
+    return (value >= MinimumValue<Range>() &&
+            value <= std::numeric_limits<Range>::max());
+  }
+
   template<typename T>
   template<typename T2>
   Error  Scalar<T>::checkError() const
   {
     switch (type_.value)
     {
-    case Type::kNan:
+    case ScalarType::kNan:
       return kNanError;
-    case Type::kPositiveInfinity:
+    case ScalarType::kPositiveInfinity:
       return kPositiveInfinityError;
-    case Type::kNegativeInfinity:
+    case ScalarType::kNegativeInfinity:
       return kNegativeInfinityError;
     default:
       if (!IsInRange<T, T2>(data_))

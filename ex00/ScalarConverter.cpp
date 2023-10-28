@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 17:16:33 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/28 04:51:06 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/28 17:11:53 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include "parser.hpp"
 
 template <>
-std::ostream& operator<<(std::ostream& os, Result<char, convert::Error> const& result)
+std::ostream& operator<<(std::ostream& os, Result<char, converter::Error> const& result)
 {
   if (result.is_ok())
     os << "'" << result.value() << "'";
@@ -33,13 +33,13 @@ std::ostream& operator<<(std::ostream& os, Result<char, convert::Error> const& r
   {
     switch (result.error())
     {
-      case convert::kNonDisplayableError:
+      case converter::kNonDisplayableError:
         os << "Non displayable";
         break;
-      case convert::kNanError:
-      case convert::kPositiveInfinityError:
-      case convert::kNegativeInfinityError:
-      case convert::kImpossibleError:
+      case converter::kNanError:
+      case converter::kPositiveInfinityError:
+      case converter::kNegativeInfinityError:
+      case converter::kImpossibleError:
         os << "impossible";
         break;
       default:
@@ -50,7 +50,7 @@ std::ostream& operator<<(std::ostream& os, Result<char, convert::Error> const& r
 }
 
 template <>
-std::ostream& operator<<(std::ostream& os, Result<int, convert::Error> const& result)
+std::ostream& operator<<(std::ostream& os, Result<int, converter::Error> const& result)
 {
   if (result.is_ok())
     os << result.value();
@@ -58,13 +58,13 @@ std::ostream& operator<<(std::ostream& os, Result<int, convert::Error> const& re
   {
     switch (result.error())
     {
-      case convert::kNonDisplayableError:
+      case converter::kNonDisplayableError:
         os << "Non displayable";
         break;
-      case convert::kNanError:
-      case convert::kPositiveInfinityError:
-      case convert::kNegativeInfinityError:
-      case convert::kImpossibleError:
+      case converter::kNanError:
+      case converter::kPositiveInfinityError:
+      case converter::kNegativeInfinityError:
+      case converter::kImpossibleError:
         os << "impossible";
         break;
       default:
@@ -75,7 +75,7 @@ std::ostream& operator<<(std::ostream& os, Result<int, convert::Error> const& re
 }
 
 template <>
-std::ostream& operator<<(std::ostream& os, Result<float, convert::Error> const& result)
+std::ostream& operator<<(std::ostream& os, Result<float, converter::Error> const& result)
 {
   if (result.is_ok())
     os << result.value();
@@ -83,19 +83,19 @@ std::ostream& operator<<(std::ostream& os, Result<float, convert::Error> const& 
   {
     switch (result.error())
     {
-      case convert::kNonDisplayableError:
+      case converter::kNonDisplayableError:
         os << "Non displayable";
         break;
-      case convert::kImpossibleError:
+      case converter::kImpossibleError:
         os << "impossible";
         break;
-      case convert::kNanError:
+      case converter::kNanError:
         os << "nanf";
         break;
-      case convert::kPositiveInfinityError:
+      case converter::kPositiveInfinityError:
         os << "+inff";
         break;
-      case convert::kNegativeInfinityError:
+      case converter::kNegativeInfinityError:
         os << "-inff";
         break;
       default:
@@ -106,7 +106,7 @@ std::ostream& operator<<(std::ostream& os, Result<float, convert::Error> const& 
 }
 
 template <>
-std::ostream& operator<<(std::ostream& os, Result<double, convert::Error> const& result)
+std::ostream& operator<<(std::ostream& os, Result<double, converter::Error> const& result)
 {
   if (result.is_ok())
     os << result.value();
@@ -114,19 +114,19 @@ std::ostream& operator<<(std::ostream& os, Result<double, convert::Error> const&
   {
     switch (result.error())
     {
-      case convert::kNonDisplayableError:
+      case converter::kNonDisplayableError:
         os << "Non displayable";
         break;
-      case convert::kImpossibleError:
+      case converter::kImpossibleError:
         os << "impossible";
         break;
-      case convert::kNanError:
+      case converter::kNanError:
         os << "nan";
         break;
-      case convert::kPositiveInfinityError:
+      case converter::kPositiveInfinityError:
         os << "+inf";
         break;
-      case convert::kNegativeInfinityError:
+      case converter::kNegativeInfinityError:
         os << "-inf";
         break;
       default:
@@ -137,7 +137,7 @@ std::ostream& operator<<(std::ostream& os, Result<double, convert::Error> const&
 }
 
 template <typename T>
-static void Print(convert::Scalar<T> scalar)
+static void Print(converter::Scalar<T> scalar)
 {
   std::cout << "char: " << scalar.to_char() << std::endl;
   std::cout << "int: " << scalar.to_int() << std::endl;
@@ -147,11 +147,6 @@ static void Print(convert::Scalar<T> scalar)
 
 void  ScalarConverter::convert(std::string const& str)
 {
-  if (str.empty())
-  {
-    std::cout << "Usage: ./convert [string]" << std::endl;
-    return ;
-  }
   parser::FloatResult  float_result = parser::Float(str);
   if (float_result.is_ok())
   {
