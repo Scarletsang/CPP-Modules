@@ -21,6 +21,7 @@ endif
 
 MAIN_SRC:= \
 	Scalar.cpp \
+	parser.cpp \
 	ScalarConverter.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
