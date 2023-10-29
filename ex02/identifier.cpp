@@ -6,15 +6,17 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 17:34:08 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/29 17:51:26 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/29 17:59:02 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "identifier.hpp"
 
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
+
+#include <iostream>
+#include <exception>
 
 #include "Base.hpp"
 #include "A.hpp"
@@ -66,21 +68,21 @@ namespace identifier
       std::cout << "A" << std::endl;
       return ;
     }
-    catch (std::bad_cast& bc) {}
+    catch (std::exception& bc) {}
     try
     {
       static_cast<void>(dynamic_cast<B&>(p));
       std::cout << "B" << std::endl;
       return ;
     }
-    catch (std::bad_cast& bc) {}
+    catch (std::exception& bc) {}
     try
     {
       static_cast<void>(dynamic_cast<C&>(p));
       std::cout << "C" << std::endl;
       return ;
     }
-    catch (std::bad_cast& bc) {
+    catch (std::exception& bc) {
       std::cout << "Un-registered subclass of Base class" << std::endl;
     }
   }

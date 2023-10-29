@@ -5,10 +5,10 @@
 NAME:=dynamic_cast
 
 CC:=g++
-CFLAGS= -std=c++98 -Wall -Wextra -Werror
-LDFLAGS= -std=c++98
+CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror -MMD -MP -O2
+LDFLAGS= -std=c++98 -pedantic
 ifdef FSANITIZE
-	CFLAGS+= -g3 -fsanitize=address -DDEBUG=1
+	CXXFLAGS+= -g3 -fsanitize=address -DDEBUG=1
 	LDFLAGS+= -g3 -fsanitize=address
 endif
 
@@ -49,6 +49,7 @@ SRC:= $(MAIN_SRC)
 SRC_DIR:=.
 OBJ_DIR:=obj
 OBJ:=$(addprefix $(OBJ_DIR)/,$(subst /,@,$(SRC:.cpp=.o)))
+DEPENDS:=$(OBJ:.o=.d)
 
 #################################
 ######     Main rules     #######
@@ -73,9 +74,11 @@ $(NAME): $(OBJ)
 ######     Object compilation     #######
 #########################################
 
+-include $(DEPENDS)
+
 .SECONDEXPANSION:
 $(OBJ_DIR)/%.o: $(SRC_DIR)/$$(subst @,/,$$*).cpp
-	@$(CC) $(CFLAGS) $(addprefix -iquote ,$(INCLUDE_DIR)) -c $< -o $@
+	@$(CC) $(CXXFLAGS) $(addprefix -iquote ,$(INCLUDE_DIR)) -c $< -o $@
 
 $(OBJ): $(OBJ_DIR)
 
