@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=serializer
+NAME:=reinterpret_cast
 
 CC:=g++
 CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror -MMD -MP -O2

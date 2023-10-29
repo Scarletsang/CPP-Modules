@@ -6,13 +6,14 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/29 15:44:08 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/29 18:33:46 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 #include "Data.hpp"
@@ -20,50 +21,64 @@
 
 namespace printer
 {
-  void  InteractivePrompt()
-  {}
-} // namespace printer
-
-namespace interactive
-{
-  int Run()
+  void  OriginaldData(Data* data)
   {
-    std::string input;
+    std::cout << "Original    : " << *data << " [" << data << "]" << std::endl;
+  }
 
-    printer::InteractivePrompt();
-    std::getline(std::cin, input);
-    while (std::cin.good())
+  void  AfterSerializedData(uintptr_t data)
+  {
+    std::cout << "serialized  : " << std::showbase << std::hex << data << std::endl;
+    std::cout << std::resetiosflags(std::ios::showbase | std::ios::hex);
+  }
+
+  void  AfterDeserializedData(Data* data)
+  {
+    std::cout << "deserialized: " << *data << " [" << data << "]" << std::endl;
+  }
+
+  void  AddressComparation(bool is_same)
+  {
+    std::cout << "Received data has "
+              << (is_same ? "the same " : "a different")
+              << "address as the original data" << std::endl;
+  }
+}
+
+namespace test
+{
+  int SerializeThenDeserialize(int a, int b)
+  {
+    Data  data(a, b);
+    printer::OriginaldData(&data);
+
+    uintptr_t serialized = Serializer::serialize(&data);
+    printer::AfterSerializedData(serialized);
+
+    Data* deserialized = Serializer::deserialize(serialized);
+    printer::AfterDeserializedData(deserialized);
+    if (deserialized == &data)
     {
-      printer::InteractivePrompt();
-      std::getline(std::cin, input);
+      printer::AddressComparation(true);
+      return EXIT_SUCCESS;
     }
-    return EXIT_SUCCESS;
+    else
+    {
+      printer::AddressComparation(false);
+      return EXIT_FAILURE;
+    }
   }
-} // namespace battle
+} // namespace test
 
-namespace noninteractive
+int main(int argc, const char* argv[])
 {
-  int Run()
+  if (argc == 3)
   {
-    Data  data(42, 21);
-
-    Data *data2 = Serializer::deserialize(Serializer::serialize(&data));
-
-    std::cout << *data2 << std::endl;
-    std::cout << (&data == data2 ? "same" : "different") << " address" << std::endl;
-    return EXIT_SUCCESS;
+    return test::SerializeThenDeserialize(atoi(argv[1]), atoi(argv[2]));
   }
-} // namespace noninteractive
-
-int main(int argc, const char** argv)
-{
-  if (argc == 1)
-    return noninteractive::Run();
-  else if (argc == 2 && std::string(argv[1]) == "-i")
-    return interactive::Run();
   else
   {
-    std::cerr << "Usage: " << argv[0] << " [-i]" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <int> <int>" << std::endl;
     return EXIT_FAILURE;
   }
 }
