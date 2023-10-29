@@ -3,3 +3,4 @@
 **/*.out
 **/leaks_result
 **/*.o
+**/*.d
