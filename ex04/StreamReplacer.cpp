@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:45:03 by htsang            #+#    #+#             */
-/*   Updated: 2023/07/21 22:38:03 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/12 13:44:03 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ namespace my
         buffer.insert(pos, to);
         pos += to.length();
       }
-      if (pos != 0)
+      if (pos != 0) // when replacement is found in the current buffer
       {
         output_ << buffer.substr(0, pos + of.length() - 1);
-        buffer.erase(0, pos + of.length() - 1);
+        buffer.erase(0, pos + of.length() - 1); // clean buffer after writing
       }
       else if (buffer_size > to.size())
       {
