@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/09/23 14:33:54 by htsang           ###   ########.fr       */
+/*   Updated: 2023/10/29 15:44:08 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 #include <iostream>
 #include <string>
+
+#include "Data.hpp"
+#include "Serializer.hpp"
 
 namespace printer
 {
@@ -42,6 +45,12 @@ namespace noninteractive
 {
   int Run()
   {
+    Data  data(42, 21);
+
+    Data *data2 = Serializer::deserialize(Serializer::serialize(&data));
+
+    std::cout << *data2 << std::endl;
+    std::cout << (&data == data2 ? "same" : "different") << " address" << std::endl;
     return EXIT_SUCCESS;
   }
 } // namespace noninteractive
