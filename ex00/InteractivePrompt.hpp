@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 21:00:24 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/29 22:50:22 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/02 22:56:56 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,52 @@
 
 #include <string>
 
+/**
+ * @brief A class that create an interactive prompt
+*/
 template <typename States>
 class InteractivePrompt
 {
   public:
     static const int  kActionLimit = 8;
     typedef int (*Action)(std::string input, States&);
+    enum  Mode
+    {
+      kMultipleChoice,
+      kForm
+    };
+
     InteractivePrompt();
+    /**
+     * @brief The interactive prompt provides two modes:
+     * 1. kMultipleChoice: the user is prompted for a choice among a list of options
+     * 2. kForm: the user is prompted for a list of values
+    */
+    InteractivePrompt(enum Mode mode);
     InteractivePrompt(const InteractivePrompt& interactiveprompt);
     virtual ~InteractivePrompt();
     const InteractivePrompt& operator=(const InteractivePrompt& interactiveprompt);
 
+    /**
+     * @brief Register an action to be executed when the user enters a specific input
+     * @param match The input that triggers the action. In kForm mode, this is acting as
+     * a prompt for the user to enter a value
+     * @param action The action to be executed. In kForm mode, this is acting as a parser
+    */
     void  registerAction(std::string match, Action action);
     int   run(States& states);
     int   shell(States& states);
 
+    /**
+     * @brief Set the reprompt message. It is printed when the user enters an invalid input.
+     * When it is not set, user will not be prompted again for an invalid input.
+     * @param string The reprompt message
+    */
     void  setReprompt(std::string string);
     void  setPrompt(std::string string);
 
     void  printPrompt() const;
-  
+
   private:
     struct  Configuration
     {
@@ -41,9 +67,13 @@ class InteractivePrompt
       Action      action;
     };
     struct Configuration    settings_[kActionLimit];
+    enum Mode               mode_;
     std::string             prompt_;
     std::string             reprompt_;
     std::string             input_;
+
+    int runMultipleChoice(States& states);
+    int runForm(States& states);
 };
 
 /////////////////////////////////////////////////////
@@ -52,12 +82,20 @@ class InteractivePrompt
 
 template <typename States>
 InteractivePrompt<States>::InteractivePrompt()
-  : prompt_(""),
+  : mode_(kMultipleChoice),
+    prompt_(""),
+    reprompt_("") {}
+
+template <typename States>
+InteractivePrompt<States>::InteractivePrompt(enum Mode mode)
+  : mode_(mode),
+    prompt_(""),
     reprompt_("") {}
 
 template <typename States>
 InteractivePrompt<States>::InteractivePrompt(const InteractivePrompt& interactiveprompt)
-  : prompt_(interactiveprompt.prompt_),
+  : mode_(interactiveprompt.mode_),
+    prompt_(interactiveprompt.prompt_),
     reprompt_(interactiveprompt.reprompt_)
 {
   for (int i = 0; i < kActionLimit; i++)
@@ -74,6 +112,7 @@ const InteractivePrompt<States>& InteractivePrompt<States>::operator=(const Inte
 {
   if (this != &interactiveprompt)
   {
+    mode_ = interactiveprompt.mode_;
     prompt_ = interactiveprompt.prompt_;
     reprompt_ = interactiveprompt.reprompt_;
     for (int i = 0; i < kActionLimit; i++)
@@ -117,27 +156,14 @@ int   InteractivePrompt<States>::run(States& states)
   if (!std::cout.good())
     return EXIT_FAILURE;
 
-  printPrompt();
-  std::getline(std::cin, input_);
-  if (!input_.empty())
+  switch (mode_)
   {
-    for (size_t i = 0; i < kActionLimit; i++)
-    {
-      if (input_ == settings_[i].match)
-        return settings_[i].action(input_, states);
-    }
-  }
-  while (std::cin.good() && !reprompt_.empty())
-  {
-    std::cout << reprompt_;
-    std::getline(std::cin, input_);
-    if (input_.empty())
-      continue;
-    for (size_t i = 0; i < kActionLimit; i++)
-    {
-      if (input_ == settings_[i].match)
-        return settings_[i].action(input_, states);
-    }
+    case kMultipleChoice:
+      return runMultipleChoice(states);
+    case kForm:
+      return runForm(states);
+    default:
+      break;
   }
   return EXIT_FAILURE;
 }
@@ -165,4 +191,65 @@ void  InteractivePrompt<States>::printPrompt() const
       break ;
   }
   std::cout << "): ";
+}
+
+/////////////////////////////////////////////
+////////////   private methods   ////////////
+/////////////////////////////////////////////
+
+template <typename States>
+int InteractivePrompt<States>::runMultipleChoice(States& states)
+{
+  printPrompt();
+  std::getline(std::cin, input_);
+  if (!input_.empty())
+  {
+    for (size_t i = 0; i < kActionLimit; i++)
+    {
+      if (input_ == settings_[i].match)
+        return settings_[i].action(input_, states);
+    }
+  }
+  while (std::cin.good() && !reprompt_.empty())
+  {
+    std::cout << reprompt_;
+    std::getline(std::cin, input_);
+    if (input_.empty())
+      continue;
+    for (size_t i = 0; i < kActionLimit; i++)
+    {
+      if (input_ == settings_[i].match)
+        return settings_[i].action(input_, states);
+    }
+  }
+  return EXIT_FAILURE;
+}
+
+template <typename States>
+int InteractivePrompt<States>::runForm(States& states)
+{
+  int exit_code = EXIT_SUCCESS;
+
+  if (!prompt_.empty())
+    std::cout << prompt_ << std::endl;
+  for (int i = 0; (i < kActionLimit); i++)
+  {
+    if (!std::cin.good())
+      return EXIT_FAILURE;
+    else if (settings_[i].match == "")
+      break ;
+    std::cout << settings_[i].match << ": ";
+    std::getline(std::cin, input_);
+    exit_code = settings_[i].action(input_, states);
+    if ((exit_code == EXIT_FAILURE) && !reprompt_.empty())
+    {
+      while (std::cin.good() && (exit_code == EXIT_FAILURE))
+      {
+        std::cout << reprompt_;
+        std::getline(std::cin, input_);
+        exit_code = settings_[i].action(input_, states);
+      }
+    }
+  }
+  return EXIT_SUCCESS;
 }
