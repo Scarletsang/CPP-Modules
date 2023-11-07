@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=
+NAME:=iter
 
 CC:=g++
 CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror
@@ -20,6 +20,7 @@ endif
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
+	Fixed.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 
