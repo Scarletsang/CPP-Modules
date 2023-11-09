@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 21:06:11 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 21:48:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/09 22:53:33 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 #include <cstdlib>
 
 #include <limits>
-#include <exception>
+#include <stdexcept>
 #include <set>
 #include <algorithm>
+#include <iterator>
 
 Span::Span()
   : maximum_size_(kDefaultSize) {}

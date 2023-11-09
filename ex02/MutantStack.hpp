@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*   MutantStack.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/09 19:50:11 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 22:37:06 by htsang           ###   ########.fr       */
+/*   Created: 2023/11/09 23:01:50 by htsang            #+#    #+#             */
+/*   Updated: 2023/11/09 23:03:08 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream>
-#include <algorithm>
-#include <stdexcept>
+#include <stack>
 
 template <typename T>
-int easyfind(T &container, int n)
+class MutantStack : std::stack<T>
 {
-    typename T::iterator it;
-    it = std::find(container.begin(), container.end(), n);
-    if (it != container.end())
-        return (*it);
-    else
-        throw std::runtime_error("Element not found");
-}
+  public:
+    MutantStack();
+    MutantStack(const MutantStack& copy);
+    ~MutantStack();
+
+    MutantStack& operator=(const MutantStack& copy);
+
+    
+};

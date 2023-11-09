@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=
+NAME:=mutantstack
 
 CC:=g++
 CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror

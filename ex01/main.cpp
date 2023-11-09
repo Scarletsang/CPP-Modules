@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 21:44:12 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/09 23:01:31 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "InteractivePrompt.hpp"
 #include "Span.hpp"
@@ -47,14 +48,18 @@ namespace noninteractive
 {
   int Run()
   {
-    Span sp = Span(5);
-    sp.addNumber(6);
-    sp.addNumber(3);
-    sp.addNumber(17);
-    sp.addNumber(9);
-    sp.addNumber(11);
-    std::cout << sp.shortestSpan() << std::endl;
-    std::cout << sp.longestSpan() << std::endl;
+    std::vector<int> v;
+    v.push_back(5);
+    v.push_back(3);
+    v.push_back(17);
+    v.push_back(9);
+    v.push_back(11);
+    {
+      Span sp = Span(5);
+      sp.addNumbers(v.begin(), v.end());
+      std::cout << sp.shortestSpan() << std::endl;
+      std::cout << sp.longestSpan() << std::endl;
+    }
     return EXIT_SUCCESS;
   }
 
