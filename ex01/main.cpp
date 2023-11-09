@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 23:01:31 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/09 23:37:26 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace interactive
     prompt.shell(states);
     return EXIT_SUCCESS;
   }
-} // namespace battle
+} // namespace interactive
 
 namespace noninteractive
 {
@@ -62,8 +62,6 @@ namespace noninteractive
     }
     return EXIT_SUCCESS;
   }
-
-  
 } // namespace noninteractive
 
 int main(int argc, const char** argv)

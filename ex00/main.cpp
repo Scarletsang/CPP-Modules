@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 20:57:37 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/09 23:37:00 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,31 @@
 
 #include "InteractivePrompt.hpp"
 #include "easyfind.hpp"
+
+namespace interactive
+{
+  struct States
+  {};
+
+  int Exit(std::string input, struct States& states)
+  {
+    (void)input;
+    (void)states;
+    return EXIT_FAILURE;
+  }
+
+  int Run()
+  {
+    struct States                     states;
+    InteractivePrompt<struct States>  prompt;
+
+    prompt.setPrompt("Enter a number");
+    prompt.setReprompt("Invalid input. Try again: ");
+    prompt.registerAction("exit", Exit);
+    prompt.shell(states);
+    return EXIT_SUCCESS;
+  }
+} // namespace interactive
 
 namespace test
 {
@@ -51,31 +76,6 @@ namespace test
     printContainer<T>(container);
   }
 } // namespace test
-
-namespace interactive
-{
-  struct States
-  {};
-
-  int Exit(std::string input, struct States& states)
-  {
-    (void)input;
-    (void)states;
-    return EXIT_FAILURE;
-  }
-
-  int Run()
-  {
-    struct States                     states;
-    InteractivePrompt<struct States>  prompt;
-
-    prompt.setPrompt("Enter a number");
-    prompt.setReprompt("Invalid input. Try again: ");
-    prompt.registerAction("exit", Exit);
-    prompt.shell(states);
-    return EXIT_SUCCESS;
-  }
-} // namespace battle
 
 namespace noninteractive
 {
