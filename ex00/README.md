@@ -1,6 +1,6 @@
 input                   | type   | to_char     | to_int     | to_float   | to_double
 ----------------------- | ------ | ----------- | ---------- | ---------- | ---------
-a                       | char   | 'a'         | 65         | 65.0f      | 65.0
+A                       | char   | 'A'         | 65         | 65.0f      | 65.0
 42                      | int    | '*'         | 42         | 42.0f      | 42.0
 13                      | int    | unprintable | 13         | 13.0f      | 13.0
 300                     | int    | impossible  | 300        | 300.0f     | 300.0
@@ -29,7 +29,7 @@ ouput       | input   | reason
 ----------- | ------- | ------
 'a'         | a       | there is no convertion
 'B'         | 42      | it is in ASCII printable characters range
-impossible  | 42.9    | decimal place is not 0
+'C'         | 42.9    | casted to the nearest vaue
 unprintable | -13     | not in printable range but in char range
 impossible  | 300     | char overflow
 impossible  | nan     | not a char concept
@@ -49,7 +49,7 @@ ouput       | input               | reason
 ----------- | ------------------- | ------
 13          | 13                  | there is no convertion
 42          | B                   | it is a char
-impossible  | 42.9                | decimal place is not 0
+43          | 42.9                | casted to the nearest vaue
 impossible  | out of range number | int overflow
 impossible  | nan                 | not an int concept
 impossible  | +inf                | not an int concept
