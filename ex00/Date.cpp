@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 23:27:29 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 00:07:28 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 05:00:45 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,21 @@ int Date::month() const
 int Date::day() const
 {
   return day_;
+}
+
+void  Date::set_year(int year)
+{
+  year_ = year;
+}
+
+void  Date::set_month(int month)
+{
+  month_ = month;
+}
+
+void  Date::set_day(int day)
+{
+  day_ = day;
 }
 
 bool  Date::is_leap_year() const

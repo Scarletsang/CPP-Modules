@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:39:04 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 02:39:49 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 18:01:27 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,44 +49,43 @@ namespace parser
     std::string             delimiter;
   };
 
-  template <typename ParseT>
-  Result<ParseT, BitcoinExchange::kErrorCode>  ParseDelimiter(
-    ParseT parse_data, struct ParserMetaData& parser_meta)
+  BoolParseResult  ParseDelimiter(struct ParserMetaData& parser_meta)
   {
     if (parser_meta.end - parser_meta.it < parser_meta.delimiter.length())
-      return Result<ParseT, BitcoinExchange::kErrorCode>::Error(BitcoinExchange::kInvalidEntry);
+      return BoolParseResult::Error(BitcoinExchange::kInvalidEntry);
     else if (std::equal(parser_meta.it, parser_meta.it + parser_meta.delimiter.length(), 
       parser_meta.delimiter.begin(), parser_meta.delimiter.end()))
     {
       parser_meta.it += parser_meta.delimiter.length();
-      return Result<ParseT, BitcoinExchange::kErrorCode>::Ok(parse_data);
+      return BoolParseResult::Ok(true);
     }
     else
-      return Result<ParseT, BitcoinExchange::kErrorCode>::Error(BitcoinExchange::kInvalidEntry);
-    return Result<ParseT, BitcoinExchange::kErrorCode>::Ok(parse_data);
+      return BoolParseResult::Error(BitcoinExchange::kInvalidEntry);
+    return BoolParseResult::Ok(true);
   }
 
-  template <typename ParseT>
-  Result<ParseT, BitcoinExchange::kErrorCode>  ParseSpaces(
-    ParseT parse_data, struct ParserMetaData& parser_meta)
+  BoolParseResult  ParseSpaces(struct ParserMetaData& parser_meta)
   {
     while (parser_meta.it != parser_meta.end && std::isspace(*parser_meta.it))
       ++parser_meta.it;
-    return Result<ParseT, BitcoinExchange::kErrorCode>::Ok(parse_data);
+    return BoolParseResult::Ok(true);
   }
 
-  template <typename ParseT>
-  Result<ParseT, BitcoinExchange::kErrorCode>  CheckEndOfLine(
-    ParseT parse_data, struct ParserMetaData& parser_meta)
+  BoolParseResult  CheckEndOfLine(struct ParserMetaData& parser_meta)
   {
     if (parser_meta.it != parser_meta.end && *parser_meta.it != '\n')
-      return Result<ParseT, BitcoinExchange::kErrorCode>::Error(BitcoinExchange::kInvalidEntry);
-    return Result<ParseT, BitcoinExchange::kErrorCode>::Ok(parse_data);
+      return BoolParseResult::Error(BitcoinExchange::kInvalidEntry);
+    return BoolParseResult::Ok(true);
   }
 
   EntryParseResult ParseDate(Entry entry, struct ParserMetaData& parser_meta)
   {
-    Date  date;
+    Date                  date;
+    struct ParserMetaData date_parser_meta(parser_meta);
+    date_parser_meta.delimiter = "-";
+
+    ParseDelimiter(date_parser_meta)
+      .chain(&ParseSpaces, date_parser_meta);
 
     return EntryParseResult::Ok(entry);
   }
@@ -108,12 +107,12 @@ namespace parser
   EntryParseResult ParseEntry(int, struct ParserMetaData& parser_meta)
   {
     return ParseDate(std::pair<Date, float>(), parser_meta)
-      .chain(&ParseSpaces<Entry>, parser_meta)
+      .chain(&ParseSpaces, parser_meta)
       .chain(&ParseDate, parser_meta)
-      .chain(&ParseSpaces<Entry>, parser_meta)
-      .chain(&ParseDelimiter<Entry>, parser_meta)
-      .chain(&ParseSpaces<Entry>, parser_meta)
+      .chain(&ParseSpaces, parser_meta)
+      .chain(&ParseDelimiter, parser_meta)
+      .chain(&ParseSpaces, parser_meta)
       .chain(&ParseRate, parser_meta)
-      .chain(&CheckEndOfLine<Entry>, parser_meta);
+      .chain(&CheckEndOfLine, parser_meta);
   }
 } // namespace parser

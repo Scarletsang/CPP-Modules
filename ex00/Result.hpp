@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 14:35:42 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 02:34:35 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 18:03:13 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ class Result
 
     template <typename T2, typename ExtraData>
     Result<T2, Err> chain(Result<T2, Err> (*f)(T, ExtraData&), ExtraData& data) const;
+
+    template <typename T2, typename ExtraData>
+    Result<T, Err>  chain(Result<T2, Err> (*f)(ExtraData&), ExtraData& data) const;
 
   private:
     bool  is_ok_;
@@ -92,13 +95,30 @@ T Result<T,Err>::value() const { return value_; }
 template <typename T, typename Err>
 Err Result<T,Err>::error() const { return error_; }
 
-// (>>=)  :: m a -> (  a -> m b) -> m b
+// (>>=)  :: m a -> (  a -> env -> m b) -> m b
 template <typename T, typename Err>
 template <typename T2, typename ExtraData>
 Result<T2, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(T, ExtraData&), ExtraData& data) const
 {
   if (is_ok_)
     return f(value_, data);
+  else
+    return Result<T2, Err>::Error(error_);
+}
+
+// chain :: m a -> ( env -> m bool) -> m a (for error checking)
+template <typename T, typename Err>
+template <typename T2, typename ExtraData>
+Result<T, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(ExtraData&), ExtraData& data) const
+{
+  if (is_ok_)
+  {
+    Result<T2, Err> result = f(data);
+    if (result.is_ok())
+      return Result<T, Err>::Ok(value_);
+    else
+      return Result<T, Err>::Error(result.error());
+  }
   else
     return Result<T2, Err>::Error(error_);
 }

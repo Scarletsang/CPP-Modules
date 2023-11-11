@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 23:27:19 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 00:06:36 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 05:00:34 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ class Date
     int year() const;
     int month() const;
     int day() const;
+
+    void  set_year(int year);
+    void  set_month(int month);
+    void  set_day(int day);
 
     bool  is_leap_year() const;
     bool  is_valid() const;
