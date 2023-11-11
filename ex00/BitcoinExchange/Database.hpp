@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   BitcoinExchangeDb.hpp                                :+:      :+:    :+:   */
+/*   Database.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,33 +18,36 @@
 
 #include "Date.hpp"
 
-class BitcoinExchangeDb
+namespace bitcoin_exchange
 {
-  public:
-    enum  kErrorCode
-    {
-      kNoError = 0,
-      kInvalidDate,
-      kNegativeRate,
-      kOutOfRangeRate
-    };
-    BitcoinExchangeDb();
-    BitcoinExchangeDb(BitcoinExchangeDb const& other);
-    ~BitcoinExchangeDb();
+  class Database
+  {
+    public:
+      enum  kErrorCode
+      {
+        kNoError = 0,
+        kInvalidDate,
+        kNegativeRate,
+        kOutOfRangeRate
+      };
+      Database();
+      Database(Database const& other);
+      ~Database();
 
-    BitcoinExchangeDb&  operator=(BitcoinExchangeDb const& other);
+      Database&  operator=(Database const& other);
 
-    enum  kErrorCode        set_entry(Date date, float rate);
-    enum  kErrorCode        set_entry(std::pair<Date, float> entry);
-    float                   get_rate(Date date) const;
-    std::pair<Date, float>  get_closest_rate(Date date) const;
+      enum  kErrorCode        set_entry(Date date, float rate);
+      enum  kErrorCode        set_entry(std::pair<Date, float> entry);
+      float                   get_rate(Date date) const;
+      std::pair<Date, float>  get_closest_rate(Date date) const;
 
-    class NoRateException : public std::exception
-    {
-      public:
-        virtual const char* what() const throw();
-    };
-  
-  private:
-    std::map<Date, float>  rates_;
-};
+      class NoRateException : public std::exception
+      {
+        public:
+          virtual const char* what() const throw();
+      };
+    
+    private:
+      std::map<Date, float>  rates_;
+  };
+} // namespace bitcoin_exchange

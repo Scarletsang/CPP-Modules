@@ -6,93 +6,61 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 23:27:29 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 05:00:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 22:31:07 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Date.hpp"
 
 Date::Date()
-  : year_(-1), month_(-1), day_(-1) {}
+  : year(-1), month(-1), day(-1) {}
 
 Date::Date(int year, int month, int day)
-  : year_(year), month_(month), day_(day)
+  : year(year), month(month), day(day)
 {
   if (!is_valid())
   {
-    year_ = -1;
-    month_ = -1;
-    day_ = -1;
+    year = -1;
+    month = -1;
+    day = -1;
   }
 }
 
 Date::Date(const Date& other)
-  : year_(other.year()), month_(other.month()), day_(other.day()) {}
-
-Date::~Date() {}
+  : year(other.year), month(other.month), day(other.day) {}
 
 Date& Date::operator=(const Date& other)
 {
   if (this != &other)
   {
-    year_ = other.year();
-    month_ = other.month();
-    day_ = other.day();
+    year = other.year;
+    month = other.month;
+    day = other.day;
   }
   return *this;
 }
 
 bool  Date::operator<(const Date& other) const
 {
-  if (year_ < other.year())
+  if (year < other.year)
     return true;
-  else if (year_ > other.year())
+  else if (year > other.year)
     return false;
-  else if (month_ < other.month())
+  else if (month < other.month)
     return true;
-  else if (month_ > other.month())
+  else if (month > other.month)
     return false;
   else
-    return (day_ < other.day());
-}
-
-int Date::year() const
-{
-  return year_;
-}
-
-int Date::month() const
-{
-  return month_;
-}
-
-int Date::day() const
-{
-  return day_;
-}
-
-void  Date::set_year(int year)
-{
-  year_ = year;
-}
-
-void  Date::set_month(int month)
-{
-  month_ = month;
-}
-
-void  Date::set_day(int day)
-{
-  day_ = day;
+    return (day < other.day);
 }
 
 bool  Date::is_leap_year() const
 {
-  if (year_ % 4 != 0)
+  if (year % 4 != 0)
     return false;
-  else if (year_ % 100 != 0)
+  else if (year % 100 != 0)
     return true;
-  else if (year_ % 400 != 0)
+  else if (year % 400 != 0)
     return false;
   else
     return true;
@@ -100,17 +68,17 @@ bool  Date::is_leap_year() const
 
 bool  Date::is_valid() const
 {
-  if (year_ < 0 || month_ < 0 || day_ < 0)
+  if (year < 0 || month < 0 || day < 0)
     return false;
-  else if (month_ > 12)
+  else if (month > 12)
     return false;
-  else if (day_ > 31)
+  else if (day > 31)
     return false;
-  else if (month_ == 2 && day_ > 29)
+  else if (month == 2 && day > 29)
     return false;
-  else if (month_ == 2 && day_ == 29 && !is_leap_year())
+  else if (month == 2 && day == 29 && !is_leap_year())
     return false;
-  else if ((month_ == 4 || month_ == 6 || month_ == 9 || month_ == 11) && day_ > 30)
+  else if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
     return false;
   else
     return true;

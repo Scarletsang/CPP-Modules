@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 14:35:42 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 18:03:13 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 21:13:07 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ class Result
     Result<T2, Err> chain(Result<T2, Err> (*f)(T, ExtraData&), ExtraData& data) const;
 
     template <typename T2, typename ExtraData>
-    Result<T, Err>  chain(Result<T2, Err> (*f)(ExtraData&), ExtraData& data) const;
+    Result<T2, Err> chain(Result<T2, Err> (*f)(ExtraData&), ExtraData& data) const;
+
+    template <typename T2>
+    Result<T2, Err> chain(Result<T2, Err> (*f)()) const;
 
   private:
     bool  is_ok_;
@@ -106,19 +109,23 @@ Result<T2, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(T, ExtraData&), ExtraD
     return Result<T2, Err>::Error(error_);
 }
 
-// chain :: m a -> ( env -> m bool) -> m a (for error checking)
+// chain :: m a -> ( env -> m b) -> m b (for error checking)
 template <typename T, typename Err>
 template <typename T2, typename ExtraData>
-Result<T, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(ExtraData&), ExtraData& data) const
+Result<T2, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(ExtraData&), ExtraData& data) const
 {
   if (is_ok_)
-  {
-    Result<T2, Err> result = f(data);
-    if (result.is_ok())
-      return Result<T, Err>::Ok(value_);
-    else
-      return Result<T, Err>::Error(result.error());
-  }
+    return f(data);
+  else
+    return Result<T2, Err>::Error(error_);
+}
+
+template <typename T, typename Err>
+template <typename T2>
+Result<T2, Err> Result<T,Err>::chain(Result<T2, Err> (*f)()) const
+{
+  if (is_ok_)
+    return f();
   else
     return Result<T2, Err>::Error(error_);
 }
