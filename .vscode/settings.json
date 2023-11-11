@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.ego": "eco",
         "__bit_reference": "cpp",
         "__config": "cpp",
         "__debug": "cpp",
@@ -59,6 +60,15 @@
         "typeinfo": "cpp",
         "unordered_map": "cpp",
         "utility": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "__tree": "cpp",
+        "deque": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "stack": "cpp",
+        "filesystem": "cpp",
+        "map": "cpp"
     }
 }

@@ -25,3 +25,6 @@
 [submodule "src/cpp08"]
 	path = src/cpp08
 	url = https://github.com/Scarletsang/CPP-Modules.git
+[submodule "src/cpp09"]
+	path = src/cpp09
+	url = https://github.com/Scarletsang/CPP-Modules.git
