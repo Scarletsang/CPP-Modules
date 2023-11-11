@@ -2,7 +2,7 @@
 ######     Variables     #######
 ################################
 
-NAME:=
+NAME:=btc
 
 CC:=g++
 CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror
@@ -21,6 +21,9 @@ INCLUDE_DIR:= .
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
+	Date.cpp \
+	BitcoinExchangeDb.cpp \
+	BitcoinExchange.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 

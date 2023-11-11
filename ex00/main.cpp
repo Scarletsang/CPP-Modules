@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 23:37:11 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 00:12:20 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ namespace interactive
     struct States                     states;
     InteractivePrompt<struct States>  prompt;
 
-    prompt.setPrompt("Enter a number");
-    prompt.setReprompt("Invalid input. Try again: ");
-    prompt.registerAction("exit", Exit);
+    prompt.set_prompt("Enter a number");
+    prompt.set_reprompt("Invalid input. Try again: ");
+    prompt.register_action("exit", Exit);
     prompt.shell(states);
     return EXIT_SUCCESS;
   }

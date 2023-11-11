@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 21:00:24 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/02 22:56:56 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/11 00:11:51 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class InteractivePrompt
      * a prompt for the user to enter a value
      * @param action The action to be executed. In kForm mode, this is acting as a parser
     */
-    void  registerAction(std::string match, Action action);
+    void  register_action(std::string match, Action action);
     int   run(States& states);
     int   shell(States& states);
 
@@ -55,10 +55,10 @@ class InteractivePrompt
      * When it is not set, user will not be prompted again for an invalid input.
      * @param string The reprompt message
     */
-    void  setReprompt(std::string string);
-    void  setPrompt(std::string string);
+    void  set_reprompt(std::string string);
+    void  set_prompt(std::string string);
 
-    void  printPrompt() const;
+    void  print_prompt() const;
 
   private:
     struct  Configuration
@@ -72,8 +72,8 @@ class InteractivePrompt
     std::string             reprompt_;
     std::string             input_;
 
-    int runMultipleChoice(States& states);
-    int runForm(States& states);
+    int run_multiple_choice(States& states);
+    int run_form(States& states);
 };
 
 /////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ const InteractivePrompt<States>& InteractivePrompt<States>::operator=(const Inte
 }
 
 template <typename States>
-void  InteractivePrompt<States>::registerAction(std::string match, Action action)
+void  InteractivePrompt<States>::register_action(std::string match, Action action)
 {
   for (size_t i = 0; i < kActionLimit; i++)
   {
@@ -139,13 +139,13 @@ void  InteractivePrompt<States>::registerAction(std::string match, Action action
 }
 
 template <typename States>
-void  InteractivePrompt<States>::setReprompt(std::string string)
+void  InteractivePrompt<States>::set_reprompt(std::string string)
 {
   reprompt_ = string;
 }
 
 template <typename States>
-void  InteractivePrompt<States>::setPrompt(std::string string)
+void  InteractivePrompt<States>::set_prompt(std::string string)
 {
   prompt_ = string;
 }
@@ -159,9 +159,9 @@ int   InteractivePrompt<States>::run(States& states)
   switch (mode_)
   {
     case kMultipleChoice:
-      return runMultipleChoice(states);
+      return run_multiple_choice(states);
     case kForm:
-      return runForm(states);
+      return run_form(states);
     default:
       break;
   }
@@ -178,7 +178,7 @@ int   InteractivePrompt<States>::shell(States& states)
 }
 
 template <typename States>
-void  InteractivePrompt<States>::printPrompt() const
+void  InteractivePrompt<States>::print_prompt() const
 {
   std::cout << prompt_ << "(";
   for (size_t i = 0; i < kActionLimit; i++)
@@ -198,9 +198,9 @@ void  InteractivePrompt<States>::printPrompt() const
 /////////////////////////////////////////////
 
 template <typename States>
-int InteractivePrompt<States>::runMultipleChoice(States& states)
+int InteractivePrompt<States>::run_multiple_choice(States& states)
 {
-  printPrompt();
+  print_prompt();
   std::getline(std::cin, input_);
   if (!input_.empty())
   {
@@ -226,7 +226,7 @@ int InteractivePrompt<States>::runMultipleChoice(States& states)
 }
 
 template <typename States>
-int InteractivePrompt<States>::runForm(States& states)
+int InteractivePrompt<States>::run_form(States& states)
 {
   int exit_code = EXIT_SUCCESS;
 
