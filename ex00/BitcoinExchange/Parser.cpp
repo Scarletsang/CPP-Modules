@@ -10,9 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ParserEnv.hpp"
+#include "Parser.hpp"
+
+#include <cerrno>
 
 #include <string>
+#include <utility>
 
 #include "Result.hpp"
 #include "Date.hpp"
@@ -20,9 +23,9 @@
 
 namespace bitcoin_exchange
 {
-  ////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
   ////////////   ParserEnv environment   ////////////
-  ////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
 
   ParserEnv::ParserEnv(std::string::iterator& it, std::string::iterator& end)
     : it(it), end(end) {}
@@ -40,52 +43,80 @@ namespace bitcoin_exchange
     return *this;
   }
 
-  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////
   ////////////   ParserEnv action (Use by bitcoinExchange)   ////////////
-  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////
 
-  HeadersParseResult  ParseHeaders(ParserEnv& parser_with_delimiter)
+  HeadersParseResult  ParseHeaders(std::pair<ParserEnv, ParserSettings> env_with_delimiter)
   {
     BitcoinExchange::Headers headers;
+    ParserEnv&               env = env_with_delimiter.first;
 
-    return HeadersParseResult::Ok(headers);
+    if (ParseString(std::make_pair(&env, env_with_delimiter.second.headers.date))
+      .chain(&ParseWhitespaces, env)
+      .chain(&ParseDelimiter, std::make_pair(&env, env_with_delimiter.second.delimiter))
+      .chain(&ParseWhitespaces, env)
+      .chain(&ParseString, std::make_pair(&env, env_with_delimiter.second.headers.rate))
+      .chain(&ParseEnd, env)
+      .is_ok())
+      return HeadersParseResult::Ok(headers);
+    return HeadersParseResult::Error(BitcoinExchange::kWrongHeaders);
   }
 
-  EntryParseResult    ParseEntry(ParserEnv& parser_with_delimiter)
+  EntryParseResult    ParseEntry(std::pair<ParserEnv, std::string> env_with_delimiter)
   {
-    Entry entry;
-    ParserEnv<Nothing> ParserEnv(parser_with_delimiter);
+    Entry       entry;
+    ParserEnv&  env = env_with_delimiter.first;
 
-    if (ParseDate(ParserEnv)
-      .chain(&SavesValueTo<Date>, entry.first)
-      .chain(&ParseWhitespaces, ParserEnv)
-      .chain(&ParseDelimiter, parser_with_delimiter)
-      .chain(&ParseWhitespaces, ParserEnv)
-      .chain(&ParseRate, ParserEnv)
-      .chain(&SavesValueTo<float>, entry.second)
-      .chain(&ParseEnd)
+    if (ParseDate(env)
+      .chain(&SavesValueTo<Date>, &entry.first)
+      .chain(&ParseWhitespaces, env)
+      .chain(&ParseDelimiter, std::make_pair(&env, env_with_delimiter.second))
+      .chain(&ParseWhitespaces, env)
+      .chain(&ParseRate, env)
+      .chain(&SavesValueTo<float>, &entry.second)
+      .chain(&ParseEnd, env)
       .is_ok())
         return EntryParseResult::Ok(entry);
     return EntryParseResult::Error(BitcoinExchange::kInvalidEntry); 
   }
-  ////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////
   ////////////   ParserEnv action (implementation)   ////////////
-  ////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////
 
-  ParserEnv::DateParseResult   ParserEnv::parse_date()
+  DateParseResult   ParseDate(ParserEnv& env)
   {
-    Date date;
+    Date  date;
 
-    if (parse_int()
-      .chain(&ParserEnv::saves_value_to<int>, date.day)
-      .chain(&ParserEnv::parse_delimiter, "-")
-      .chain(&ParserEnv::parse_int)
-      .chain(&ParserEnv::saves_value_to<int>, date.month)
-      .chain(&ParserEnv::parse_delimiter, "-")
-      .chain(&ParserEnv::parse_int)
-      .chain(&ParserEnv::saves_value_to<int>, date.year)
+    if (ParseInt(env)
+      .chain(&SavesValueTo<int>, &date.day)
+      .chain(&ParseDelimiter, std::make_pair(&env, std::string("-")))
+      .chain(&ParseInt, env)
+      .chain(&SavesValueTo<int>, &date.month)
+      .chain(&ParseDelimiter, std::make_pair(&env, std::string("-")))
+      .chain(&ParseInt, env)
+      .chain(&SavesValueTo<int>, &date.year)
       .is_ok())
         return DateParseResult::Ok(date);
     return DateParseResult::Error(BitcoinExchange::kInvalidDate);
+  }
+
+  RateParseResult   ParseRate(ParserEnv& env)
+  {
+    char* endptr;
+    errno = 0;
+    double rate = std::strtod(&(*env.it), &endptr);
+    if (errno == ERANGE || 
+      ((static_cast<double>(std::numeric_limits<float>::max()) < rate) &&
+      (rate < static_cast<double>(-std::numeric_limits<float>::max()))))
+      return RateParseResult::Error(BitcoinExchange::kOutOfRangeRate);
+    else if (rate < 0)
+      return RateParseResult::Error(BitcoinExchange::kNegativeRate);
+    else
+    {
+      env.it = static_cast<std::string::iterator>(endptr);
+      return RateParseResult::Ok(static_cast<float>(rate));
+    }
   }
 } // namespace bitcoin_exchange

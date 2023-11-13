@@ -13,6 +13,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 #include "Result.hpp"
 #include "Date.hpp"
@@ -39,6 +40,12 @@ namespace bitcoin_exchange
     ParserEnv& operator=(ParserEnv const& other);
   };
 
+  struct ParserSettings
+  {
+    std::string               delimiter;
+    BitcoinExchange::Headers  headers;
+  };
+
   ////////////////////////////////////////////////////////////////////
   ////////////   ParserEnv action (Use by bitcoinExchange)   ////////////
   ////////////////////////////////////////////////////////////////////
@@ -47,8 +54,8 @@ namespace bitcoin_exchange
   typedef Result<BitcoinExchange::Headers, BitcoinExchange::kErrorCode> HeadersParseResult;
   typedef Result<Entry, BitcoinExchange::kErrorCode> EntryParseResult;
 
-  HeadersParseResult  ParseHeaders(ParserEnv& ParserEnv);
-  EntryParseResult    ParseEntry(ParserEnv& ParserEnv);
+  HeadersParseResult  ParseHeaders(std::pair<ParserEnv, ParserSettings> env_with_delimiter);
+  EntryParseResult    ParseEntry(std::pair<ParserEnv, std::string> env_with_delimiter);
 
   ////////////////////////////////////////////////////////////
   ////////////   ParserEnv action (implementation)   ////////////
@@ -57,21 +64,23 @@ namespace bitcoin_exchange
   typedef Result<Date, BitcoinExchange::kErrorCode> DateParseResult;
   typedef Result<float, BitcoinExchange::kErrorCode> RateParseResult;
   typedef Result<int, BitcoinExchange::kErrorCode> IntParseResult;
-  typedef Result<struct Nothing, BitcoinExchange::kErrorCode> NoParseResult;
+  typedef Result<Nothing, BitcoinExchange::kErrorCode> NoParseResult;
+  typedef Result<std::string, BitcoinExchange::kErrorCode> StringParseResult;
 
-  DateParseResult     ParseDate(ParserEnv& ParserEnv);
-  RateParseResult     ParseRate(ParserEnv& ParserEnv);
+  DateParseResult     ParseDate(ParserEnv& env);
+  RateParseResult     ParseRate(ParserEnv& env);
 
-  IntParseResult      ParseInt(ParserEnv& ParserEnv);
-  NoParseResult       ParseDelimiter(ParserEnv& ParserEnv);
-  NoParseResult       ParseWhitespaces(ParserEnv& ParserEnv);
-  NoParseResult       ParseNewline(ParserEnv& ParserEnv);
-  NoParseResult       ParseEnd(ParserEnv& ParserEnv);
+  IntParseResult      ParseInt(ParserEnv& env);
+  StringParseResult   ParseString(std::pair<ParserEnv*, std::string> env_with_string);
+  NoParseResult       ParseDelimiter(std::pair<ParserEnv*, std::string> env_with_delimiter);
+  NoParseResult       ParseWhitespaces(ParserEnv& env);
+  NoParseResult       ParseNewline(ParserEnv& env);
+  NoParseResult       ParseEnd(ParserEnv& env);
 
   template <typename T>
-  NoParseResult     SavesValueTo(T value, T& location)
+  NoParseResult     SavesValueTo(T value, T* location)
   {
-    location = value;
+    *location = value;
     return NoParseResult::Ok(Nothing());
   }
 } // namespace bitcoin_exchange

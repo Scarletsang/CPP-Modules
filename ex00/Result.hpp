@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 14:35:42 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 21:13:07 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/13 16:51:13 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@ class Result
 
     T     value() const;
     Err   error() const;
+
+    template <typename T2, typename ExtraData>
+    Result<T2, Err> chain(Result<T2, Err> (*f)(T, ExtraData), ExtraData data) const;
+
+    template <typename T2, typename ExtraData>
+    Result<T2, Err> chain(Result<T2, Err> (*f)(ExtraData), ExtraData data) const;
 
     template <typename T2, typename ExtraData>
     Result<T2, Err> chain(Result<T2, Err> (*f)(T, ExtraData&), ExtraData& data) const;
@@ -99,6 +105,27 @@ template <typename T, typename Err>
 Err Result<T,Err>::error() const { return error_; }
 
 // (>>=)  :: m a -> (  a -> env -> m b) -> m b
+template <typename T, typename Err>
+template <typename T2, typename ExtraData>
+Result<T2, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(T, ExtraData), ExtraData data) const
+{
+  if (is_ok_)
+    return f(value_, data);
+  else
+    return Result<T2, Err>::Error(error_);
+}
+
+// chain :: m a -> ( env -> m b) -> m b (for error checking)
+template <typename T, typename Err>
+template <typename T2, typename ExtraData>
+Result<T2, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(ExtraData), ExtraData data) const
+{
+  if (is_ok_)
+    return f(data);
+  else
+    return Result<T2, Err>::Error(error_);
+}
+
 template <typename T, typename Err>
 template <typename T2, typename ExtraData>
 Result<T2, Err> Result<T,Err>::chain(Result<T2, Err> (*f)(T, ExtraData&), ExtraData& data) const
