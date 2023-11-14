@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:39:04 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 22:20:49 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/14 23:19:35 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,129 +14,120 @@
 
 #include <string>
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 
+#include "BitcoinExchange/Parser.hpp"
 #include "Date.hpp"
 #include "Result.hpp"
 
 BitcoinExchange::BitcoinExchange() {}
 
 BitcoinExchange::BitcoinExchange(BitcoinExchange const& other)
-  : db_(other.db_) {}
+  : headers_(other.headers_), db_(other.db_) {}
 
 BitcoinExchange::~BitcoinExchange() {}
 
 BitcoinExchange&  BitcoinExchange::operator=(BitcoinExchange const& other)
 {
   if (this != &other)
+  {
+    headers_ = other.headers_;
     db_ = other.db_;
+  }
   return *this;
 }
 
-// namespace parser
-// {
-//   struct Nothing
-//   {
-//     Nothing() {};
-//   };
-//   typedef std::pair<Date, float> Entry;
-//   typedef Result<BitcoinExchange::Headers, BitcoinExchange::kErrorCode> HeadersParseResult;
-//   typedef Result<Entry, BitcoinExchange::kErrorCode> EntryParseResult;
-//   typedef Result<Date, BitcoinExchange::kErrorCode> DateParseResult;
-//   typedef Result<float, BitcoinExchange::kErrorCode> RateParseResult;
-//   typedef Result<int, BitcoinExchange::kErrorCode> IntParseResult;
-//   typedef Result<struct Nothing, BitcoinExchange::kErrorCode> NoParseResult;
+BitcoinExchange::kErrorCode BitcoinExchange::entries_from_file(std::string filename, 
+                                                    std::string delimiter,
+                                                    bool silent = false)
+{
+  std::ifstream file(filename);
 
-//   struct ParserMetaData
-//   {
-//     std::string::iterator&  it;
-//     std::string::iterator&  end;
-//     std::string             delimiter;
-//   };
+  if (!file.is_open())
+    return silent ? kFileNotFound : print_error(kFileNotFound, filename);
+  std::string line;
+  kErrorCode  error_code = kNoError;
+  if (!std::getline(file, line))
+    return silent ? kEmptyFile : print_error(kEmptyFile, line);
+  else if (header_from_line(line, delimiter) != kNoError)
+    return silent ? kWrongHeaders : print_error(kWrongHeaders, line);
+  while (std::getline(file, line))
+  {
+    if ((error_code = entry_from_line(line, delimiter, silent)) != kNoError)
+      return silent ? error_code : print_error(error_code, line);
+  }
+  file.close();
+  return error_code;
+}
 
-//   NoParseResult  ParseDelimiter(struct ParserMetaData& parser_meta)
-//   {
-//     if (parser_meta.end - parser_meta.it < parser_meta.delimiter.length())
-//       return NoParseResult::Error(BitcoinExchange::kInvalidEntry);
-//     else if (std::equal(parser_meta.it, parser_meta.it + parser_meta.delimiter.length(), 
-//       parser_meta.delimiter.begin(), parser_meta.delimiter.end()))
-//     {
-//       parser_meta.it += parser_meta.delimiter.length();
-//       return NoParseResult::Ok(Nothing());
-//     }
-//     else
-//       return NoParseResult::Error(BitcoinExchange::kInvalidEntry);
-//     return NoParseResult::Ok(Nothing());
-//   }
+BitcoinExchange::kErrorCode BitcoinExchange::entry_from_line(std::string line,
+                                                    std::string delimiter,
+                                                    bool silent = false)
+{
+  bitcoin_exchange::ParserEnv env(line.begin(), line.end());
 
-//   NoParseResult  ParseSpaces(struct ParserMetaData& parser_meta)
-//   {
-//     while (parser_meta.it != parser_meta.end && std::isspace(*parser_meta.it))
-//       ++parser_meta.it;
-//     return NoParseResult::Ok(Nothing());
-//   }
+  bitcoin_exchange::EntryParseResult result = \
+    bitcoin_exchange::ParseEntry(std::make_pair(&env, delimiter));
+  if (result.is_ok())
+  {
+    db_.set_entry(result.value());
+    return kNoError;
+  }
+  else
+    return result.error();
+}
 
-//   NoParseResult  CheckEndOfLine(struct ParserMetaData& parser_meta)
-//   {
-//     if (parser_meta.it != parser_meta.end && *parser_meta.it != '\n')
-//       return NoParseResult::Error(BitcoinExchange::kInvalidEntry);
-//     return NoParseResult::Ok(Nothing());
-//   }
+BitcoinExchange::kErrorCode  BitcoinExchange::header_from_line(std::string line,
+                                                               std::string delimiter)
+{
+  bitcoin_exchange::ParserSettings settings(delimiter, headers_);
+  bitcoin_exchange::ParserEnv      env(line.begin(), line.end());
 
-//   int Int(std::string& input)
-//   {
-//     int i = std::atoi(input.c_str());
-//     if (i == 0 && input != "0")
-//       throw std::invalid_argument("Invalid input");
-//     return i;
-//   }
+  bitcoin_exchange::HeadersParseResult result = \
+    bitcoin_exchange::ParseHeaders(std::make_pair(&env, settings));
+  if (result.is_ok())
+  {
+    headers_ = result.value();
+    return kNoError;
+  }
+  else
+    return result.error();
+}
 
-//   template <typename T>
-//   NoParseResult SavesValueTo(T data, T& location)
-//   {
-//     location = data;
-//     return NoParseResult::Ok(Nothing());
-//   }
-
-//   DateParseResult ParseDate(struct ParserMetaData& parser_meta)
-//   {
-//     Date                  date;
-//     struct ParserMetaData date_parser_meta(parser_meta);
-//     date_parser_meta.delimiter = "-";
-
-//     ParseDelimiter(date_parser_meta)
-//       .chain(&ParseSpaces, date_parser_meta);
-
-//     return DateParseResult::Ok(date);
-//   }
-
-//   RateParseResult ParseRate(struct ParserMetaData& parser_meta)
-//   {
-//     float rate;
-
-//     return RateParseResult::Ok(rate);
-//   }
-
-//   HeadersParseResult ParseHeaders(int, struct ParserMetaData& parser_meta)
-//   {
-//     BitcoinExchange::Headers headers;
-
-//     return HeadersParseResult::Ok(headers);
-//   }
-
-//   EntryParseResult ParseEntry(int, struct ParserMetaData& parser_meta)
-//   {
-//     Entry entry;
-
-//     if (ParseDate(parser_meta)
-//       .chain(&SavesValueTo<Date>, entry.first)
-//       .chain(&ParseSpaces, parser_meta)
-//       .chain(&ParseDelimiter, parser_meta)
-//       .chain(&ParseSpaces, parser_meta)
-//       .chain(&ParseRate, parser_meta)
-//       .chain(&SavesValueTo<float>, entry.second)
-//       .chain(&CheckEndOfLine, parser_meta)
-//       .is_ok())
-//         return EntryParseResult::Ok(entry);
-//     return EntryParseResult::Error(BitcoinExchange::kInvalidEntry);
-//   }
-// } // namespace parser
+kErrorCode  BitcoinExchange::print_error(kErrorCode error, std::string& line)
+{
+  switch (error)
+  {
+    case kFileNotFound:
+      std::cerr << "Error: " << strerror(errno) << std::endl;
+      break;
+    case kEmptyFile:
+      std::cerr << "Error: Empty file" << std::endl;
+      break;
+    case kWrongHeaders:
+      std::cerr << "Error: Wrong headers" << std::endl;
+      break;
+    case kIncompleteEntry:
+      std::cerr << "Error: Incomplete entry: " << line << std::endl;
+      break;
+    case kInvalidEntry:
+      std::cerr << "Error: Invalid entry: " << line << std::endl;
+      break;
+    case kInvalidDate:
+      std::cerr << "Error: Invalid date: " << line << std::endl;
+      break;
+    case kExtraFields:
+      std::cerr << "Error: Extra fields: " << line << std::endl;
+      break;
+    case kNegativeRate:
+      std::cerr << "Error: Negative rate: " << line << std::endl;
+      break;
+    case kOutOfRangeRate:
+      std::cerr << "Error: Out of range rate: " << line << std::endl;
+      break;
+    default:
+      break;
+  }
+  return error;
+}

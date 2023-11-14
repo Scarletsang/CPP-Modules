@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:18:51 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 22:30:20 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/14 23:15:44 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <string>
 
 #include "BitcoinExchange/Database.hpp"
-#include "BitcoinExchange/Parser.hpp"
 
 class BitcoinExchange
 {
@@ -23,10 +22,13 @@ class BitcoinExchange
     enum  kErrorCode
     {
       kNoError = 0,
+      kFileNotFound,
+      kEmptyFile,
       kWrongHeaders,
       kIncompleteEntry,
       kInvalidEntry,
       kInvalidDate,
+      kExtraFields,
       kNegativeRate,
       kOutOfRangeRate
     };
@@ -41,10 +43,13 @@ class BitcoinExchange
 
     BitcoinExchange&  operator=(BitcoinExchange const& other);
 
-    enum  kErrorCode entries_from_file(std::string filename, std::string delimiter, bool silent = false);
-    enum  kErrorCode entries_from_line(std::string line, std::string delimiter, bool silent = false);
+    kErrorCode  entries_from_file(std::string filename, std::string delimiter, bool silent = false);
+    kErrorCode  entry_from_line(std::string line, std::string delimiter, bool silent = false);
+    kErrorCode  header_from_line(std::string line, std::string delimiter);
   
   private:
     struct Headers             headers_;
     bitcoin_exchange::Database db_;
+
+    kErrorCode  print_error(kErrorCode error, std::string& line);
 };
