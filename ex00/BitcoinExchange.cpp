@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:39:04 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/14 23:19:35 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/14 23:20:41 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ BitcoinExchange::kErrorCode  BitcoinExchange::header_from_line(std::string line,
     return result.error();
 }
 
-kErrorCode  BitcoinExchange::print_error(kErrorCode error, std::string& line)
+BitcoinExchange::kErrorCode  BitcoinExchange::print_error(kErrorCode error, std::string& line)
 {
   switch (error)
   {
