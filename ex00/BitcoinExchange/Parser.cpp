@@ -115,7 +115,7 @@ namespace bitcoin_exchange
       return RateParseResult::Error(BitcoinExchange::kNegativeRate);
     else
     {
-      env.it = static_cast<std::string::iterator>(endptr);
+      env.it += (endptr - &*env.it);
       return RateParseResult::Ok(static_cast<float>(rate));
     }
   }
