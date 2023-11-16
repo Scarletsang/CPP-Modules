@@ -50,8 +50,8 @@ namespace bitcoin_exchange
   ////////////   ParserSettings environment   ////////////
   ////////////////////////////////////////////////////////
 
-  ParserSettings::ParserSettings(std::string delimiter, BitcoinExchange::Headers headers)
-    : delimiter(delimiter), headers(headers) {}
+  ParserSettings::ParserSettings(std::string delimiter, BitcoinExchange::Headers headers, float max_rate)
+    : delimiter(delimiter), headers(headers), max_rate(max_rate) {}
 
   ///////////////////////////////////////////////////////////////////////
   ////////////   ParserEnv action (Use by bitcoinExchange)   ////////////
@@ -78,7 +78,7 @@ namespace bitcoin_exchange
       .chain(&Return<BitcoinExchange::Headers>, headers);
   }
 
-  EntryParseResult    ParseEntry(std::pair<ParserEnv*, std::string> env_with_delimiter)
+  EntryParseResult    ParseEntry(std::pair<ParserEnv*, ParserSettings> env_with_delimiter)
   {
     Entry       entry;
     ParserEnv   env = *env_with_delimiter.first;
@@ -86,9 +86,9 @@ namespace bitcoin_exchange
     return ParseDate(env)
       .chain(&SavesValueTo<Date>, &entry.first)
       .chain(&ParseWhitespaces, env)
-      .chain(&ParseDelimiter, std::make_pair(&env, env_with_delimiter.second))
+      .chain(&ParseDelimiter, std::make_pair(&env, env_with_delimiter.second.delimiter))
       .chain(&ParseWhitespaces, env)
-      .chain(&ParseRate, env)
+      .chain(&ParseRate, std::make_pair(&env, env_with_delimiter.second.max_rate))
       .chain(&SavesValueTo<float>, &entry.second)
       .chain(&ParseEnd, env)
       .chain(&UpdateEnv, std::make_pair(env_with_delimiter.first, env))
@@ -116,20 +116,19 @@ namespace bitcoin_exchange
       .chain(&Return<Date>, date);
   }
 
-  RateParseResult   ParseRate(ParserEnv& env)
+  RateParseResult   ParseRate(std::pair<ParserEnv*, float> env_with_maximum_rate)
   {
+    ParserEnv* env = env_with_maximum_rate.first;
     char* endptr;
     errno = 0;
-    double rate = std::strtod(&(*env.it), &endptr);
-    if (errno == ERANGE || 
-      ((static_cast<double>(std::numeric_limits<float>::max()) < rate) &&
-      (rate < static_cast<double>(-std::numeric_limits<float>::max()))))
+    double rate = std::strtod(&*env->it, &endptr);
+    if (errno == ERANGE || (0 > rate) || (rate > env_with_maximum_rate.second))
       return RateParseResult::Error(BitcoinExchange::kOutOfRangeRate);
     else if (rate < 0)
       return RateParseResult::Error(BitcoinExchange::kNegativeRate);
     else
     {
-      env.it += (endptr - &*env.it);
+      env->it += (endptr - &*env->it);
       return RateParseResult::Ok(static_cast<float>(rate));
     }
   }

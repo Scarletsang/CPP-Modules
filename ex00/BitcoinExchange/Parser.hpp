@@ -44,8 +44,9 @@ namespace bitcoin_exchange
   {
     std::string               delimiter;
     BitcoinExchange::Headers  headers;
+    float                     max_rate;
 
-    ParserSettings(std::string delimiter, BitcoinExchange::Headers headers);
+    ParserSettings(std::string delimiter, BitcoinExchange::Headers headers, float max_rate);
   };
 
   ////////////////////////////////////////////////////////////////////
@@ -57,7 +58,7 @@ namespace bitcoin_exchange
   typedef Result<Entry, BitcoinExchange::kErrorCode> EntryParseResult;
 
   HeadersParseResult  ParseHeaders(std::pair<ParserEnv*, ParserSettings> env_with_delimiter);
-  EntryParseResult    ParseEntry(std::pair<ParserEnv*, std::string> env_with_delimiter);
+  EntryParseResult    ParseEntry(std::pair<ParserEnv*, ParserSettings> env_with_delimiter);
 
   ////////////////////////////////////////////////////////////
   ////////////   ParserEnv action (implementation)   ////////////
@@ -70,7 +71,7 @@ namespace bitcoin_exchange
   typedef Result<std::string, BitcoinExchange::kErrorCode> StringParseResult;
 
   DateParseResult     ParseDate(ParserEnv& env);
-  RateParseResult     ParseRate(ParserEnv& env);
+  RateParseResult     ParseRate(std::pair<ParserEnv*, float> env_with_maximum_rate);
 
   IntParseResult      ParseInt(ParserEnv& env);
   StringParseResult   ParseUntilDelimiter(std::pair<ParserEnv*, std::string> env_with_delimiter);

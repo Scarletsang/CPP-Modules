@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:39:04 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/16 18:29:56 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/16 19:42:38 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 #include "BitcoinExchange/Parser.hpp"
 #include "Date.hpp"
@@ -95,10 +96,11 @@ BitcoinExchange::kErrorCode  BitcoinExchange::compare_entries_from_file(std::str
 BitcoinExchange::kErrorCode BitcoinExchange::entry_from_line(std::string line,
                                                              std::string delimiter)
 {
+  bitcoin_exchange::ParserSettings settings(delimiter, headers_, std::numeric_limits<float>::max());
   bitcoin_exchange::ParserEnv env(line.begin(), line.end());
 
   bitcoin_exchange::EntryParseResult result = \
-    bitcoin_exchange::ParseEntry(std::make_pair(&env, delimiter));
+    bitcoin_exchange::ParseEntry(std::make_pair(&env, settings));
   if (result.is_ok())
   {
     db_.set_entry(result.value());
@@ -111,10 +113,11 @@ BitcoinExchange::kErrorCode BitcoinExchange::entry_from_line(std::string line,
 BitcoinExchange::kErrorCode  BitcoinExchange::compare_entry_from_line(std::string line,
                                                                      std::string delimiter)
 {
+  bitcoin_exchange::ParserSettings settings(delimiter, headers_, 1000);
   bitcoin_exchange::ParserEnv env(line.begin(), line.end());
 
   bitcoin_exchange::EntryParseResult result = \
-    bitcoin_exchange::ParseEntry(std::make_pair(&env, delimiter));
+    bitcoin_exchange::ParseEntry(std::make_pair(&env, settings));
   if (result.is_ok())
   {
     std::pair<Date, float> entry = result.value();
@@ -129,7 +132,7 @@ BitcoinExchange::kErrorCode  BitcoinExchange::compare_entry_from_line(std::strin
 BitcoinExchange::kErrorCode  BitcoinExchange::header_from_line(std::string line,
                                                                std::string delimiter)
 {
-  bitcoin_exchange::ParserSettings settings(delimiter, headers_);
+  bitcoin_exchange::ParserSettings settings(delimiter, headers_, std::numeric_limits<float>::max());
   bitcoin_exchange::ParserEnv      env(line.begin(), line.end());
 
   bitcoin_exchange::HeadersParseResult result = \
