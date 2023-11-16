@@ -22,7 +22,8 @@ INCLUDE_DIR:= .
 
 MAIN_SRC:= \
 	Date.cpp \
-	BitcoinExchangeDb.cpp \
+	BitcoinExchange/Database.cpp \
+	BitcoinExchange/Parser.cpp \
 	BitcoinExchange.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)

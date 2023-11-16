@@ -74,10 +74,12 @@ namespace bitcoin_exchange
 
   IntParseResult      ParseInt(ParserEnv& env);
   StringParseResult   ParseUntilDelimiter(std::pair<ParserEnv*, std::string> env_with_delimiter);
+  StringParseResult   ParseUntilEof(ParserEnv& env);
   NoParseResult       ParseDelimiter(std::pair<ParserEnv*, std::string> env_with_delimiter);
   NoParseResult       ParseWhitespaces(ParserEnv& env);
   NoParseResult       ParseEnd(ParserEnv& env);
 
+  StringParseResult   TrimString(std::string string, ParserEnv& env);
   StringParseResult   ValidateHeader(std::string header, std::string expected);
 
   NoParseResult       UpdateEnv(std::pair<ParserEnv*, ParserEnv> env_with_new_env);

@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 23:27:29 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 22:31:07 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/16 18:32:19 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Date.hpp"
+
+#include <iomanip>
 
 Date::Date()
   : year(-1), month(-1), day(-1) {}
@@ -82,4 +84,12 @@ bool  Date::is_valid() const
     return false;
   else
     return true;
+}
+
+std::ostream& operator<<(std::ostream& os, const Date& date)
+{
+  os << date.year << "-"
+     << std::setw(2) << std::setfill('0') << date.month << "-"
+     << std::setw(2) << std::setfill('0') << date.day;
+  return os;
 }

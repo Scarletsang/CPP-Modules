@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 23:27:19 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 21:06:59 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/16 16:42:03 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
+#include <iostream>
 
 struct Date
 {
@@ -26,3 +28,5 @@ struct Date
   bool  is_leap_year() const;
   bool  is_valid() const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Date& date);

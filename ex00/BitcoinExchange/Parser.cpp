@@ -13,9 +13,12 @@
 #include "Parser.hpp"
 
 #include <cerrno>
+#include <cstdlib>
+#include <cstddef>
 
 #include <string>
 #include <utility>
+#include <limits>
 
 #include "Result.hpp"
 #include "Date.hpp"
@@ -60,10 +63,14 @@ namespace bitcoin_exchange
     ParserEnv                env = *env_with_delimiter.first;
 
     return ParseUntilDelimiter(std::make_pair(&env, env_with_delimiter.second.delimiter))
+      .chain(&TrimString, env)
       .chain(&ValidateHeader, env_with_delimiter.second.headers.date)
       .chain(&SavesValueTo<std::string>, &headers.date)
+      .chain(&ParseWhitespaces, env)
       .chain(&ParseDelimiter, std::make_pair(&env, env_with_delimiter.second.delimiter))
-      .chain(&ParseUntilDelimiter, std::make_pair(&env, std::string("\n")))
+      .chain(&ParseWhitespaces, env)
+      .chain(&ParseUntilEof, env)
+      .chain(&TrimString, env)
       .chain(&ValidateHeader, env_with_delimiter.second.headers.rate)
       .chain(&SavesValueTo<std::string>, &headers.rate)
       .chain(&ParseEnd, env)
@@ -98,13 +105,13 @@ namespace bitcoin_exchange
     ParserEnv new_env = env;
 
     return ParseInt(new_env)
-      .chain(&SavesValueTo<int>, &date.day)
+      .chain(&SavesValueTo<int>, &date.year)
       .chain(&ParseDelimiter, std::make_pair(&new_env, std::string("-")))
       .chain(&ParseInt, new_env)
       .chain(&SavesValueTo<int>, &date.month)
       .chain(&ParseDelimiter, std::make_pair(&new_env, std::string("-")))
       .chain(&ParseInt, new_env)
-      .chain(&SavesValueTo<int>, &date.year)
+      .chain(&SavesValueTo<int>, &date.day)
       .chain(&UpdateEnv, std::make_pair(&env, new_env))
       .chain(&Return<Date>, date);
   }
@@ -149,22 +156,45 @@ namespace bitcoin_exchange
     const std::string delimiter = env_with_delimiter.second;
 
     // parse without saving the delimiter
-    while (std::distance(env.it, env.end) >= delimiter.size() &&
+    while (std::distance(env.it, env.end) >= static_cast<ptrdiff_t>(delimiter.size()) &&
       !std::equal(env.it, env.it + delimiter.size(), delimiter.begin()))
       ++env.it;
-    return StringParseResult::Ok(std::string(env_with_delimiter.first->it, env.it));
+    std::string result(env_with_delimiter.first->it, env.it);
+    *env_with_delimiter.first = env;
+    return StringParseResult::Ok(result);
+  }
+
+  StringParseResult   TrimString(std::string string, ParserEnv& env)
+  {
+    (void) env;
+    std::string::iterator it = string.begin();
+    while (std::isspace(*it))
+      ++it;
+    string.erase(string.begin(), it);
+    it = string.end();
+    while (std::isspace(*(it - 1)))
+      --it;
+    string.erase(it, string.end());
+    return StringParseResult::Ok(string);
+  }
+
+  StringParseResult   ParseUntilEof(ParserEnv& env)
+  {
+    std::string::iterator it = env.it;
+    env.it = env.end;
+    return StringParseResult::Ok(std::string(it, env.end));
   }
 
   NoParseResult       ParseDelimiter(std::pair<ParserEnv*, std::string> env_with_delimiter)
   {
-    const ParserEnv*  env = env_with_delimiter.first;
+    ParserEnv*  env = env_with_delimiter.first;
     const std::string delimiter = env_with_delimiter.second;
 
-    if (std::distance(env->it, env->end) < delimiter.size())
+    if (std::distance(env->it, env->end) < static_cast<ptrdiff_t>(delimiter.size()))
       return NoParseResult::Error(BitcoinExchange::kIncompleteEntry);
     else if (std::equal(env->it, env->it + delimiter.size(), delimiter.begin()))
     {
-      std::advance(env->it, delimiter.size());
+      std::advance(env->it, static_cast<ptrdiff_t>(delimiter.size()));
       return NoParseResult::Ok(Nothing());
     }
     else

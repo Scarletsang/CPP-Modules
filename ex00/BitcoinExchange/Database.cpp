@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 19:41:06 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 19:41:54 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/16 18:33:42 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,22 @@ namespace bitcoin_exchange
     return it->second;
   }
 
-  std::pair<Date, float> Database::get_closest_rate(Date date) const
+  std::pair<Date, float> Database::get_closest_entry(Date date) const
   {
     std::map<Date, float>::const_iterator it = rates_.lower_bound(date);
     if (it == rates_.end())
       throw NoRateException();
     return *it;
+  }
+
+  bool  Database::is_empty() const
+  {
+    return rates_.empty();
+  }
+
+  size_t  Database::size() const
+  {
+    return rates_.size();
   }
 
   const char* Database::NoRateException::what() const throw()

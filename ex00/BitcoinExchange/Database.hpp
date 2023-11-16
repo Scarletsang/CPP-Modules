@@ -39,7 +39,10 @@ namespace bitcoin_exchange
       enum  kErrorCode        set_entry(Date date, float rate);
       enum  kErrorCode        set_entry(std::pair<Date, float> entry);
       float                   get_rate(Date date) const;
-      std::pair<Date, float>  get_closest_rate(Date date) const;
+      std::pair<Date, float>  get_closest_entry(Date date) const;
+
+      bool                    is_empty() const;
+      size_t                  size() const;
 
       class NoRateException : public std::exception
       {

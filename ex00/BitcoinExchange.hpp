@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:18:51 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/14 23:15:44 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/15 15:56:13 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ class BitcoinExchange
     BitcoinExchange&  operator=(BitcoinExchange const& other);
 
     kErrorCode  entries_from_file(std::string filename, std::string delimiter, bool silent = false);
-    kErrorCode  entry_from_line(std::string line, std::string delimiter, bool silent = false);
-    kErrorCode  header_from_line(std::string line, std::string delimiter);
+    kErrorCode  compare_entries_from_file(std::string filename, std::string delimiter);
   
   private:
     struct Headers             headers_;
     bitcoin_exchange::Database db_;
 
+    kErrorCode  compare_entry_from_line(std::string line, std::string delimiter);
+    kErrorCode  entry_from_line(std::string line, std::string delimiter);
+    kErrorCode  header_from_line(std::string line, std::string delimiter);
     kErrorCode  print_error(kErrorCode error, std::string& line);
 };
