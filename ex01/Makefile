@@ -5,7 +5,7 @@
 NAME:=RPN
 
 CC:=g++
-CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror
+CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror -MMD -MP -O2
 LDFLAGS= -std=c++98 -pedantic
 ifdef FSANITIZE
 	CXXFLAGS+= -g3 -fsanitize=address -DDEBUG=1
