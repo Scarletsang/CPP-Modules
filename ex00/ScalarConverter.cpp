@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 17:16:33 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/28 17:11:53 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/16 16:11:34 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <cmath>
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <limits>
 #include <stdexcept>
@@ -78,7 +79,7 @@ template <>
 std::ostream& operator<<(std::ostream& os, Result<float, converter::Error> const& result)
 {
   if (result.is_ok())
-    os << result.value();
+    os << std::fixed << std::setprecision(1) << result.value() << 'f';
   else
   {
     switch (result.error())
@@ -109,7 +110,7 @@ template <>
 std::ostream& operator<<(std::ostream& os, Result<double, converter::Error> const& result)
 {
   if (result.is_ok())
-    os << result.value();
+    os << std::fixed << std::setprecision(1) << result.value();
   else
   {
     switch (result.error())
