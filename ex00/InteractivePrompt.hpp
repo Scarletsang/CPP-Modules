@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 21:00:24 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 00:11:51 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/17 01:38:59 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ class InteractivePrompt
 {
   public:
     static const int  kActionLimit = 8;
-    typedef int (*Action)(std::string input, States&);
+    typedef int (*Action)(std::string& input, States&);
     enum  Mode
     {
       kMultipleChoice,

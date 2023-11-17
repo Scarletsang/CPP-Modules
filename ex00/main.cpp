@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/16 18:14:57 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/17 16:12:49 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,35 @@ namespace interactive
   struct States
   {};
 
-  int Exit(std::string input, struct States& states)
+  int AddEntry(std::string& input, struct States& states)
+  {
+    (void)input;
+    (void)states;
+    return EXIT_FAILURE;
+  }
+
+  int Compare(std::string& input, struct States& states)
+  {
+    (void)input;
+    (void)states;
+    return EXIT_FAILURE;
+  }
+
+  int Query(std::string& input, struct States& states)
+  {
+    (void)input;
+    (void)states;
+    return EXIT_FAILURE;
+  }
+
+  int Print(std::string& input, struct States& states)
+  {
+    (void)input;
+    (void)states;
+    return EXIT_FAILURE;
+  }
+
+  int Exit(std::string& input, struct States& states)
   {
     (void)input;
     (void)states;
@@ -35,9 +63,13 @@ namespace interactive
     struct States                     states;
     InteractivePrompt<struct States>  prompt;
 
-    prompt.set_prompt("Enter a number");
+    prompt.set_prompt("What do you want to do?");
     prompt.set_reprompt("Invalid input. Try again: ");
     prompt.register_action("exit", Exit);
+    prompt.register_action("Add", AddEntry);
+    prompt.register_action("compare", Compare);
+    prompt.register_action("query", Query);
+    prompt.register_action("print", Print);
     prompt.shell(states);
     return EXIT_SUCCESS;
   }
@@ -57,9 +89,12 @@ namespace noninteractive
 int main(int argc, const char** argv)
 {
   if (argc == 2)
-    return noninteractive::Run(argv[1]);
-  else if (argc == 3 && std::string(argv[1]) == "-i")
-    return interactive::Run();
+  {
+    if (std::string(argv[1]) == "-i")
+      return interactive::Run();
+    else
+      return noninteractive::Run(argv[1]);
+  }
   else
   {
     std::cerr << "Usage: " << argv[0] << "filename [-i]" << std::endl;
