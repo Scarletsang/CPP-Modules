@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 22:37:48 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/10 16:38:22 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/21 16:40:04 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,16 @@ namespace interactive
     int Parse(std::string& input, int& number)
     {
       number = std::atoi(input.c_str());
+      if (number == 0 && input[0] != '0' && input.size() != 1)
+        return EXIT_FAILURE;
       return EXIT_SUCCESS;
     }
 
     int Parse(std::string& input, struct s_index& index)
     {
       index.number = std::atoi(input.c_str());
+      if (index.number == 0 && input[0] != '0' && input.size() != 1)
+        return EXIT_FAILURE;
       return (index.number < 0 || index.number >= index.upper_bound);
     }
 

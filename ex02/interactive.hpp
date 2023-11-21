@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 22:39:24 by htsang            #+#    #+#             */
-/*   Updated: 2023/10/10 16:36:21 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/21 16:41:26 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,4 +115,3 @@ namespace interactive
   } // namespace parser
 
 } // namespace interactive
-
