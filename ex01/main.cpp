@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/07 01:35:32 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/24 20:25:20 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,8 +142,10 @@ namespace interactive
     prompt.setReprompt("Invalid input. Try again: ");
     prompt.registerAction("Enter the first number", FillNumber<0>);
     prompt.registerAction("Enter the second number", FillNumber<1>);
-    prompt.run(states);
-    return Iterate(states);
+    if (prompt.run(states) == EXIT_SUCCESS)
+      return Iterate(states);
+    else
+      return EXIT_FAILURE;
   }
 } // namespace battle
 

@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 21:00:24 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/02 22:56:56 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/24 20:28:35 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,16 +232,15 @@ int InteractivePrompt<States>::runForm(States& states)
 
   if (!prompt_.empty())
     std::cout << prompt_ << std::endl;
-  for (int i = 0; (i < kActionLimit); i++)
+  for (int i = 0; (i < kActionLimit) && std::cin.good(); i++)
   {
-    if (!std::cin.good())
-      return EXIT_FAILURE;
-    else if (settings_[i].match == "")
-      break ;
-    std::cout << settings_[i].match << ": ";
+    if (settings_[i].match.empty())
+      break;
+    else
+      std::cout << settings_[i].match << ": ";
     std::getline(std::cin, input_);
     exit_code = settings_[i].action(input_, states);
-    if ((exit_code == EXIT_FAILURE) && !reprompt_.empty())
+    if (!reprompt_.empty())
     {
       while (std::cin.good() && (exit_code == EXIT_FAILURE))
       {
@@ -251,5 +250,5 @@ int InteractivePrompt<States>::runForm(States& states)
       }
     }
   }
-  return EXIT_SUCCESS;
+  return std::cin.good() ? exit_code : EXIT_FAILURE;
 }
