@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 21:06:11 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 22:53:33 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/24 20:52:32 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ int Span::shortestSpan() const
   if (numbers_.size() < 2)
     throw std::runtime_error("Container must have at least 2 elements");
   int span = std::numeric_limits<int>::max();
-  for (std::set<int>::iterator it = numbers_.begin(); it != --numbers_.end();)
+  for (std::multiset<int>::iterator it = numbers_.begin(); it != --numbers_.end();)
     span = std::min(span, abs(*it - *(++it)));
-  return span;  
+  return span;
 }
 
 int Span::longestSpan() const

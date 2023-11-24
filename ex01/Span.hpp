@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 21:01:32 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 22:53:48 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/24 20:52:46 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ class Span
     int   longestSpan() const;
   
   private:
-    unsigned int   maximum_size_;
-    std::set<int>  numbers_;
+    unsigned int        maximum_size_;
+    std::multiset<int>  numbers_;
 };
 
 template <typename InputIt>
