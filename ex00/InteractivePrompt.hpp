@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 21:00:24 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/02 22:56:56 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/27 23:29:37 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,27 @@
 /**
  * @brief A class that create an interactive prompt
 */
-template <typename States>
 class InteractivePrompt
 {
   public:
     static const int  kActionLimit = 8;
-    typedef int (*Action)(std::string input, States&);
+
+    class Data
+    {
+      public:
+        Data();
+        Data(const Data& promptdata);
+        virtual ~Data();
+        const Data& operator=(const Data& promptdata);
+    };
+
+    template <typename Data, int (*ActionFunction)(const std::string& input, Data&)>
+    static int   Action(const std::string& input, InteractivePrompt::Data& states)
+    {
+      return ActionFunction(input, static_cast<Data&>(states));
+    }
+
+    typedef int (*ActionFunc)(const std::string& input, Data&);
     enum  Mode
     {
       kMultipleChoice,
@@ -46,9 +61,9 @@ class InteractivePrompt
      * a prompt for the user to enter a value
      * @param action The action to be executed. In kForm mode, this is acting as a parser
     */
-    void  registerAction(std::string match, Action action);
-    int   run(States& states);
-    int   shell(States& states);
+    void  registerAction(std::string match, ActionFunc action);
+    int   run(Data& states);
+    int   shell(Data& states);
 
     /**
      * @brief Set the reprompt message. It is printed when the user enters an invalid input.
@@ -64,7 +79,7 @@ class InteractivePrompt
     struct  Configuration
     {
       std::string match;
-      Action      action;
+      ActionFunc      action;
     };
     struct Configuration    settings_[kActionLimit];
     enum Mode               mode_;
@@ -72,184 +87,6 @@ class InteractivePrompt
     std::string             reprompt_;
     std::string             input_;
 
-    int runMultipleChoice(States& states);
-    int runForm(States& states);
+    int runMultipleChoice(Data& states);
+    int runForm(Data& states);
 };
-
-/////////////////////////////////////////////////////
-////////////   template implementation   ////////////
-/////////////////////////////////////////////////////
-
-template <typename States>
-InteractivePrompt<States>::InteractivePrompt()
-  : mode_(kMultipleChoice),
-    prompt_(""),
-    reprompt_("") {}
-
-template <typename States>
-InteractivePrompt<States>::InteractivePrompt(enum Mode mode)
-  : mode_(mode),
-    prompt_(""),
-    reprompt_("") {}
-
-template <typename States>
-InteractivePrompt<States>::InteractivePrompt(const InteractivePrompt& interactiveprompt)
-  : mode_(interactiveprompt.mode_),
-    prompt_(interactiveprompt.prompt_),
-    reprompt_(interactiveprompt.reprompt_)
-{
-  for (int i = 0; i < kActionLimit; i++)
-  {
-    settings_[i] = interactiveprompt.settings_[i];
-  }
-}
-
-template <typename States>
-InteractivePrompt<States>::~InteractivePrompt() {}
-
-template <typename States>
-const InteractivePrompt<States>& InteractivePrompt<States>::operator=(const InteractivePrompt& interactiveprompt)
-{
-  if (this != &interactiveprompt)
-  {
-    mode_ = interactiveprompt.mode_;
-    prompt_ = interactiveprompt.prompt_;
-    reprompt_ = interactiveprompt.reprompt_;
-    for (int i = 0; i < kActionLimit; i++)
-    {
-      settings_[i] = interactiveprompt.settings_[i];
-    }
-  }
-  return *this;
-}
-
-template <typename States>
-void  InteractivePrompt<States>::registerAction(std::string match, Action action)
-{
-  for (size_t i = 0; i < kActionLimit; i++)
-  {
-    if (settings_[i].match == "")
-    {
-      settings_[i].match = match;
-      settings_[i].action = action;
-      return ;
-    }
-  }
-  throw std::runtime_error("InteractivePrompt::registerAction: maxiumum number of actions reached");
-}
-
-template <typename States>
-void  InteractivePrompt<States>::setReprompt(std::string string)
-{
-  reprompt_ = string;
-}
-
-template <typename States>
-void  InteractivePrompt<States>::setPrompt(std::string string)
-{
-  prompt_ = string;
-}
-
-template <typename States>
-int   InteractivePrompt<States>::run(States& states)
-{
-  if (!std::cout.good())
-    return EXIT_FAILURE;
-
-  switch (mode_)
-  {
-    case kMultipleChoice:
-      return runMultipleChoice(states);
-    case kForm:
-      return runForm(states);
-    default:
-      break;
-  }
-  return EXIT_FAILURE;
-}
-
-template <typename States>
-int   InteractivePrompt<States>::shell(States& states)
-{
-  int exit_code;
-
-  while (!(exit_code = run(states))) ;
-  return exit_code;
-}
-
-template <typename States>
-void  InteractivePrompt<States>::printPrompt() const
-{
-  std::cout << prompt_ << "(";
-  for (size_t i = 0; i < kActionLimit; i++)
-  {
-    if (settings_[i].match != "")
-      std::cout << settings_[i].match;
-    if (i + 1 < kActionLimit && settings_[i + 1].match != "")
-      std::cout << "/";
-    else
-      break ;
-  }
-  std::cout << "): ";
-}
-
-/////////////////////////////////////////////
-////////////   private methods   ////////////
-/////////////////////////////////////////////
-
-template <typename States>
-int InteractivePrompt<States>::runMultipleChoice(States& states)
-{
-  printPrompt();
-  std::getline(std::cin, input_);
-  if (!input_.empty())
-  {
-    for (size_t i = 0; i < kActionLimit; i++)
-    {
-      if (input_ == settings_[i].match)
-        return settings_[i].action(input_, states);
-    }
-  }
-  while (std::cin.good() && !reprompt_.empty())
-  {
-    std::cout << reprompt_;
-    std::getline(std::cin, input_);
-    if (input_.empty())
-      continue;
-    for (size_t i = 0; i < kActionLimit; i++)
-    {
-      if (input_ == settings_[i].match)
-        return settings_[i].action(input_, states);
-    }
-  }
-  return EXIT_FAILURE;
-}
-
-template <typename States>
-int InteractivePrompt<States>::runForm(States& states)
-{
-  int exit_code = EXIT_SUCCESS;
-
-  if (!prompt_.empty())
-    std::cout << prompt_ << std::endl;
-  for (int i = 0; (i < kActionLimit); i++)
-  {
-    if (!std::cin.good())
-      return EXIT_FAILURE;
-    else if (settings_[i].match == "")
-      break ;
-    std::cout << settings_[i].match << ": ";
-    std::getline(std::cin, input_);
-    exit_code = settings_[i].action(input_, states);
-    if ((exit_code == EXIT_FAILURE) && !reprompt_.empty())
-    {
-      while (std::cin.good() && (exit_code == EXIT_FAILURE))
-      {
-        std::cout << reprompt_;
-        std::getline(std::cin, input_);
-        exit_code = settings_[i].action(input_, states);
-      }
-    }
-  }
-  return EXIT_SUCCESS;
-}

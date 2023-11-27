@@ -6,43 +6,72 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 23:37:00 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/28 00:01:53 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
+#include <ctime>
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <list>
 #include <deque>
+#include <utility>
 
 #include "InteractivePrompt.hpp"
+#include "InteractiveData.hpp"
 #include "easyfind.hpp"
 
 namespace interactive
 {
-  struct States
-  {};
+  typedef std::pair<bool, int> ParserResult;
 
-  int Exit(std::string input, struct States& states)
+  ParserResult  ParseInt(const std::string& input)
   {
-    (void)input;
-    (void)states;
+    int i = std::atoi(input.c_str());
+    if (i == 0 && input != "0")
+      return std::make_pair(false, 0);
+    return std::make_pair(true, i);
+  }
+
+  int SetSizeAction(const std::string& input, InteractiveData& data)
+  {
+    ParserResult result = ParseInt(input);
+    
+    if (result.first)
+    {
+      data.generate(result.second);
+      data.print();
+      return EXIT_SUCCESS;
+    }
+    return EXIT_FAILURE;
+  }
+
+  int FindAction(const std::string& input, InteractiveData& data)
+  {
+    ParserResult result = ParseInt(input);
+    
+    if (result.first)
+    {
+      data.print_element(result.second);
+      return EXIT_SUCCESS;
+    }
     return EXIT_FAILURE;
   }
 
   int Run()
   {
-    struct States                     states;
-    InteractivePrompt<struct States>  prompt;
+    InteractiveData   data;
+    InteractivePrompt prompt(InteractivePrompt::kForm);
 
-    prompt.setPrompt("Enter a number");
     prompt.setReprompt("Invalid input. Try again: ");
-    prompt.registerAction("exit", Exit);
-    prompt.shell(states);
-    return EXIT_SUCCESS;
+    prompt.registerAction("Please enter the amount of numbers to randomize", 
+      InteractivePrompt::Action<InteractiveData, SetSizeAction>);
+    prompt.registerAction("Please enter the number you want to find", 
+      InteractivePrompt::Action<InteractiveData, FindAction>);
+    return prompt.run(data);
   }
 } // namespace interactive
 
@@ -72,7 +101,8 @@ namespace test
   void  Test(int size, int find)
   {
     T container = createContainer<T>(size);
-    std::cout << "Find result: " << easyfind(container, find) << std::endl;
+    typename T::iterator it = easyfind(container, find);
+    std::cout << "Find result " << *it << " at index " << (it - container.begin()) << std::endl;
     printContainer<T>(container);
   }
 } // namespace test
