@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/28 00:01:53 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/28 15:54:55 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <list>
 #include <deque>
 #include <utility>
+#include <iterator>
 
 #include "InteractivePrompt.hpp"
 #include "InteractiveData.hpp"
@@ -75,45 +76,15 @@ namespace interactive
   }
 } // namespace interactive
 
-namespace test
-{
-  template <typename T>
-  T  createContainer(int size)
-  {
-    T container;
-
-    for (int i = 0; i < size; i++)
-      container.push_back(i);
-    return container;
-  }
-
-  template <typename T>
-  void  printContainer(T& container)
-  {
-    for (typename T::iterator it = container.begin(); it != container.end(); it++)
-    {
-      std::cout << *it << " ";
-    }
-    std::cout << std::endl;
-  }
-
-  template <typename T>
-  void  Test(int size, int find)
-  {
-    T container = createContainer<T>(size);
-    typename T::iterator it = easyfind(container, find);
-    std::cout << "Find result " << *it << " at index " << (it - container.begin()) << std::endl;
-    printContainer<T>(container);
-  }
-} // namespace test
-
 namespace noninteractive
 {
   int Run()
   {
-    test::Test<std::vector<int> >(10, 5);
-    test::Test<std::deque<int> >(10, 5);
-    test::Test<std::list<int> >(10, 5);
+    InteractiveData   data;
+
+    data.generate(10);
+    data.print();
+    data.print_element(5);
     return EXIT_SUCCESS;
   }
 } // namespace noninteractive

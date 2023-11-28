@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 22:12:55 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/27 23:29:56 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/28 15:19:29 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "InteractivePrompt.hpp"
+
+#include <cstdlib>
 
 #include <string>
 #include <iostream>
@@ -21,11 +23,11 @@
 
 InteractivePrompt::Data::Data() {}
 
-InteractivePrompt::Data::Data(const InteractivePrompt::Data& promptdata) {}
+InteractivePrompt::Data::Data(const InteractivePrompt::Data&) {}
 
 InteractivePrompt::Data::~Data() {}
 
-const InteractivePrompt::Data& InteractivePrompt::Data::operator=(const InteractivePrompt::Data& promptdata)
+const InteractivePrompt::Data& InteractivePrompt::Data::operator=(const InteractivePrompt::Data&)
 {
   return *this;
 }

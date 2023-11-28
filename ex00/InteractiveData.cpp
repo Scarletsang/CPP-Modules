@@ -6,17 +6,22 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 23:30:22 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/28 00:53:01 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/28 15:53:11 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "InteractiveData.hpp"
 
+#include <iterator>
+#include <iostream>
+
 InteractiveData::InteractiveData()
-  : vector_(), list_(), deque_() {}
+  : InteractivePrompt::Data(),
+    vector_(), list_(), deque_() {}
 
 InteractiveData::InteractiveData(const InteractiveData& interactivedata)
-  : vector_(interactivedata.vector_), list_(interactivedata.list_), deque_(interactivedata.deque_) {}
+  : InteractivePrompt::Data(),
+    vector_(interactivedata.vector_), list_(interactivedata.list_), deque_(interactivedata.deque_) {}
 
 InteractiveData::~InteractiveData() {}
 
@@ -44,12 +49,12 @@ void  InteractiveData::print() const
     std::cout << *it << " ";
   std::cout << std::endl;
 
-  std::cout << "list: ";
+  std::cout << "list:   ";
   for (std::list<int>::const_iterator it = list_.begin(); it != list_.end(); it++)
     std::cout << *it << " ";
   std::cout << std::endl;
 
-  std::cout << "deque: ";
+  std::cout << "deque:  ";
   for (std::deque<int>::const_iterator it = deque_.begin(); it != deque_.end(); it++)
     std::cout << *it << " ";
   std::cout << std::endl;
@@ -59,32 +64,11 @@ void  InteractiveData::print() const
 void  InteractiveData::print_element(int value) const
 {
   std::cout << "vector: ";
-  try
-  {
-    std::cout << easyfind(vector_, value) << std::endl;
-  }
-  catch (std::exception& e)
-  {
-    std::cout << e.what() << std::endl;
-  }
+  print_element(vector_, value);
 
-  std::cout << "list: ";
-  try
-  {
-    std::cout << easyfind(list_, value) << std::endl;
-  }
-  catch (std::exception& e)
-  {
-    std::cout << e.what() << std::endl;
-  }
+  std::cout << "list:   ";
+  print_element(list_, value);
 
-  std::cout << "deque: ";
-  try
-  {
-    std::cout << easyfind(deque_, value) << std::endl;
-  }
-  catch (std::exception& e)
-  {
-    std::cout << e.what() << std::endl;
-  }
+  std::cout << "deque:  ";
+  print_element(deque_, value);
 }

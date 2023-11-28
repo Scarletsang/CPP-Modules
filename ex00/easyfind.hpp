@@ -6,23 +6,20 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 19:50:11 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/27 23:50:24 by htsang           ###   ########.fr       */
+/*   Updated: 2023/11/28 15:56:14 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream>
 #include <algorithm>
-#include <stdexcept>
+#include <utility>
 
 template <typename T>
-typename T::iterator easyfind(T &container, int n)
+std::pair<int, int> easyfind(T container, int n)
 {
-    typename T::iterator it;
-    it = std::find(container.begin(), container.end(), n);
-    if (it != container.end())
-        return (it);
-    else
-        throw std::runtime_error("Element not found");
+  typename T::iterator it = std::find(container.begin(), container.end(), n);
+  if (it == container.end())
+    return std::make_pair(0, -1);
+  return std::make_pair(n, std::distance(container.begin(), it));
 }
