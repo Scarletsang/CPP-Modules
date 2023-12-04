@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/04 23:44:52 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/04 23:51:06 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ namespace test
     container.push_back(737);
     //[...]
     container.push_back(0);
-    std::container<int>::iterator it = container.begin();
-    std::container<int>::iterator ite = container.end();
+    typename Container::iterator it = container.begin();
+    typename Container::iterator ite = container.end();
     ++it;
     --it;
     while(it != ite){

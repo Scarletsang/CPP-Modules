@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:01:50 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/04 23:41:34 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/04 23:54:00 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ class MutantStack : public std::stack<T, Container>
 
     void  push_back(const T& value);
     void  pop_back();
+    T&          back();
+    const T&    back() const;
 };
 
 /////////////////////////////////////////////////////
@@ -72,11 +74,23 @@ typename MutantStack<T, Container>::iterator MutantStack<T, Container>::end()
 template <typename T, typename Container>
 void  MutantStack<T, Container>::push_back(const T& value)
 {
-  this->c.push_back(value);
+  this->push(value);
 }
 
 template <typename T, typename Container>
 void  MutantStack<T, Container>::pop_back()
 {
-  this->c.pop_back();
+  this->pop();
+}
+
+template <typename T, typename Container>
+T&          MutantStack<T, Container>::back()
+{
+  return this->top();
+}
+
+template <typename T, typename Container>
+const T&    MutantStack<T, Container>::back() const
+{
+  return this->top();
 }
