@@ -23,6 +23,7 @@ INCLUDE_DIR:= .
 MAIN_SRC:= \
 	interactve/Data.cpp \
 	interactve/Prompt.cpp \
+	InteractiveMutantStack.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 

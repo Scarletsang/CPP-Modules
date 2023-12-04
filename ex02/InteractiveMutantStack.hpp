@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 23:30:17 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/04 23:45:16 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/04 23:49:24 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class InteractiveMutantStack : public interactive::Data
     int   Run();
 
   private:
-    MutantStack<int>              deque_stack_;
-    MutantStack<int, std::list>   list_stack_;
-    MutantStack<int, std::vector> vector_stack_;
+    MutantStack<int>                    deque_stack_;
+    MutantStack<int, std::list<int> >   list_stack_;
+    MutantStack<int, std::vector<int> > vector_stack_;
 };
