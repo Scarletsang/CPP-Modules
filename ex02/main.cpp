@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 23:46:11 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/04 23:44:52 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,75 +17,48 @@
 #include <list>
 #include <stack>
 
-#include "InteractivePrompt.hpp"
+#include "interactive/Prompt.hpp"
+#include "InteractiveMutantStack.hpp"
 #include "MutantStack.hpp"
 
 namespace interactive
 {
-  struct States
-  {};
-
-  int Exit(std::string input, struct States& states)
+  int Exit(const std::string&, InteractiveMutantStack&)
   {
-    (void)input;
-    (void)states;
     return EXIT_FAILURE;
   }
 
   int Run()
   {
-    struct States                     states;
-    InteractivePrompt<struct States>  prompt;
+    InteractiveMutantStack  data;
+    Prompt                  prompt;
 
     prompt.setPrompt("Enter a number");
     prompt.setReprompt("Invalid input. Try again: ");
-    prompt.registerAction("exit", Exit);
-    prompt.shell(states);
+    prompt.registerAction("exit", Action<InteractiveMutantStack, Exit>);
+    prompt.shell(data);
     return EXIT_SUCCESS;
   }
 } // namespace interactive
 
 namespace test
 {
-  int  TestWithMutantStack()
+  template <typename Container>
+  int Test()
   {
-    MutantStack<int>    mstack;
-    mstack.push_back(5);
-    mstack.push_back(17);
-    std::cout << mstack.top() << std::endl;
-    mstack.pop();
-    std::cout << mstack.size() << std::endl;
-    mstack.push_back(3);
-    mstack.push_back(5);
-    mstack.push_back(737);
+    Container    container;
+    container.push_back(5);
+    container.push_back(17);
+    std::cout << container.back() << std::endl;
+    container.pop_back();
+    std::cout << container.size() << std::endl;
+    container.push_back(3);
+    container.push_back(5);
+    container.push_back(737);
     //[...]
-    mstack.push_back(0);
-    MutantStack<int>::iterator it = mstack.begin();
-    MutantStack<int>::iterator ite = mstack.end();
-    ++it;
-    --it;
-    while(it != ite){
-      std::cout << *it << std::endl;
-      ++it;
-    }
-    return EXIT_SUCCESS;
-  }
-
-  int TestWithList()
-  {
-    std::list<int>    list;
-    list.push_back(5);
-    list.push_back(17);
-    std::cout << list.back() << std::endl;
-    list.pop_back();
-    std::cout << list.size() << std::endl;
-    list.push_back(3);
-    list.push_back(5);
-    list.push_back(737);
-    //[...]
-    list.push_back(0);
-    std::list<int>::iterator it = list.begin();
-    std::list<int>::iterator ite = list.end();
+    container.push_back(0);
+    std::container<int>::iterator it = container.begin();
+    std::container<int>::iterator ite = container.end();
     ++it;
     --it;
     while(it != ite){
@@ -109,9 +82,9 @@ namespace noninteractive
 {
   int Run()
   {
-    test::TestWithMutantStack();
+    test::Test<MutantStack<int> >();
     std::cout << std::endl;
-    test::TestWithList();
+    test::Test<std::list<int> >();
     if (test::CheckMutantStackInheritance() == EXIT_FAILURE)
     {
       std::cerr << "MutantStack does not inherit from std::stack" << std::endl;
