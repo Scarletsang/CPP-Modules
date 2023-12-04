@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/09 23:37:26 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/04 22:40:14 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,60 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <utility>
 
-#include "InteractivePrompt.hpp"
+#include "interactive/Prompt.hpp"
+#include "InteractiveSpan.hpp"
 #include "Span.hpp"
 
 namespace interactive
 {
-  struct States
-  {};
-
-  int Exit(std::string input, struct States& states)
+  int AddNumberAction(const std::string&, InteractiveSpan& data)
   {
-    (void)input;
-    (void)states;
+    int exit_code = data.addNumber();
+
+    if (exit_code == EXIT_SUCCESS)
+      data.print();
+    return exit_code;
+  }
+
+  int StatusAction(const std::string&, InteractiveSpan& data)
+  {
+    try
+    {
+      data.status();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+      return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+  }
+
+  int PrintAction(const std::string&, InteractiveSpan& data)
+  {
+    data.print();
+    return EXIT_SUCCESS;
+  }
+
+  int Exit(const std::string&, InteractiveSpan&)
+  {
     return EXIT_FAILURE;
   }
 
   int Run()
   {
-    struct States                     states;
-    InteractivePrompt<struct States>  prompt;
+    InteractiveSpan     data;
+    Prompt              prompt;
 
     prompt.setPrompt("Enter a number");
     prompt.setReprompt("Invalid input. Try again: ");
-    prompt.registerAction("exit", Exit);
-    prompt.shell(states);
+    prompt.registerAction("add", Action<InteractiveSpan, AddNumberAction>);
+    prompt.registerAction("status", Action<InteractiveSpan, StatusAction>);
+    prompt.registerAction("print", Action<InteractiveSpan, PrintAction>);
+    prompt.registerAction("exit", Action<InteractiveSpan, Exit>);
+    prompt.shell(data);
     return EXIT_SUCCESS;
   }
 } // namespace interactive

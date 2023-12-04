@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 21:01:32 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/24 20:52:46 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/04 22:19:10 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ class Span
 {
   public:
     static const unsigned int kDefaultSize = 100;
+    typedef std::multiset<int>::const_iterator const_iterator;
     Span();
     Span(unsigned int n);
     Span(const Span& copy);
@@ -31,9 +32,14 @@ class Span
     template <typename InputIt>
     void  addNumbers(InputIt first, InputIt last);
 
+    // iterators
+    const_iterator  begin() const;
+    const_iterator  end() const;
+    unsigned int    capacity() const;
+
     int   shortestSpan() const;
     int   longestSpan() const;
-  
+
   private:
     unsigned int        maximum_size_;
     std::multiset<int>  numbers_;

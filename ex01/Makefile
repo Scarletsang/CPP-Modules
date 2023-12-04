@@ -21,6 +21,9 @@ INCLUDE_DIR:= .
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
+	interactive/Data.cpp \
+	interactive/Prompt.cpp \
+	InteractiveSpan.cpp \
 	Span.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
