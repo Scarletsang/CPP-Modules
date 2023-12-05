@@ -14,6 +14,7 @@
 
 #include <string>
 #include <cstdlib>
+#include <iostream>
 
 #include "Data.hpp"
 
@@ -96,7 +97,7 @@ namespace interactive
   /////////////////////////////////////////////////////
 
   template <typename Data>
-  int   Run(int (*f)(const std::string& input, Data&),
+  int   RunActionFunc(int (*action_func)(const std::string& input, Data&),
             Data& data,
             const std::string& prompt = "",
             const std::string& reprompt = "")
@@ -106,14 +107,14 @@ namespace interactive
     if (!std::cin.good())
       return EXIT_FAILURE;
     else if (!prompt.empty())
-      std::cout << prompt << ": " << std::endl;
+      std::cout << prompt << ": ";
     std::getline(std::cin, input);
     while (std::cin.good())
     {
-      if (f(input, data) == EXIT_SUCCESS)
+      if (action_func(input, data) == EXIT_SUCCESS)
         return EXIT_SUCCESS;
       else if (!reprompt.empty())
-        std::cout << reprompt << ": " << std::endl;
+        std::cout << reprompt << ": ";
       std::getline(std::cin, input);
     }
     return EXIT_FAILURE;

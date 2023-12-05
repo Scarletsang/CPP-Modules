@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:01:50 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/04 23:54:00 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/05 15:40:59 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ template <typename T, typename Container = std::deque<T> >
 class MutantStack : public std::stack<T, Container>
 {
   public:
-    typedef typename Container::iterator iterator;
+    typedef typename Container::iterator        iterator;
+    typedef typename Container::const_iterator  const_iterator;
     MutantStack();
     MutantStack(const MutantStack& copy);
     ~MutantStack();
@@ -28,6 +29,8 @@ class MutantStack : public std::stack<T, Container>
 
     iterator begin();
     iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
 
     void  push_back(const T& value);
     void  pop_back();
@@ -67,6 +70,18 @@ typename MutantStack<T, Container>::iterator MutantStack<T, Container>::begin()
 
 template <typename T, typename Container>
 typename MutantStack<T, Container>::iterator MutantStack<T, Container>::end()
+{
+  return this->c.end();
+}
+
+template <typename T, typename Container>
+typename MutantStack<T, Container>::const_iterator MutantStack<T, Container>::begin() const
+{
+  return this->c.begin();
+}
+
+template <typename T, typename Container>
+typename MutantStack<T, Container>::const_iterator MutantStack<T, Container>::end() const
 {
   return this->c.end();
 }

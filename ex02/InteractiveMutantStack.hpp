@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 23:30:17 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/04 23:49:24 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/05 15:46:33 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include <list>
 #include <vector>
 
-#include "interactive/Prompt.hpp"
 #include "interactive/Data.hpp"
 #include "MutantStack.hpp"
 
@@ -30,7 +29,10 @@ class InteractiveMutantStack : public interactive::Data
     virtual ~InteractiveMutantStack();
     const InteractiveMutantStack& operator=(const InteractiveMutantStack& InteractiveMutantStack);
 
-    int   Run();
+    void  push(int element);
+    void  pop();
+    void  print() const;
+    bool  empty() const;
 
   private:
     MutantStack<int>                    deque_stack_;

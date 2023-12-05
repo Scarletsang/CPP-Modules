@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/04 23:51:06 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/05 15:58:45 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,44 @@
 
 namespace interactive
 {
+  int GetIntAction(const std::string&input, PrimitiveData<int>& int_data)
+  {
+    int i = std::atoi(input.c_str());
+    if (i == 0 && input != "0")
+      return EXIT_FAILURE;
+    else
+      int_data.data() = i;
+    return EXIT_SUCCESS;
+  }
+
+  int PushAction(const std::string&, InteractiveMutantStack& mutant_stacks)
+  {
+    PrimitiveData<int>  int_data;
+    if (RunActionFunc(GetIntAction, int_data, "Enter a value to push", "Invalid input. Try again"))
+      return EXIT_FAILURE;
+    mutant_stacks.push(int_data.data());
+    mutant_stacks.print();
+    return EXIT_SUCCESS;
+  }
+
+  int PopAction(const std::string&, InteractiveMutantStack& mutant_stacks)
+  {
+    if (mutant_stacks.empty())
+    {
+      std::cout << "Pop from empty stacks are forbidden." << std::endl;
+      return EXIT_SUCCESS;
+    }
+    mutant_stacks.pop();
+    mutant_stacks.print();
+    return EXIT_SUCCESS;
+  }
+
+  int PrintAction(const std::string&, InteractiveMutantStack& mutant_stacks)
+  {
+    mutant_stacks.print();
+    return EXIT_SUCCESS;
+  }
+
   int Exit(const std::string&, InteractiveMutantStack&)
   {
     return EXIT_FAILURE;
@@ -33,8 +71,11 @@ namespace interactive
     InteractiveMutantStack  data;
     Prompt                  prompt;
 
-    prompt.setPrompt("Enter a number");
+    prompt.setPrompt("Choose an action");
     prompt.setReprompt("Invalid input. Try again: ");
+    prompt.registerAction("push", Action<InteractiveMutantStack, PushAction>);
+    prompt.registerAction("pop", Action<InteractiveMutantStack, PopAction>);
+    prompt.registerAction("print", Action<InteractiveMutantStack, PrintAction>);
     prompt.registerAction("exit", Action<InteractiveMutantStack, Exit>);
     prompt.shell(data);
     return EXIT_SUCCESS;
