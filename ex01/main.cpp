@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 00:12:20 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/06 00:38:13 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,51 +14,52 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
-#include "InteractivePrompt.hpp"
+#include "RPN.hpp"
+#include "Error.hpp"
 
-namespace interactive
+Error ParseExpression(std::stringstream& ss, RPN& rpn)
 {
-  struct States
-  {};
+  int number;
 
-  int Exit(std::string input, struct States& states)
+  while (ss.good())
   {
-    (void)input;
-    (void)states;
-    return EXIT_FAILURE;
+    // TODO
   }
-
-  int Run()
-  {
-    struct States                     states;
-    InteractivePrompt<struct States>  prompt;
-
-    prompt.set_prompt("Enter a number");
-    prompt.set_reprompt("Invalid input. Try again: ");
-    prompt.register_action("exit", Exit);
-    prompt.shell(states);
-    return EXIT_SUCCESS;
-  }
-} // namespace interactive
-
-namespace noninteractive
-{
-  int Run()
-  {
-    return EXIT_SUCCESS;
-  }
-} // namespace noninteractive
+}
 
 int main(int argc, const char** argv)
 {
   if (argc == 1)
-    return noninteractive::Run();
-  else if (argc == 2 && std::string(argv[1]) == "-i")
-    return interactive::Run();
-  else
   {
-    std::cerr << "Usage: " << argv[0] << " [-i]" << std::endl;
+    std::cout << "usage: " << argv[0] << " [expression]" << std::endl;
     return EXIT_FAILURE;
   }
+  RPN               rpn;
+  std::stringstream ss;
+  Error             err;
+  for (int i = 0; i < argc; i++)
+  {
+    ss << argv[i];
+    err = ParseExpression(ss, rpn);
+    if (err.code() != Error::kOk)
+    {
+      std::cout << err << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+  switch (rpn.size())
+  {
+    case 1:
+      std::cout << rpn.top() << std::endl;
+      return EXIT_SUCCESS;
+    case 0:
+      std::cout << Error(Error::kStackEmpty) << std::endl;
+      break;
+    default:
+      std::cout << Error(Error::kAmbiguous) << std::endl;
+      break;
+  }
+  return EXIT_FAILURE;
 }
