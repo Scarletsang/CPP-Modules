@@ -30,7 +30,7 @@ namespace bitcoin_exchange
   ////////////   ParserEnv environment   ////////////
   ///////////////////////////////////////////////////
 
-  ParserEnv::ParserEnv(std::string::iterator it, std::string::iterator end)
+  ParserEnv::ParserEnv(std::string::const_iterator it, std::string::const_iterator end)
     : it(it), end(end) {}
 
   ParserEnv::ParserEnv(ParserEnv const& other)
@@ -112,6 +112,7 @@ namespace bitcoin_exchange
       .chain(&ParseDelimiter, std::make_pair(&new_env, std::string("-")))
       .chain(&ParseInt, new_env)
       .chain(&SavesValueTo<int>, &date.day)
+      .chain(&ValidateDate, date)
       .chain(&UpdateEnv, std::make_pair(&env, new_env))
       .chain(&Return<Date>, date);
   }
@@ -179,7 +180,7 @@ namespace bitcoin_exchange
 
   StringParseResult   ParseUntilEof(ParserEnv& env)
   {
-    std::string::iterator it = env.it;
+    std::string::const_iterator it = env.it;
     env.it = env.end;
     return StringParseResult::Ok(std::string(it, env.end));
   }
@@ -227,6 +228,14 @@ namespace bitcoin_exchange
       return StringParseResult::Ok(header);
     else
       return StringParseResult::Error(BitcoinExchange::kWrongHeaders);
+  }
+
+  DateParseResult     ValidateDate(Date& date)
+  {
+    if (date.is_valid())
+      return DateParseResult::Ok(date);
+    else
+      return DateParseResult::Error(BitcoinExchange::kInvalidDate);
   }
 
 } // namespace bitcoin_exchange

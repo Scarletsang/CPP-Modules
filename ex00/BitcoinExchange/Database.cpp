@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 19:41:06 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/16 18:33:42 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/05 21:58:21 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,16 @@ namespace bitcoin_exchange
   size_t  Database::size() const
   {
     return rates_.size();
+  }
+
+  Database::const_iterator  Database::begin() const
+  {
+    return rates_.begin();
+  }
+
+  Database::const_iterator  Database::end() const
+  {
+    return rates_.end();
   }
 
   const char* Database::NoRateException::what() const throw()

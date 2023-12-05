@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:39:04 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/16 19:42:38 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/05 22:51:25 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ BitcoinExchange&  BitcoinExchange::operator=(BitcoinExchange const& other)
     db_ = other.db_;
   }
   return *this;
+}
+
+const bitcoin_exchange::Database&  BitcoinExchange::get_database() const
+{
+  return db_;
 }
 
 BitcoinExchange::kErrorCode BitcoinExchange::entries_from_file(std::string filename, 
@@ -146,7 +151,7 @@ BitcoinExchange::kErrorCode  BitcoinExchange::header_from_line(std::string line,
     return result.error();
 }
 
-BitcoinExchange::kErrorCode  BitcoinExchange::print_error(kErrorCode error, std::string& line)
+BitcoinExchange::kErrorCode  BitcoinExchange::print_error(kErrorCode error, const std::string& line)
 {
   switch (error)
   {

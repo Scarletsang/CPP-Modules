@@ -32,10 +32,10 @@ namespace bitcoin_exchange
 
   struct ParserEnv
   {
-    std::string::iterator  it;
-    std::string::iterator  end;
+    std::string::const_iterator  it;
+    std::string::const_iterator  end;
 
-    ParserEnv(std::string::iterator it, std::string::iterator end);
+    ParserEnv(std::string::const_iterator it, std::string::const_iterator end);
     ParserEnv(ParserEnv const& other);
     ParserEnv& operator=(ParserEnv const& other);
   };
@@ -82,6 +82,7 @@ namespace bitcoin_exchange
 
   StringParseResult   TrimString(std::string string, ParserEnv& env);
   StringParseResult   ValidateHeader(std::string header, std::string expected);
+  DateParseResult     ValidateDate(Date& date);
 
   NoParseResult       UpdateEnv(std::pair<ParserEnv*, ParserEnv> env_with_new_env);
 

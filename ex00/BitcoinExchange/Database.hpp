@@ -30,6 +30,8 @@ namespace bitcoin_exchange
         kNegativeRate,
         kOutOfRangeRate
       };
+      typedef std::map<Date, float>::const_iterator const_iterator;
+
       Database();
       Database(Database const& other);
       ~Database();
@@ -43,6 +45,9 @@ namespace bitcoin_exchange
 
       bool                    is_empty() const;
       size_t                  size() const;
+
+      const_iterator          begin() const;
+      const_iterator          end() const;
 
       class NoRateException : public std::exception
       {

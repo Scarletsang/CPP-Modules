@@ -25,6 +25,8 @@ MAIN_SRC:= \
 	BitcoinExchange/Database.cpp \
 	BitcoinExchange/Parser.cpp \
 	BitcoinExchange.cpp \
+	interactive/Data.cpp \
+	interactive/Prompt.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 
