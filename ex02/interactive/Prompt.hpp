@@ -114,7 +114,7 @@ namespace interactive
       if (action_func(input, data) == EXIT_SUCCESS)
         return EXIT_SUCCESS;
       else if (!reprompt.empty())
-        std::cout << reprompt << ": ";
+        std::cout << reprompt;
       std::getline(std::cin, input);
     }
     return EXIT_FAILURE;

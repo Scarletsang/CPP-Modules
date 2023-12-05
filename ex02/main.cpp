@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/05 15:58:45 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/05 16:43:55 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace interactive
   int PushAction(const std::string&, InteractiveMutantStack& mutant_stacks)
   {
     PrimitiveData<int>  int_data;
-    if (RunActionFunc(GetIntAction, int_data, "Enter a value to push", "Invalid input. Try again"))
+    if (RunActionFunc(GetIntAction, int_data, "Enter a value to push", "Invalid input. Try again: "))
       return EXIT_FAILURE;
     mutant_stacks.push(int_data.data());
     mutant_stacks.print();
