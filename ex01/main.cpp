@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/06 16:16:05 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/06 21:08:04 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,18 @@ typedef Result<Nothing, Error>        NoResult;
 
 IntResult  ParseNumber(std::stringstream& ss)
 {
+  std::streampos  pos = ss.tellg();
   int number;
   ss >> number;
+
   if (ss.fail())
   {
+    ss.seekg(pos);
     ss.clear();
     return IntResult::Error(Error(Error::kInvalidNumber));
   }
-  return IntResult::Ok(number);
+  else
+    return IntResult::Ok(number);
 }
 
 NoResult  PushNumber(int number, RPN& rpn)
@@ -44,23 +48,23 @@ NoResult  PushNumber(int number, RPN& rpn)
 
 OperationResult ParseOperator(std::stringstream& ss)
 {
-  char op = ss.peek();
+  std::streampos  pos = ss.tellg();
+  char op = 0;
+
+  ss >> op;
 
   switch (op)
   {
     case '+':
-      ss.get();
       return OperationResult::Ok(RPN::kAdd);
     case '-':
-      ss.get();
       return OperationResult::Ok(RPN::kSub);
     case '*':
-      ss.get();
       return OperationResult::Ok(RPN::kMul);
     case '/':
-      ss.get();
       return OperationResult::Ok(RPN::kDiv);
     default:
+      ss.seekg(pos);
       return OperationResult::Error(Error(Error::kInvalidOperand));
   }
 }
@@ -79,10 +83,14 @@ NoResult ParseExpression(std::stringstream& ss, RPN& rpn)
     NoResult result = ParseNumber(ss).chain(PushNumber, rpn);
     if (result.is_ok())
       continue;
+    ss >> std::ws;
+    if (!ss.good())
+      break;
     result = ParseOperator(ss).chain(ApplyOperation, rpn);
     if (!result.is_ok())
       return NoResult::Error(result.error());
   }
+  ss.clear();
   return NoResult::Ok(Nothing());
 }
 
@@ -95,9 +103,9 @@ int main(int argc, const char** argv)
   }
   RPN               rpn;
   std::stringstream ss;
-  for (int i = 0; i < argc; i++)
+  for (int i = 1; i < argc; ++i)
   {
-    ss << argv[i];
+    ss << " " << argv[i];
     NoResult parse_result = ParseExpression(ss, rpn);
     if (!parse_result.is_ok())
     {

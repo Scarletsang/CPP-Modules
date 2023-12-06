@@ -6,13 +6,14 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 23:15:20 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/05 23:27:44 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/06 20:27:59 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
 
-RPN::RPN() {}
+RPN::RPN()
+  : stack_() {}
 
 RPN::RPN(RPN const& other)
 {
@@ -32,6 +33,9 @@ RPN::~RPN() {}
 void  RPN::push(int value)
 {
   this->stack_.push(value);
+  #ifdef DEBUG
+    std::cout << "pushed " << value << std::endl;
+  #endif
 }
 
 RPN::MaybeInt RPN::pop()
@@ -40,32 +44,33 @@ RPN::MaybeInt RPN::pop()
     return MaybeInt::Error(Nothing());
   int value = this->stack_.top();
   this->stack_.pop();
+  #ifdef DEBUG
+    std::cout << "poped " << value << std::endl;
+  #endif
   return MaybeInt::Ok(value);
 }
 
 int RPN::apply(Operation op)
 {
-  MaybeInt  a = this->pop();
-  if (!a.is_ok())
+  if (this->stack_.size() < 2)
     return EXIT_FAILURE;
-  MaybeInt  b = this->pop();
-  if (!b.is_ok())
-    return EXIT_FAILURE;
+  int  a = this->pop().value();
+  int  b = this->pop().value();
   int result;
 
   switch (op)
   {
     case kAdd:
-      result = a.value() + b.value();
+      result = a + b;
       break;
     case kSub:
-      result = a.value() - b.value();
+      result = a - b;
       break;
     case kMul:
-      result = a.value() * b.value();
+      result = a * b;
       break;
     case kDiv:
-      result = a.value() / b.value();
+      result = a / b;
       break;
     default:
       return EXIT_FAILURE;
