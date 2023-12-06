@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 23:15:20 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/06 20:27:59 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/06 23:03:12 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void  RPN::push(int value)
 {
   this->stack_.push(value);
   #ifdef DEBUG
-    std::cout << "pushed " << value << std::endl;
+    print();
   #endif
 }
 
@@ -45,7 +45,7 @@ RPN::MaybeInt RPN::pop()
   int value = this->stack_.top();
   this->stack_.pop();
   #ifdef DEBUG
-    std::cout << "poped " << value << std::endl;
+    print();
   #endif
   return MaybeInt::Ok(value);
 }
@@ -61,16 +61,18 @@ int RPN::apply(Operation op)
   switch (op)
   {
     case kAdd:
-      result = a + b;
+      result = b + a;
       break;
     case kSub:
-      result = a - b;
+      result = b - a;
       break;
     case kMul:
-      result = a * b;
+      result = b * a;
       break;
     case kDiv:
-      result = a / b;
+      if (a == 0)
+        return EXIT_FAILURE;
+      result = b / a;
       break;
     default:
       return EXIT_FAILURE;
@@ -94,4 +96,26 @@ bool RPN::empty() const
 int RPN::size() const
 {
   return this->stack_.size();
+}
+
+static void  Print(std::stack<int>& stack)
+{
+  if (stack.empty())
+    return;
+  int value = stack.top();
+  stack.pop();
+  Print(stack);
+  std::cout << value << " ";
+}
+
+void RPN::print() const {
+  std::stack<int> copy = stack_;
+  std::cout << "stack: ";
+  if (copy.empty()) {
+      std::cout << "[ empty ]" << std::endl;
+      return;
+  }
+  std::cout << "[ ";
+  Print(copy);
+  std::cout << "]" << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/06 21:08:04 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/06 22:56:11 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include "RPN.hpp"
 #include "Error.hpp"
@@ -24,20 +25,29 @@ typedef Result<RPN::Operation, Error> OperationResult;
 typedef Result<int, Error>            IntResult;
 typedef Result<Nothing, Error>        NoResult;
 
+void  debug(std::stringstream& ss)
+{
+  int index = ss.tellg();
+  std::ios_base::iostate state = ss.rdstate();
+  std::bitset<3> bits(state);
+  std::cout << "----------------" << std::endl;
+  std::cout << "input(" << bits << "): '" << ss.str() << "'" << std::endl;
+  std::cout << std::setw(index + 13) << "^" << std::endl;
+  std::cout << "----------------" << std::endl;
+}
+
 IntResult  ParseNumber(std::stringstream& ss)
 {
   std::streampos  pos = ss.tellg();
   int number;
-  ss >> number;
-
-  if (ss.fail())
+  if (ss >> number)
+    return IntResult::Ok(number);
+  else
   {
-    ss.seekg(pos);
     ss.clear();
+    ss.seekg(pos);
     return IntResult::Error(Error(Error::kInvalidNumber));
   }
-  else
-    return IntResult::Ok(number);
 }
 
 NoResult  PushNumber(int number, RPN& rpn)
@@ -49,24 +59,27 @@ NoResult  PushNumber(int number, RPN& rpn)
 OperationResult ParseOperator(std::stringstream& ss)
 {
   std::streampos  pos = ss.tellg();
-  char op = 0;
+  char op;
 
-  ss >> op;
-
-  switch (op)
+  if (ss >> op)
   {
-    case '+':
-      return OperationResult::Ok(RPN::kAdd);
-    case '-':
-      return OperationResult::Ok(RPN::kSub);
-    case '*':
-      return OperationResult::Ok(RPN::kMul);
-    case '/':
-      return OperationResult::Ok(RPN::kDiv);
-    default:
-      ss.seekg(pos);
-      return OperationResult::Error(Error(Error::kInvalidOperand));
+    switch (op)
+    {
+      case '+':
+        return OperationResult::Ok(RPN::kAdd);
+      case '-':
+        return OperationResult::Ok(RPN::kSub);
+      case '*':
+        return OperationResult::Ok(RPN::kMul);
+      case '/':
+        return OperationResult::Ok(RPN::kDiv);
+      default:
+        break;
+    }
   }
+  ss.clear();
+  ss.seekg(pos);
+  return OperationResult::Error(Error(Error::kInvalidOperand));
 }
 
 NoResult  ApplyOperation(RPN::Operation operation, RPN& rpn)
@@ -80,17 +93,18 @@ NoResult ParseExpression(std::stringstream& ss, RPN& rpn)
 {
   while (ss.good())
   {
+    #ifdef DEBUG
+    debug(ss);
+    #endif
     NoResult result = ParseNumber(ss).chain(PushNumber, rpn);
-    if (result.is_ok())
-      continue;
-    ss >> std::ws;
-    if (!ss.good())
-      break;
-    result = ParseOperator(ss).chain(ApplyOperation, rpn);
     if (!result.is_ok())
-      return NoResult::Error(result.error());
+    {
+      result = ParseOperator(ss).chain(ApplyOperation, rpn);
+      if (!result.is_ok())
+        return NoResult::Error(result.error());
+    }
+    ss >> std::ws;
   }
-  ss.clear();
   return NoResult::Ok(Nothing());
 }
 
@@ -112,6 +126,7 @@ int main(int argc, const char** argv)
       std::cout << parse_result.error() << std::endl;
       return EXIT_FAILURE;
     }
+    ss.clear();
   }
   switch (rpn.size())
   {

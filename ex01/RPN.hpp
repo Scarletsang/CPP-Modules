@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 18:57:22 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/06 20:11:23 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/06 22:39:12 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ class RPN
     MaybeInt  top() const;
     bool      empty() const;
     int       size() const;
+
+    void      print() const;
   
   private:
     std::stack<int> stack_;
