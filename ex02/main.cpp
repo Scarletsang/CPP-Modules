@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/11 00:12:20 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/07 23:13:19 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,51 +14,40 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <deque>
 
-#include "InteractivePrompt.hpp"
+#include "me/Me.hpp"
 
-namespace interactive
+void  Print(IMe &me)
 {
-  struct States
-  {};
-
-  int Exit(std::string input, struct States& states)
-  {
-    (void)input;
-    (void)states;
-    return EXIT_FAILURE;
-  }
-
-  int Run()
-  {
-    struct States                     states;
-    InteractivePrompt<struct States>  prompt;
-
-    prompt.set_prompt("Enter a number");
-    prompt.set_reprompt("Invalid input. Try again: ");
-    prompt.register_action("exit", Exit);
-    prompt.shell(states);
-    return EXIT_SUCCESS;
-  }
-} // namespace interactive
-
-namespace noninteractive
-{
-  int Run()
-  {
-    return EXIT_SUCCESS;
-  }
-} // namespace noninteractive
+  for (size_t i = 0; i < me.size(); i++)
+    std::cout << me[i] << " ";
+  std::cout << std::endl;
+}
 
 int main(int argc, const char** argv)
 {
   if (argc == 1)
-    return noninteractive::Run();
-  else if (argc == 2 && std::string(argv[1]) == "-i")
-    return interactive::Run();
-  else
   {
-    std::cerr << "Usage: " << argv[0] << " [-i]" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <number sequences>" << std::endl;
     return EXIT_FAILURE;
   }
+  Me<std::vector<int> > vector_me;
+  Me<std::deque<int> >  deque_me;
+
+  IMe &v_me = vector_me;
+  IMe &d_me = deque_me;
+
+  v_me.push_back(1);
+  v_me.push_back(2);
+  d_me.push_back(3);
+  d_me.push_back(4);
+
+  Print(v_me);
+  Print(d_me);
+  // parse
+  // merge the biggest number
+  // insert
+  // print
 }

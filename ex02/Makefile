@@ -2,8 +2,6 @@
 ######     Variables     #######
 ################################
 
-NAME:=PmergeMe
-
 CC:=g++
 CXXFLAGS= -std=c++98 -pedantic -Wall -Wextra -Werror -MMD -MP -O2
 LDFLAGS= -std=c++98 -pedantic
@@ -11,7 +9,18 @@ ifdef FSANITIZE
 	CXXFLAGS+= -g3 -fsanitize=address -DDEBUG=1
 	LDFLAGS+= -g3 -fsanitize=address
 endif
+
+###############################
+######     Settings     #######
+###############################
+
+NAME:= PmergeMe
+# This specify where the header files are located
 INCLUDE_DIR:= .
+# This specify where the source files are located
+SRC_DIR:=.
+# This specify where the object files will be located
+OBJS_DIR:=obj
 
 ###################################
 ######     Source files     #######
@@ -43,11 +52,8 @@ SRC:= $(MAIN_SRC)
 ######     Object name reformat     #######
 ###########################################
 
-# This in effect makes all the object files to be compiled in the OBJ_DIR directory
-
-SRC_DIR:=.
-OBJ_DIR:=obj
-OBJ:=$(addprefix $(OBJ_DIR)/,$(subst /,@,$(SRC:.cpp=.o)))
+# This in effect makes all the object files to be compiled in the OBJS_DIR directory
+OBJ:=$(addprefix $(OBJS_DIR)/,$(subst /,@,$(SRC:.cpp=.o)))
 DEPENDS:=$(OBJ:.o=.d)
 
 #################################
@@ -76,13 +82,13 @@ $(NAME): $(OBJ)
 -include $(DEPENDS)
 
 .SECONDEXPANSION:
-$(OBJ_DIR)/%.o: $(SRC_DIR)/$$(subst @,/,$$*).cpp
+$(OBJS_DIR)/%.o: $(SRC_DIR)/$$(subst @,/,$$*).cpp
 	@$(CC) $(CXXFLAGS) $(addprefix -iquote ,$(INCLUDE_DIR)) -c $< -o $@
 
-$(OBJ): $(OBJ_DIR)
+$(OBJ): $(OBJS_DIR)
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+$(OBJS_DIR):
+	@mkdir -p $(OBJS_DIR)
 
 ###############################
 ######     Cleaning     #######
@@ -92,7 +98,7 @@ clean:
 	@rm -f $(OBJ)
 
 fclean: clean
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJS_DIR)
 	@rm -f $(NAME)
 
 re: fclean all
