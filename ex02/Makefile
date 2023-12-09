@@ -16,7 +16,7 @@ endif
 
 NAME:= PmergeMe
 # This specify where the header files are located
-INCLUDE_DIR:= .
+INCLUDE_DIR:= . types
 # This specify where the source files are located
 SRC_DIR:=.
 # This specify where the object files will be located
@@ -30,6 +30,7 @@ OBJS_DIR:=obj
 # contatenate them in the SRC variable like this:
 
 MAIN_SRC:= \
+	types/Nothing.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 

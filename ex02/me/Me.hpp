@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 20:19:46 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/07 23:09:32 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/09 17:19:20 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,31 @@
 #include <iterator>
 
 #include "IMe.hpp"
+#include "Maybe.hpp"
 
 template <typename T>
-class Me : public IMe
+class Me : public IMe<typename T::value_type>
 {
   public:
+    typedef typename T::value_type        value_type;
+    typedef T                             container_type;
     Me();
     Me(const Me &copy);
     ~Me();
     Me& operator=(const Me &copy);
 
-    int&        operator[](size_t position);
-    const int&  operator[](size_t position) const;
+    value_type&       operator[](size_t position);
+    const value_type& operator[](size_t position) const;
 
-    bool      empty() const;
-    size_t    size() const;
-    int       back() const;
+    bool              empty() const;
+    size_t            size() const;
+    Maybe<value_type> back() const;
 
-    void      push_back(int value);
-    int       pop_back();
-    int       insert(size_t position, int value);
-    int       erase(size_t position);
-    void      clear();
+    Maybe<value_type> pop_back();
+    void              push_back(value_type value);
+    int               insert(size_t position, value_type value);
+    int               erase(size_t position);
+    void              clear();
 
   private:
     T  container_;
@@ -69,13 +72,13 @@ Me<T>& Me<T>::operator=(const Me &copy)
 }
 
 template <typename T>
-int& Me<T>::operator[](size_t position)
+typename Me<T>::value_type& Me<T>::operator[](size_t position)
 {
   return container_[position];
 }
 
 template <typename T>
-const int& Me<T>::operator[](size_t position) const
+const typename Me<T>::value_type& Me<T>::operator[](size_t position) const
 {
   return container_[position];
 }
@@ -93,27 +96,30 @@ size_t Me<T>::size() const
 }
 
 template <typename T>
-int Me<T>::back() const
+Maybe<typename Me<T>::value_type> Me<T>::back() const
 {
+  if (container_.empty())
+    return Nothing();
   return container_.back();
 }
 
 template <typename T>
-void Me<T>::push_back(int value)
+Maybe<typename Me<T>::value_type> Me<T>::pop_back()
+{
+  Maybe<typename Me<T>::value_type> value = container_.back();
+  if (value.is_ok())
+    container_.pop_back();
+  return value;
+}
+
+template <typename T>
+void Me<T>::push_back(typename Me<T>::value_type value)
 {
   container_.push_back(value);
 }
 
 template <typename T>
-int Me<T>::pop_back()
-{
-  int value = container_.back();
-  container_.pop_back();
-  return value;
-}
-
-template <typename T>
-int Me<T>::insert(size_t position, int value)
+int Me<T>::insert(size_t position, typename Me<T>::value_type value)
 {
   if (position > container_.size())
     return EXIT_FAILURE;
