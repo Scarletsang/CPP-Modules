@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 00:31:22 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 01:19:29 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 03:46:53 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
+#include <cstdlib>
 
 #include "Maybe.hpp"
 
@@ -22,9 +24,9 @@ class JacobsthalSequence
     ~JacobsthalSequence();
 
     JacobsthalSequence& operator=(const JacobsthalSequence& other);
-    int next();
+    size_t next();
 
   private:
-    Maybe<int> a;
-    Maybe<int> b;
+    Maybe<size_t> a;
+    Maybe<size_t> b;
 };

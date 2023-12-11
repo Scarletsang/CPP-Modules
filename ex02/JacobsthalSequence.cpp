@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 00:31:22 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 01:39:19 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 03:47:15 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "JacobsthalSequence.hpp"
+
+#include <cstdlib>
 
 JacobsthalSequence::JacobsthalSequence()
   : a(), b() {}
@@ -30,7 +32,7 @@ JacobsthalSequence& JacobsthalSequence::operator=(const JacobsthalSequence& othe
   return *this;
 }
 
-int JacobsthalSequence::next()
+size_t JacobsthalSequence::next()
 {
   if (!a.is_ok())
   {

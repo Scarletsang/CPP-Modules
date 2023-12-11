@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 00:31:56 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 01:41:32 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 04:53:08 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "InsertionPositions.hpp"
+
+#include <cstdlib>
 
 #include "Maybe.hpp"
 #include "JacobsthalSequence.hpp"
