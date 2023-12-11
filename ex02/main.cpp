@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 22:30:30 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 23:09:50 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ size_t logic(int argc, const char** argv)
   IntContainer unsorted = Algorithm::create_ints(argc, argv);
   if (unsorted.empty())
     return 0;
-  std::pair<PairContainer, Maybe<int> > pairs =
-                        Algorithm::create_pairs(
-                        Print("before", unsorted));
+  Print("before", unsorted);
+  std::pair<PairContainer, Maybe<int> > pairs = Algorithm::create_pairs(unsorted);
   IntContainer sorted = Algorithm::insert(
                         Algorithm::create_sorter(
                         Algorithm::merge(pairs.first)));
