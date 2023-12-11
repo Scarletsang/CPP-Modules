@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 15:38:46 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 22:30:30 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ size_t logic(int argc, const char** argv)
                         Algorithm::create_sorter(
                         Algorithm::merge(pairs.first)));
   if (pairs.second.is_ok())
-    Algorithm::insert(sorted, pairs.second.value());
+    Algorithm::insert(sorted, pairs.second.value(), sorted.size());
   Print("after ", sorted);
   return unsorted.size();
 }

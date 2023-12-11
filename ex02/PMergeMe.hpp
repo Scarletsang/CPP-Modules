@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 01:57:32 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 05:04:34 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 22:30:20 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ class PMergeMe
     static Sorter         create_sorter(const PairContainer& pairs);
 
     static IntContainer   insert(Sorter sorter);
-    static void           insert(IntContainer& pairs, int value);
+    static void           insert(IntContainer& pairs, int value, int search_till);
 
     private:
       PMergeMe();
@@ -233,7 +233,8 @@ typename PMergeMe<Container, Allocator>::IntContainer  PMergeMe<Container, Alloc
 {
   InsertionPositions  positions;
   {
-    int                 value;
+    int value;
+    int added = 0;
 
     for (Maybe<int> pend_pos = positions.next();
         pend_pos.is_ok() && static_cast<size_t>(pend_pos.value()) < sorter.pend.size();
@@ -242,32 +243,32 @@ typename PMergeMe<Container, Allocator>::IntContainer  PMergeMe<Container, Alloc
       Maybe<int>& pend_value = sorter.pend[pend_pos.value() - 1];
       value = pend_value.value();
       pend_value = Nothing();
-      insert(sorter.main, value);
+      insert(sorter.main, value, pend_pos.value() + added - 1);
+      added++;
     }
   }
   for (typename MaybeIntContainer::const_iterator it = sorter.pend.begin();
       it != sorter.pend.end(); ++it)
   {
     if (it->is_ok())
-      insert(sorter.main, it->value());
+      insert(sorter.main, it->value(), sorter.main.size());
   }
   return sorter.main;
 }
 
 template <template <typename, typename> class Container, template <typename> class Allocator>
-void PMergeMe<Container, Allocator>::insert(IntContainer& ints, int value)
+void PMergeMe<Container, Allocator>::insert(IntContainer& ints, int value, int length)
 {
   int  min = 0;
-  int  max = ints.size();
   int  mid;
 
-  while (min < max)
+  while (min < length)
   {
-    mid = (min + max) / 2;
+    mid = (min + length) / 2;
     if (ints[mid] < value)
       min = mid + 1;
     else
-      max = mid;
+      length = mid;
   }
   ints.insert(ints.begin() + min, value);
 }
