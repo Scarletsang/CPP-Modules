@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:18:51 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/05 22:51:31 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 19:08:01 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ class BitcoinExchange
       kInvalidDate,
       kExtraFields,
       kNegativeRate,
-      kOutOfRangeRate
+      kOutOfRangeRate,
+      kEmptyDatabase
     };
     struct Headers
     {

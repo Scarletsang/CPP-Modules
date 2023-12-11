@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/05 23:00:48 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 20:44:19 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,13 @@ namespace interactive
       return EXIT_FAILURE;
     const bitcoin_exchange::Database& db = data.unwrap().get_database();
 
-    std::pair<Date, float> entry = db.get_closest_entry(date_data.unwrap());
-    std::cout << entry.first << "," << entry.second << std::endl;
+    bitcoin_exchange::Database::EntryResult result = db.get_closest_entry(date_data.unwrap());
+    if (result.is_ok())
+      std::cout << result.value().first << "," << result.value().second << std::endl;
+    else
+    {
+      db.print_error(result.error());
+    }
     return EXIT_SUCCESS;
   }
 
@@ -78,6 +83,7 @@ namespace interactive
     {
       std::cout << it->first << ": " << it->second << std::endl;
     }
+    std::cout << "total: " << db.size() << " entries." << std::endl;
     return EXIT_SUCCESS;
   }
 

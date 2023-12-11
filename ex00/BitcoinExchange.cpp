@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:39:04 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/05 22:51:25 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 21:59:30 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,16 @@ BitcoinExchange::kErrorCode  BitcoinExchange::compare_entry_from_line(std::strin
   if (result.is_ok())
   {
     std::pair<Date, float> entry = result.value();
-    std::pair<Date, float> closest = db_.get_closest_entry(entry.first);
-    std::cout << closest.first << " => " << entry.second << " = " << entry.second * closest.second << std::endl;
-    return kNoError;
+    bitcoin_exchange::Database::EntryResult closest = db_.get_closest_entry(entry.first);
+    if (closest.is_ok())
+    {
+      std::cout << closest.value().first << " => "
+                << entry.second << " = "
+                << entry.second * closest.value().second << std::endl;
+      return kNoError;
+    }
+    else
+      return kEmptyDatabase;
   }
   else
     return result.error();
@@ -181,6 +188,9 @@ BitcoinExchange::kErrorCode  BitcoinExchange::print_error(kErrorCode error, cons
       break;
     case kOutOfRangeRate:
       std::cerr << "Error: Out of range rate: " << line << std::endl;
+      break;
+    case kEmptyDatabase:
+      std::cerr << "Error: Empty database" << std::endl;
       break;
     default:
       break;

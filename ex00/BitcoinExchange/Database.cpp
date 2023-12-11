@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 19:41:06 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/05 21:58:21 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 22:07:42 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <utility>
 
 #include "Date.hpp"
+#include "Result.hpp"
 
 namespace bitcoin_exchange
 {
@@ -52,26 +53,33 @@ namespace bitcoin_exchange
       return kInvalidDate;
     else if (entry.second < 0)
       return kNegativeRate;
-    else if (entry.second > 1000)
-      return kOutOfRangeRate;
-    rates_[entry.first] = entry.second;
-    return kNoError;
+    else
+    {
+      rates_[entry.first] = entry.second;
+      return kNoError;
+    }
   }
 
-  float Database::get_rate(Date date) const
+  Database::RateResult  Database::get_rate(Date date) const
   {
+    if (rates_.empty())
+      return RateResult::Error(kEmptyDatabase);
     std::map<Date, float>::const_iterator it = rates_.find(date);
     if (it == rates_.end())
-      throw NoRateException();
+      return RateResult::Error(kInvalidDate);
+    else if (it != rates_.begin())
+      --it;
     return it->second;
   }
 
-  std::pair<Date, float> Database::get_closest_entry(Date date) const
+  Database::EntryResult Database::get_closest_entry(Date date) const
   {
-    std::map<Date, float>::const_iterator it = rates_.lower_bound(date);
-    if (it == rates_.end())
-      throw NoRateException();
-    return *it;
+    if (rates_.empty())
+      return EntryResult::Error(kEmptyDatabase);
+    std::map<Date, float>::const_iterator it = rates_.upper_bound(date);
+    if (it != rates_.begin())
+      --it;
+    return EntryResult::Ok(*it);
   }
 
   bool  Database::is_empty() const
@@ -94,9 +102,25 @@ namespace bitcoin_exchange
     return rates_.end();
   }
 
-  const char* Database::NoRateException::what() const throw()
+  void  Database::print_error(enum kErrorCode error_code) const
   {
-    return "The Bitcoin exchange database is empty.";
+    switch (error_code)
+    {
+      case kInvalidDate:
+        std::cerr << "Invalid date" << std::endl;
+        break;
+      case kNegativeRate:
+        std::cerr << "Negative rate" << std::endl;
+        break;
+      case kOutOfRangeRate:
+        std::cerr << "Out of range rate" << std::endl;
+        break;
+      case kEmptyDatabase:
+        std::cerr << "Empty database" << std::endl;
+        break;
+      default:
+        break;
+    }
   }
 
 } // namespace bitcoin_exchange
