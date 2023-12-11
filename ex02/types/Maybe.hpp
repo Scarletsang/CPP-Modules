@@ -6,13 +6,15 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 14:09:33 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/08 14:20:37 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 00:57:56 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Nothing.hpp"
+
+#include <iostream>
 
 template <typename T>
 class Maybe
@@ -76,6 +78,9 @@ class Maybe
     T     value_;
     bool  is_ok_;
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Maybe<T>& maybe);
 
 /////////////////////////////////////////////////////
 ////////////   template implementation   ////////////
@@ -237,4 +242,14 @@ Maybe<T2> Maybe<T>::chain(Maybe<T2> (Class::*f)(T, Env&), Class& obj, Env& data)
   if (this->is_ok())
     return (obj.*f)(this->value_, data);
   return Nothing();
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Maybe<T>& maybe)
+{
+  if (maybe.is_ok())
+    os << maybe.value();
+  else
+    os << Nothing();
+  return os;
 }

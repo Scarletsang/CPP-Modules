@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Slice.hpp                                          :+:      :+:    :+:   */
+/*   JacobsthalSequence.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/09 20:05:26 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/09 20:08:45 by htsang           ###   ########.fr       */
+/*   Created: 2023/12/11 00:31:22 by htsang            #+#    #+#             */
+/*   Updated: 2023/12/11 01:19:29 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-template <typename T>
-class Slice
+#include "Maybe.hpp"
+
+class JacobsthalSequence
 {
   public:
-    Slice(T& container);
-    Slice(T& container, int start, int end);
-    Slice(const Slice &copy);
-    ~Slice();
-    Slice& operator=(const Slice &copy);
+    JacobsthalSequence();
+    JacobsthalSequence(const JacobsthalSequence& other);
+    ~JacobsthalSequence();
+
+    JacobsthalSequence& operator=(const JacobsthalSequence& other);
+    int next();
 
   private:
-    int   start;
-    int   end;
-    T&    container;
+    Maybe<int> a;
+    Maybe<int> b;
 };

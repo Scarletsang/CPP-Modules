@@ -31,6 +31,8 @@ OBJS_DIR:=obj
 
 MAIN_SRC:= \
 	types/Nothing.cpp \
+	JacobsthalSequence.cpp \
+	InsertionPositions.cpp \
 	main.cpp
 SRC:= $(MAIN_SRC)
 

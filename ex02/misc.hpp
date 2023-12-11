@@ -1,42 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Nothing.cpp                                        :+:      :+:    :+:   */
+/*   misc.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 14:12:07 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 00:55:31 by htsang           ###   ########.fr       */
+/*   Created: 2023/12/11 02:40:52 by htsang            #+#    #+#             */
+/*   Updated: 2023/12/11 02:41:18 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Nothing.hpp"
+#pragma once
 
+#include <utility>
 #include <iostream>
 
-Nothing::Nothing() {}
-
-Nothing::Nothing(const Nothing& other) { (void) other; }
-
-Nothing::~Nothing() {}
-
-Nothing& Nothing::operator=(const Nothing&)
+template <typename T, typename U>
+std::ostream& operator<<(std::ostream& os, const std::pair<T, U>& p)
 {
-  return *this;
-}
-
-bool  Nothing::operator==(const Nothing&) const
-{
-  return true;
-}
-
-bool  Nothing::operator!=(const Nothing&) const
-{
-  return false;
-}
-
-std::ostream& operator<<(std::ostream& os, const Nothing&)
-{
-  os << "Nothing";
+  os << "(" << p.first << ", " << p.second << ")";
   return os;
+}
+
+template <typename T>
+void  Print(const T& container)
+{
+  for (typename T::size_type i = 0; i < container.size(); ++i)
+  {
+    std::cout << container[i] << " ";
+  }
+  std::cout << std::endl;
 }

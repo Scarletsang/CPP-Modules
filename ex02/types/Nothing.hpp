@@ -6,11 +6,13 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 14:10:19 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/08 14:11:55 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 00:55:16 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
+#include <iostream>
 
 class Nothing
 {
@@ -41,3 +43,5 @@ bool  Nothing::operator!=(const T&) const
 {
   return true;
 }
+
+std::ostream& operator<<(std::ostream& os, const Nothing& nothing);
