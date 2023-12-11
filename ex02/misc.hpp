@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 02:40:52 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 04:30:21 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 15:18:11 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,8 @@ template <typename T>
 const T&  Print(const std::string& title, const T& container)
 {
   std::cout << title << ": ";
-  for (typename T::size_type i = 0; i < container.size(); ++i)
-  {
-    std::cout << container[i] << " ";
-  }
+  for (typename T::const_iterator it = container.begin(); it != container.end(); ++it)
+    std::cout << *it << " ";
   std::cout << std::endl;
   return container;
 }

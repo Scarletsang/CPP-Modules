@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 05:07:04 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/11 15:38:46 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@
 
 double  Duration(clock_t start)
 {
-  return static_cast<double>(clock() - start) * 1000 / CLOCKS_PER_SEC;
+  return static_cast<double>(clock() - start) * 1000000 / CLOCKS_PER_SEC;
 }
 
 void  PrintSumary(const std::string& container_name, size_t size, double duration)
 {
   std::cout << "Time to process a range of "
             << size << " elements with " << container_name << ": "
-            << duration << "ms" << std::endl;
+            << duration << " us" << std::endl;
 }
 
 template <template <typename, typename> class Container>
