@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 23:09:50 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/14 20:54:43 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,20 @@
 #include <deque>
 
 #include "PMergeMe.hpp"
+#include "Result.hpp"
 #include "misc.hpp"
 
-double  Duration(clock_t start)
+enum  Error
 {
-  return static_cast<double>(clock() - start) * 1000000 / CLOCKS_PER_SEC;
+  kEmptyArray,
+  kUnSortedArray
+};
+
+typedef Result<clock_t, Error>  SortResult;
+
+double  Duration(clock_t start, clock_t end)
+{
+  return static_cast<double>(end - start) * 1000000 / CLOCKS_PER_SEC;
 }
 
 void  PrintSumary(const std::string& container_name, size_t size, double duration)
@@ -38,7 +47,7 @@ void  PrintSumary(const std::string& container_name, size_t size, double duratio
 }
 
 template <template <typename, typename> class Container>
-size_t logic(int argc, const char** argv)
+SortResult sort(int argc, const char** argv)
 {
   typedef PMergeMe<Container>               Algorithm;
   typedef typename Algorithm::PairContainer PairContainer;
@@ -46,16 +55,47 @@ size_t logic(int argc, const char** argv)
 
   IntContainer unsorted = Algorithm::create_ints(argc, argv);
   if (unsorted.empty())
-    return 0;
+    return SortResult::Error(kEmptyArray);
   Print("before", unsorted);
   std::pair<PairContainer, Maybe<int> > pairs = Algorithm::create_pairs(unsorted);
   IntContainer sorted = Algorithm::insert(
                         Algorithm::create_sorter(
                         Algorithm::merge(pairs.first)));
   if (pairs.second.is_ok())
-    Algorithm::insert(sorted, pairs.second.value(), sorted.size());
+    Algorithm::insert(sorted, pairs.second.value(), sorted.empty() ? 0 : sorted.size() - 1);
+  clock_t time = clock();
   Print("after ", sorted);
-  return unsorted.size();
+  if (!Algorithm::is_sorted(sorted))
+    return SortResult::Error(kUnSortedArray);
+  return SortResult::Ok(time);
+}
+
+template <template <typename, typename> class Container>
+int logic(int argc, const char** argv, const std::string& container_name)
+{
+  clock_t     start = clock();
+  SortResult  result = sort<Container>(argc, argv);
+  if (!result.is_ok())
+  {
+    switch (result.error())
+    {
+    case kEmptyArray:
+      std::cerr << "Error: empty array" << std::endl;
+      break;
+    case kUnSortedArray:
+      std::cerr << "Error: unsorted array" << std::endl;
+      break;
+    default:
+      std::cerr << "Error: unknown error" << std::endl;
+      break;
+    }
+    return EXIT_FAILURE;
+  }
+  else
+  {
+    PrintSumary(container_name, argc - 1, Duration(start, result.value()));
+    return EXIT_SUCCESS;
+  }
 }
 
 int main(int argc, const char** argv)
@@ -65,25 +105,6 @@ int main(int argc, const char** argv)
     std::cerr << "Usage: " << argv[0] << " <number sequences>" << std::endl;
     return EXIT_FAILURE;
   }
-  clock_t start;
-  size_t size;
-
-  start = clock();
-  size = logic<std::vector>(argc, argv);
-  if (size == 0)
-  {
-    std::cerr << "Error" << std::endl;
-    return EXIT_FAILURE;
-  }
-  PrintSumary("std::vector", size, Duration(start));
-
-  start = clock();
-  size = logic<std::deque>(argc, argv);
-  if (size == 0)
-  {
-    std::cerr << "Error" << std::endl;
-    return EXIT_FAILURE;
-  }
-  PrintSumary("std::deque", size, Duration(start));
-  return EXIT_SUCCESS;
+  return logic<std::vector>(argc, argv, "std::vector") ||
+         logic<std::deque>(argc, argv, "std::deque");
 }
