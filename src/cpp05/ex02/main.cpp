@@ -1,0 +1,235 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/14 20:44:18 by htsang            #+#    #+#             */
+/*   Updated: 2023/10/10 16:37:14 by htsang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Bureaucrat.hpp"
+#include "AForm.hpp"
+#include "forms/PresidentialPardonForm.hpp"
+#include "forms/RobotomyRequestForm.hpp"
+#include "forms/ShrubberyCreationForm.hpp"
+#include "interactive.hpp"
+#include "Vector.hpp"
+
+#include <cstdlib>
+
+#include <iostream>
+#include <string>
+
+namespace interactive
+{
+  int RunIncrement(Bureaucrat* bureaucrat)
+  {
+    try
+    {
+      bureaucrat->incrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << std::endl;
+    }
+    std::cout << *bureaucrat << std::endl;
+    return EXIT_SUCCESS;
+  }
+
+  int RunDecrement(Bureaucrat* bureaucrat)
+  {
+    try
+    {
+      bureaucrat->decrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << std::endl;
+    }
+    std::cout << *bureaucrat << std::endl;
+    return EXIT_SUCCESS;
+  }
+
+  int RunForm(std::string& input, Vector<AForm*>& forms)
+  {
+    AForm*  form = NULL;
+
+    printer::FormTypePrompt();
+    std::getline(std::cin, input);
+    while (std::cin.good())
+    {
+      if (input == "presidential")
+      {
+        if (parser::Parse<PresidentialPardonForm>(input, form))
+          return EXIT_FAILURE;
+        break ;
+      }
+      else if (input == "robotomy")
+      {
+        if (parser::Parse<RobotomyRequestForm>(input, form))
+          return EXIT_FAILURE;
+        break ;
+      }
+      else if (input == "shrubbery")
+      {
+        if (parser::Parse<ShrubberyCreationForm>(input, form))
+          return EXIT_FAILURE;
+        break ;
+      }
+      else
+      {
+        printer::InteractiveInvalidPrompt();
+        std::getline(std::cin, input);
+      }
+    }
+    forms.push_back(form);
+    return EXIT_SUCCESS;
+  }
+
+  int RunSign(std::string& input, Vector<AForm*>& forms, Bureaucrat* bureaucrat)
+  {
+    s_index     index;
+
+    if (forms.size() == 0)
+    {
+      printer::NoFormError();
+      return EXIT_SUCCESS;
+    }
+    printer::ShowForms(forms);
+    index.upper_bound = forms.size();
+    if (parser::ParseWithPrompt(input, index, printer::ChooseFormPrompt))
+      return EXIT_FAILURE;
+    bureaucrat->signForm(*forms[index.number]);
+    return EXIT_SUCCESS;
+  }
+
+  int RunExecute(std::string& input, Vector<AForm*>& forms, Bureaucrat* bureaucrat)
+  {
+    s_index     index;
+
+    if (forms.size() == 0)
+    {
+      printer::NoFormError();
+      return EXIT_SUCCESS;
+    }
+    printer::ShowForms(forms);
+    index.upper_bound = forms.size();
+    if (parser::ParseWithPrompt(input, index, printer::ChooseFormPrompt))
+      return EXIT_FAILURE;
+    bureaucrat->executeForm(*forms[index.number]);
+    return EXIT_SUCCESS;
+  }
+
+  void  Cleanup(Vector<AForm*>& forms, Bureaucrat* bureaucrat)
+  {
+    for (size_t i = 0; i < forms.size(); i++)
+    {
+      delete forms[i];
+      forms[i] = NULL;
+    }
+    delete bureaucrat;
+  }
+
+  int Run()
+  {
+    std::string   input;
+    Bureaucrat*   bureaucrat;
+    Vector<AForm*> forms;
+    int           exit_code;
+
+    if (parser::ParseUntilCorrect(input, bureaucrat))
+      return EXIT_FAILURE;
+    printer::InteractivePrompt();
+    std::getline(std::cin, input);
+    while (std::cin.good())
+    {
+      exit_code = EXIT_SUCCESS;
+      if (input == "+")
+        exit_code = RunIncrement(bureaucrat);
+      else if (input == "-")
+        exit_code = RunDecrement(bureaucrat);
+      else if (input == "form")
+        exit_code = RunForm(input, forms);
+      else if (input == "sign")
+        exit_code = RunSign(input, forms, bureaucrat);
+      else if (input == "execute")
+        exit_code = RunExecute(input, forms, bureaucrat);
+      else if (input == "print")
+      {
+        std::cout << *bureaucrat << std::endl;
+        printer::ShowForms(forms);
+      }
+      else if (input == "exit")
+      {
+        Cleanup(forms, bureaucrat);
+        return EXIT_SUCCESS;
+      }
+      else
+      {
+        printer::InteractiveInvalidPrompt();
+        std::getline(std::cin, input);
+        continue ;
+      }
+      if (exit_code)
+        break ;
+      printer::InteractivePrompt();
+      std::getline(std::cin, input);
+    }
+    Cleanup(forms, bureaucrat);
+    return EXIT_SUCCESS;
+  }
+} // namespace battle
+
+namespace noninteractive
+{
+  int Run()
+  {
+    Bureaucrat bureaucrat;
+
+    std::cout << bureaucrat << std::endl;
+    try
+    {
+      bureaucrat.decrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    std::cout << bureaucrat << std::endl;
+    try
+    {
+      bureaucrat.incrementGrade();
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    std::cout << bureaucrat << std::endl;
+    PresidentialPardonForm  form("president");
+    RobotomyRequestForm     form2("A highly dangerous bomb");
+    ShrubberyCreationForm   form3("healthy tree");
+    bureaucrat.signForm(form);
+    bureaucrat.signForm(form2);
+    bureaucrat.signForm(form3);
+    bureaucrat.executeForm(form);
+    bureaucrat.executeForm(form2);
+    bureaucrat.executeForm(form3);
+    return EXIT_SUCCESS;
+  }
+} // namespace noninteractive
+
+int main(int argc, const char** argv)
+{
+  if (argc == 1)
+    return noninteractive::Run();
+  else if (argc == 2 && std::string(argv[1]) == "-i")
+    return interactive::Run();
+  else
+  {
+    std::cerr << "Usage: " << argv[0] << " [-i]" << std::endl;
+    return EXIT_FAILURE;
+  }
+}
