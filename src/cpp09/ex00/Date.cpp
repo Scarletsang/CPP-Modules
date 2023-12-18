@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 23:27:29 by htsang            #+#    #+#             */
-/*   Updated: 2023/11/16 18:32:19 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/14 22:07:28 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ bool  Date::is_leap_year() const
 
 bool  Date::is_valid() const
 {
-  if (year < 0 || month < 0 || day < 0)
+  if (year < 0 || month <= 0 || day <= 0)
     return false;
   else if (month > 12)
     return false;

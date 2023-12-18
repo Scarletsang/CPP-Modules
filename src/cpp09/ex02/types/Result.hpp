@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 14:35:42 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 00:58:09 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/05 23:18:51 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,6 @@ class Result
     T     value_;
     Err   error_;
 };
-
-template<typename T, typename Err>
-std::ostream& operator<<(std::ostream& os, Result<T,Err> const& result);
 
 /////////////////////////////////////////////////////
 ////////////   template implementation   ////////////

@@ -11,7 +11,7 @@ ifdef FSANITIZE
 	CXXFLAGS+= -g3 -fsanitize=address -DDEBUG=1
 	LDFLAGS+= -g3 -fsanitize=address
 endif
-INCLUDE_DIR:= .
+INCLUDE_DIR:= . types
 
 ###################################
 ######     Source files     #######

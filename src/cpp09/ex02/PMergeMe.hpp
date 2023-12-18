@@ -6,7 +6,7 @@
 /*   By: htsang <htsang@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 01:57:32 by htsang            #+#    #+#             */
-/*   Updated: 2023/12/11 05:04:34 by htsang           ###   ########.fr       */
+/*   Updated: 2023/12/14 20:58:21 by htsang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ class PMergeMe
     static Sorter         create_sorter(const PairContainer& pairs);
 
     static IntContainer   insert(Sorter sorter);
-    static void           insert(IntContainer& pairs, int value);
+    static void           insert(IntContainer& pairs, int value, size_t max_index);
+    static bool           is_sorted(const IntContainer& ints);
 
     private:
       PMergeMe();
@@ -233,41 +234,69 @@ typename PMergeMe<Container, Allocator>::IntContainer  PMergeMe<Container, Alloc
 {
   InsertionPositions  positions;
   {
-    int                 value;
+    int value;
+    int added = 0;
 
     for (Maybe<int> pend_pos = positions.next();
-        pend_pos.is_ok() && static_cast<size_t>(pend_pos.value()) < sorter.pend.size();
+        pend_pos.is_ok() && static_cast<size_t>(pend_pos.value() + added) < sorter.pend.size();
         pend_pos = positions.next())
     {
       Maybe<int>& pend_value = sorter.pend[pend_pos.value() - 1];
       value = pend_value.value();
       pend_value = Nothing();
-      insert(sorter.main, value);
+      insert(sorter.main, value, static_cast<size_t>(pend_pos.value() + added + 1));
+      added++;
     }
   }
   for (typename MaybeIntContainer::const_iterator it = sorter.pend.begin();
       it != sorter.pend.end(); ++it)
   {
     if (it->is_ok())
-      insert(sorter.main, it->value());
+      insert(sorter.main, it->value(), sorter.main.size() - 1);
   }
   return sorter.main;
 }
 
 template <template <typename, typename> class Container, template <typename> class Allocator>
-void PMergeMe<Container, Allocator>::insert(IntContainer& ints, int value)
+void PMergeMe<Container, Allocator>::insert(IntContainer& ints, int value, size_t max_index)
 {
-  int  min = 0;
-  int  max = ints.size();
-  int  mid;
-
-  while (min < max)
+  if (ints.empty())
   {
-    mid = (min + max) / 2;
-    if (ints[mid] < value)
-      min = mid + 1;
-    else
-      max = mid;
+    ints.push_back(value);
+    return;
   }
-  ints.insert(ints.begin() + min, value);
+  if (max_index >= ints.size())
+    max_index = ints.size() - 1;
+  size_t min_index = 0;
+  size_t mid_index = max_index / 2;
+  while (min_index < max_index)
+  {
+    if (value < ints[mid_index])
+      max_index = mid_index;
+    else
+      min_index = mid_index + 1;
+    mid_index = (min_index + max_index) / 2;
+  }
+  if (value > ints[mid_index])
+    mid_index++;
+  if (mid_index == ints.size())
+    ints.push_back(value);
+  else
+    ints.insert(ints.begin() + mid_index, value);
+}
+
+template <template <typename, typename> class Container, template <typename> class Allocator>
+bool PMergeMe<Container, Allocator>::is_sorted(const IntContainer& ints)
+{
+  Maybe<int>  prev;
+  for (typename IntContainer::const_iterator it = ints.begin(); it != ints.end(); ++it)
+  {
+    if (!prev.is_ok())
+      prev = *it;
+    else if (*it < prev.value())
+      return false;
+    else
+      prev = *it;
+  }
+  return true;
 }

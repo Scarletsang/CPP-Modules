@@ -16,6 +16,7 @@
 #include <exception>
 #include <utility>
 
+#include "Result.hpp"
 #include "Date.hpp"
 
 namespace bitcoin_exchange
@@ -28,32 +29,31 @@ namespace bitcoin_exchange
         kNoError = 0,
         kInvalidDate,
         kNegativeRate,
-        kOutOfRangeRate
+        kOutOfRangeRate,
+        kEmptyDatabase
       };
       typedef std::map<Date, float>::const_iterator const_iterator;
+      typedef Result<float, Database::kErrorCode>                   RateResult;
+      typedef Result<std::pair<Date, float>, Database::kErrorCode>  EntryResult;
 
       Database();
       Database(Database const& other);
       ~Database();
 
-      Database&  operator=(Database const& other);
+      Database&         operator=(Database const& other);
 
-      enum  kErrorCode        set_entry(Date date, float rate);
-      enum  kErrorCode        set_entry(std::pair<Date, float> entry);
-      float                   get_rate(Date date) const;
-      std::pair<Date, float>  get_closest_entry(Date date) const;
+      enum  kErrorCode  set_entry(Date date, float rate);
+      enum  kErrorCode  set_entry(std::pair<Date, float> entry);
+      RateResult        get_rate(Date date) const;
+      EntryResult       get_closest_entry(Date date) const;
 
-      bool                    is_empty() const;
-      size_t                  size() const;
+      bool              is_empty() const;
+      size_t            size() const;
 
-      const_iterator          begin() const;
-      const_iterator          end() const;
+      const_iterator    begin() const;
+      const_iterator    end() const;
 
-      class NoRateException : public std::exception
-      {
-        public:
-          virtual const char* what() const throw();
-      };
+      void              print_error(enum kErrorCode error_code) const;
     
     private:
       std::map<Date, float>  rates_;
