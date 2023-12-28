@@ -8,11 +8,13 @@
     1b. Sort inside pairs according to the maximum value
     [(12, 3), (9, 2), (8, 5), (11, 6), (7, 4), (10, 1)]             leftover: 0
     1c. Sort the pairs recursively
+
         2a. Group elements into pairs
         [((12, 3), (9, 2)), ((8, 5), (11, 6)), ((7, 4), (10, 1))]   leftover: nothing
         2b. Sort inside pairs according to the maximum value
         [((12, 3), (9, 2)), ((11, 6), (8, 5)), ((10, 1), (7, 4))]   leftover: nothing
         2c. Sort the pairs recursively
+
             3a. Group elements into pairs
             [(((12, 3), (9, 2)), ((11, 6), (8, 5)))]                leftover: ((10, 1), (7, 4))
             3b. Sort inside pairs according to the maximum value
